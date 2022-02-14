@@ -1,0 +1,74 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}My profile {% endblock %}
+
+{% block login %} {% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="Front-Office/profile/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="Front-Office/profile/assets/css/all.min.css">
+    <link rel="stylesheet" href="Front-Office/profile/assets/css/animate.min.css">
+    <link rel="stylesheet" href="Front-Office/profile/assets/plugins/slider/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="Front-Office/profile/assets/plugins/slider/css/owl.theme.default.css">
+    <link rel="stylesheet" type="text/css" href="Front-Office/profile/assets/css/style.css" />
+{% endblock %}
+
+{% block body %}
+<div id="about_us" class="about-us container-fluid">
+           <div class="container">
+           {% for flashSuccess in app.flashes('success') %}
+            <div class="alert alert-success" role="alert">
+                {{ flashSuccess }}
+            </div>
+           {% endfor %}
+                <div class="about-row row">
+                   <div class="image-col col-md-4">
+                       <img src="{{ asset('uploads/profilePictures/' ~ app.user.profilePicture) }}" alt="">
+                       <div class="row">
+                       <div class="col col-md-8">
+                       <a type="button" href="{{ path('edit_account') }}" class="btn btn-secondary btn-rounded btn-fw"> Edit profile </a>
+                        </div>
+                        <div class="col col-md-8">
+                       <a class="btn btn-danger btn-rounded btn-fw" href="{{ path('delete_account') }}">Delete account</a>
+                        </div>
+                        </div>
+                   </div>
+                   <div class="detail-col col-md-8">
+                       <h2>{{ app.user.firstname }} {{ app.user.lastname }}</h2>
+                        <h6>{{ app.user.roles |join(' , ') }}</h6>
+                          <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="info-list">
+                                    <ul>
+                                        <li><span>Email:</span>{{ app.user.email }}</li>
+                                        <li><span>Gender:</span>{{ app.user.gender }}</li>
+                                        <li><span>Phone:</span>{{ app.user.phoneNumber }}</li>
+                                        <li><span>Verified ?</span><p> {% if app.user.isVerified == 0 %} No {% endif %}  {% if app.user.isVerified == 1 %} yes {% endif %}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {# <div class="col-md-6 col-12">
+                                <div class="info-list">
+                                    <ul>
+                                        <li><span>Age:</span>31 Years</li>
+                                        <li><span>Degree:</span>Master</li>
+                                        <li><span>Mail:</span>email@example.com</li>
+                                        <li><span>Phone:</span>+01 454 548 4458</li>
+                                    </ul>
+                                </div>
+                            </div> #}
+                        </div>    
+                    </div>
+                </div>
+           </div>     
+        </div>
+{% endblock %}
+
+{% block addJS %}
+    <script src="Front-Office/profile/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="Front-Office/profile/assets/js/popper.min.js"></script>
+    <script src="Front-Office/profile/assets/js/bootstrap.min.js"></script>
+    <script src="Front-Office/profile/assets/plugins/scroll-fixed/jquery-scrolltofixed-min.js"></script>
+    <script src="Front-Office/profile/assets/plugins/slider/js/owl.carousel.min.js"></script>
+    <script src="Front-Office/profile/assets/js/script.js"></script>
+{% endblock %}
