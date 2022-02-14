@@ -1,0 +1,18 @@
+id
+cin
+firstname
+lastname
+email
+password
+roles
+profilePicture
+isClient
+isTutor
+isCenter
+birthday
+gender
+verifFile
+isVerified //
+creationDate //
+isBanned //
+isDescativated //

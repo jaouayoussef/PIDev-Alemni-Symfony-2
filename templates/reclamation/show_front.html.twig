@@ -1,0 +1,88 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %} All reclamations {% endblock %}
+
+{% block body %}
+
+<section class="ftco-section">
+	<div class="container">
+		<div class="row justify-content-center">
+        <a href="{{ path('add_reclamation') }}" class="btn btn-warning">Send a reclamation</a>
+			<div class="">
+				<div class="wrapper">
+                
+					<div class="row no-gutters">
+						<div class="col-lg-12 col-md-12 order-md-last d-flex align-items-stretch">
+            <div style="overflow-x:auto;">
+                        <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Full Name</th>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>Sending Date</th>
+                            <th>User file</th>
+                            <th>Status</th>
+                            <th>Answer</th>
+                            <th>Reply Date</th>
+                            <th>Admin File</th>
+                            <th>Delete</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {% for rec in reclamations %}
+                          <tr>
+                            <td>{{ rec.fullname }}</td>
+                            <td>{{ rec.type }}</td>
+                            <td>{{ rec.titre }}</td>
+                            <td>{{ rec.message }}</td>
+                            <td>{{ rec.sending_date ? rec.sending_date|date('d-m-Y H:i') : '' }}</td>
+                            {% if rec.user_file != null %}
+                            <td><a class="btn btn-success " href="{{ asset('uploads/reclamationFiles/' ~ rec.user_file) }}">View</a></td>
+                            {% else %}
+                            <td> No File Sent</td>
+                            {% endif %}
+                            <td>{{ rec.status }}</td>
+                            {% if rec.status == 'not answered' %}
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            {% else %}
+                            <td>{{ rec.answer }}</td>
+                            <td>{{ rec.reply_date }}</td>
+                            {% if rec.file == null %}
+                            <td>No file sent</td>
+                            {% else %}
+                            <<td><a class="btn btn-success" href="{{ asset('uploads/reclamationFiles/' ~ rec.file) }}">View</a></td>
+                            {% endif %}
+                            {% endif %}
+
+                            <td>
+                            <form method="post" action="{{ path('delete_reclamation', {'id': rec.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rec.id) }}">
+                            <button class="btn btn-danger">Delete</button>
+                            </form>
+                            </td>
+                          </tr>
+                          {% else %}
+            <tr>
+            
+                <td colspan="11" class="text-center">no reclamation found</td>
+            
+            </tr>
+        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

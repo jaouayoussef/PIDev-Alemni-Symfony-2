@@ -1,0 +1,35 @@
+1/introduction :
+2/problématique + étude de l'existant :
+  De nos jours, beaucoup d'étudiants cherchent à améliorer leurs compétences afin d'obtenir des
+  diplômes, d'obtenir un emploi ou même pour leur propre développement personnel. Pourtant, ils
+  ne trouvent pas tout ce qu'ils recherchent sur les réseaux sociaux
+  Il existe certaines plateformes en ligne qui proposent certaines formations pour les étudiants
+  et pour les gens en général comme Udemy, Coursera, Skillshare et autres...
+3/critique :
+  mais certaines de ces plates-formes ont de mauvaises fonctionnalités ou de mauvais services
+  Udemy : few free courses, high prices
+  Coursera : no real-time courses
+  Skillshare : doesn't verify the quality of instructors and teachers
+4/solution proposée :
+5/acteurs : 
+  client, les entreprises, centre de formations, formateurs
+6/spécifications fonctionnelles :
+7/les modules :
+  1-
+  2-
+  3-
+  4-
+  5-
+  6-
+  7-
+  8-
+  9-
+  10-
+  11-
+  12-
+8/maquettes :
+  1-mobile :
+  2-desktop :
+  3-web :
+9/stratégie Marketing :
+10/conclusion :
