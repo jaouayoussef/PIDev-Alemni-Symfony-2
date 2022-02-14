@@ -1,0 +1,40 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %} test add {% endblock %}
+
+{% block body %}
+
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Propriétaire du code promo</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Événements</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> Gestion propriétaire du code promo </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Modifier propriétaire du code promo</h4><br>
+
+                        {{ include('promotion_code/_form.html.twig', {'button_label': 'Update'}) }}
+                        <a href="{{ path('promotion_code_new') }}"  class="btn btn-light">Cancel</a>
+
+                    </div>
+                </div>
+            </div >
+
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+
+
+{% endblock %}
+

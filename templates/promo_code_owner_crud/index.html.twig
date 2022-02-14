@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<title>PromoCodeOwner index</title>
+
+{% block body %}
+    <h1>PromoCodeOwner index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>PCD_Name</th>
+                <th>PCD_FirstName</th>
+                <th>PCD_Email</th>
+                <th>PCD_Job</th>
+                <th>PCD_TelephoneNumber</th>
+                <th>PCD_Gender</th>
+                <th>PCD_City</th>
+                <th>PCD_Note</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for promo_code_owner in promo_code_owners %}
+            <tr>
+                <td class="align-middle">{{ promo_code_owner.id }}</td>
+                <td class="align-middle">{{ promo_code_owner.PCDName }}</td>
+                <td class="align-middle">{{ promo_code_owner.PCDFirstName }}</td>
+                <td class="align-middle">{{ promo_code_owner.PCDEmail }}</td>
+                <td>{{ promo_code_owner.PCDJob }}</td>
+                <td>{{ promo_code_owner.PCDTelephoneNumber }}</td>
+                <td>{{ promo_code_owner.PCDGender }}</td>
+                <td>{{ promo_code_owner.PCDCity }}</td>
+                <td>{{ promo_code_owner.PCDNote }}</td>
+                <td>
+                    <a href="{{ path('promo_code_owner_crud_show', {'id': promo_code_owner.id}) }}">show</a>
+                    <a href="{{ path('promo_code_owner_crud_edit', {'id': promo_code_owner.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('promo_code_owner_crud_new') }}">Create new</a>
+{% endblock %}

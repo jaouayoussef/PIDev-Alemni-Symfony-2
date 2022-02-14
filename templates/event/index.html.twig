@@ -1,0 +1,164 @@
+{% extends 'base-back.html.twig' %}
+
+{% block body %}
+
+
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">Événements</h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">Événements</li>
+                                <li class="breadcrumb-item active" aria-current="page"> Gestion événements </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 grid-margin stretch-card">
+                        </div>
+
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Type événement</h4>
+                                    <form class="forms-sample">
+                                        <div class="form-group">
+                                            <select class="form-control" id="TypeEvenement" onchange="typeventfun(this)">
+                                                <option value="code">Code promotion</option>
+                                                <option value="prom">Promotion</option>
+                                            </select>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 grid-margin stretch-card" id="form1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Code Promotion</h4><br>
+                                    <form class="forms-sample">
+                                        <div class="form-group">
+                                            <label for="exampleInputName1">Propriétaire du code promo :</label>
+                                            <select class="js-example-basic-single" style="width: 100%;">
+                                                <option value="AL">Alabama</option>
+                                                <option value="WY">Wyoming</option>
+                                                <option value="AM">America</option>
+                                                <option value="CA">Canada</option>
+                                                <option value="RU">Russia</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Code promotion :</label>
+                                            <input id="phone" name="phone" type="text" class="form-control"   />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-primary text-white">-</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" />
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Date d'expiration du code :</label>
+                                            <input id="phone" name="phone" type="text" class="form-control"   />
+                                        </div>
+
+                                        <div class="form-group">
+                                                <label for="exampleTextarea1">Description :</label>
+                                                <textarea
+                                                        class="form-control"
+                                                        id="exampleTextarea1"
+                                                        rows="4"
+                                                ></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary mr-2"> Submit </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div >
+                        <div class="col-12 grid-margin stretch-card" style="display:none" id="form2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Promotion</h4><br>
+                                    <form class="forms-sample">
+                                        <div class="form-group">
+                                            <label for="exampleInputName1">Nom Promotion :</label>
+                                            <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-primary text-white">-</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" />
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Domaine :</label>
+                                            <select class="js-example-basic-multiple" multiple="multiple" style="width: 100%;">
+                                                <option value="AL">Alabama</option>
+                                                <option value="WY">Wyoming</option>
+                                                <option value="AM">America</option>
+                                                <option value="CA">Canada</option>
+                                                <option value="RU">Russia</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Date debut :</label>
+                                            <input id="phone" name="phone" type="text" class="form-control"   />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail3">Date fin :</label>
+                                            <input id="phone" name="phone" type="text" class="form-control"   />
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleTextarea1">Description :</label>
+                                            <textarea
+                                                    class="form-control"
+                                                    id="exampleTextarea1"
+                                                    rows="4"
+                                            ></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mr-2"> Submit </button>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+    <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+
+
+    <script>
+        function typeventfun(_this){
+            if ($(_this).val() == "code") {
+                $('#form1').show();
+                $('#form2').hide();
+
+            } else if ($(_this).val() == "prom") {
+                $('#form1').hide();
+                $('#form2').show();
+
+            }
+        }
+
+    </script>
+{% endblock %}
