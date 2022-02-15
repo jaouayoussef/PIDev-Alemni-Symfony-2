@@ -3,11 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;  
+use  League\OAuth2\Client\Provider\GithubResourceOwner;
+
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,32 +39,34 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findOrCreateFromOauth(GithubResourceOwner $owner): User
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $user = $this->createQueryBuilder('u')
+        ->where('u.githubID = :githubID')
+        ->setParameters([
+            'githubID' => $owner->getId(),
+        ])->getQuery()->getOneOrNullResult();
 
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if($user){
+            if($user->getGithubID()===null)
+            {
+                $user->setGithubID($owner->getId());
+                $this->getEntityManager()->flush();
+            }
+            return $user;
+        }
+
+        $user = (new User())
+        ->setRoles(['ROLE_USER'])
+        ->setGithubId($owner->getId())
+        ->setIsBanned(0)
+        ->setIsVerified(1)
+        ->setCreationDate(new \DateTime())
+        ->setEmail($owner->getEmail());
+        $em = $this->getEntityManager();
+        $em->persist($user);
+        $em->flush();
+
+        return $user;
     }
-    */
 }
