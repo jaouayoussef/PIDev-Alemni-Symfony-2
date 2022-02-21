@@ -1,0 +1,78 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Question index{% endblock %}
+
+{% block body %}
+    <div class="container-lg" style="max-width: 100%;">
+        <div class="table-responsive">
+            <div class="table-wrapper">
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th style="width: 25%;">Question</th>
+                        <th>Réponse 1</th>
+                        <th>Réponse 2</th>
+                        <th>Réponse 3</th>
+                        <th>Réponse 4</th>
+                        <th>N° correctRep</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th style="width: 25%;">    <div class="input-group">
+                                <input type="text" id="search1" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th>     <div class="input-group">
+                                <input type="text" id="search2" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th>   <div class="input-group">
+                                <input type="text" id="search3" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th><div class="input-group">
+                                <input type="text" id="search4" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th><div class="input-group">
+                                <input type="text" id="search5" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th><div class="input-group">
+                                <input type="text" id="search6" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in questions %}
+                    <tr>
+                        <td>{{ loop.index}}</td>
+                        <td>{{ question.libelle }}</td>
+                        <td>{{ question.reponse1 }}</td>
+                        <td>{{ question.reponse2 }}</td>
+                        <td>{{ question.reponse3 }}</td>
+                        <td>{{ question.reponse4 }}</td>
+                        <td>{{ question.repcorrect }}</td>
+                        <td>
+                            <a href="{{ path('question_edit', {'id': question.id}) }}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons"></i></a>
+
+                        </td>
+                    </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">no records found</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
