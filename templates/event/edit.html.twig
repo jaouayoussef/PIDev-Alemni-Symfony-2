@@ -1,0 +1,131 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %} test add {% endblock %}
+
+{% block body %}
+
+
+<div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">Événements</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Événements</a></li>
+                <li class="breadcrumb-item active" aria-current="page"> Gestion Événements </li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+        </div>
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Modifier Événements</h4><br>
+    {{ include('event/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+                </div>
+            </div>
+        </div >
+
+    </div>
+</div>
+
+    <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+<script>
+
+    $( document ).ready(function() {
+        document.getElementById("event_E_PHOTO").required = false;
+    });
+    function verifDatedebut() {
+        let dateDebutString = document.getElementById("event_E_DateDebut").value.split("-");
+        let datedebuttimeandjour = dateDebutString[2].split("T");
+        let datedebuttimea = datedebuttimeandjour[1].split(":");
+        let dateDebut = new Date (dateDebutString[0],dateDebutString[1],datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
+
+
+        let date = new Date();
+
+        if (dateDebut.getDate() <= date.getDate()  ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            document.getElementById("event_E_DateFin").disabled = true;
+            document.getElementById("event_E_DateDebut").value = 0;
+            document.getElementById("event_E_DateFin").value = 0;
+
+
+        }else {
+            document.getElementById("event_E_DateFin").disabled = false;
+            document.getElementById("event_E_DateFin").value = 0;
+        }
+    }
+    function verifDate() {
+        let dateDebutString = document.getElementById("event_E_DateDebut").value.split("-");
+        let datedebuttimeandjour = dateDebutString[2].split("T");
+        let datedebuttimea = datedebuttimeandjour[1].split(":");
+        let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
+        let datefintimeandjour = dateFinString[2].split("T");
+        let datefintimea = datefintimeandjour[1].split(":");
+        let dateDebut = new Date (dateDebutString[0],dateDebutString[1],datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
+        let dateFin = new Date (dateDebutString[0],dateDebutString[1],datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
+
+        let date = new Date();
+
+        if (dateDebut >= dateFin ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            document.getElementById("event_E_DateFin").value = 0;
+
+        }
+    }
+    function checkEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+    function validate() {
+        var email = document.getElementById("event_E_Email").value;
+
+        if (!checkEmail(email)) {
+            document.getElementById("event_E_Email").value = null ;
+            Swal.fire({
+                icon: 'error',
+                title: 'Email Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+        }
+        return false;
+    }
+    function verifNumTel(_this){
+        if (_this.value.length != 8){
+            Swal.fire({
+                icon: 'error',
+                title: 'Numéro de téléphone Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            _this.value = null;
+        }
+    }
+    function verifNbr(_this){
+        if ( parseInt(_this.value) == 0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Le nombre de place ne doit pas etre égal à 0 !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            _this.value = null;
+        }
+    }
+</script>
+{% endblock %}
+
