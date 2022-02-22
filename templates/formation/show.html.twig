@@ -1,0 +1,147 @@
+{% extends 'base-front.html.twig' %}
+
+
+{% block header %}
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><span>Ale</span>mni</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="course.html" class="nav-link">Our courses</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">All Tutors</a></li>
+                    <li class="nav-item"><a href="instructor.html" class="nav-link">Our events</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact us</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                             aria-labelledby="navbarDropdownMenuLink-333">
+                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('{{asset('front/images/bg_2.jpg')}}');" >
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end justify-content-center">
+                <div class="col-md-9 ftco-animate pb-5 text-center">
+                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="fa fa-chevron-right"></i></a></span> <span>Events Lists <i class="fa fa-chevron-right"></i></span></p>
+                    <h1 class="mb-0 bread">Listes des formations</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block body %}
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 sidebar">
+                    <div class="sidebar-box bg-white ftco-animate">
+                        <form action="#" class="search-form">
+                            <div class="form-group">
+                                <span class="icon fa fa-search"></span>
+                                <input type="text" class="form-control" placeholder="Search...">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box bg-white p-4 ftco-animate">
+
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        {% for formation in formations %}
+                            <div class="col-md-6 d-flex align-items-stretch ftco-animate">
+                                <div class="project-wrap">
+                                    <img src="{{ asset('uploads/formation/' ~ formation.imageFormation) | imagine_filter('square') }}" alt="{{ formation.nomFormation }}" >
+                                    <div class="text p-4">
+                                        <h3><a href="#">{{ formation.nomFormation }}</a></h3>
+                                        <p class="advisor"> {{ formation.domaine.nomDomaine }}</span></p>
+                                        <ul class="d-flex justify-content-between">
+                                            <li><span class="flaticon-shower"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ formation.id~formation.nomFormation }}">détails</button></li>
+                                            <li class="price">{{ formation.prixFormation }} dt</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade bd-example-modal-lga{{ formation.id~formation.nomFormation }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">{{ formation.nomFormation  }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="col-md-8 d-flex align-items-center">
+                                                <div class="staff-detail w-100 pl-md-5">
+                                                    <h3>Description :</h3>
+                                                    <p>{{ formation.descriptionFormation }}</p>
+                                                    <h3>Formateur :</h3>
+                                                    <p>{{ formation.formateur }}</p>
+                                                    <h3>Nombres places :</h3>
+                                                    <p>{{ formation.nbPlaces  }}</p>
+                                                    <h3>Prix :</h3>
+                                                    <p>{{ formation.prixFormation }} dt</p>
+
+                                                    <table class="table">
+                                                        <tbody>
+                                                        <tr>
+
+                                                            <th>Nom</th>
+                                                            <th>Description</th>
+                                                            <th>Date</th>
+                                                            <th>Heure debut</th>
+                                                            <th>Heure Fin</th>
+
+                                                        </tr>
+                                                        <tr>
+                                                            {% for for in seances %}
+                                                            {% if for.formation.id == formation.id %}
+
+                                                            <td>{{ for.nomSeance }}</td>
+                                                            <td>{{ for.descriptionSeance }}</td>
+                                                            <td>{{ for.dateSeance|date('d/m/Y') }}</td>
+                                                            <td>{{ for.heureDeb|date('H:i') }}</td>
+                                                            <td>{{ for.heureFin |date('H:i')}}</td>
+
+
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
