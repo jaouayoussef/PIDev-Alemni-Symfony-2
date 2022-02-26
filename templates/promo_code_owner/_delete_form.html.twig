@@ -1,0 +1,22 @@
+<form method="post" action="{{ path('promo_code_owner_delete', {'id': promo_code_owner.id}) }}" id="myForm">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promo_code_owner.id) }}">
+</form>
+<button class="btn btn-danger" id="btn-submit" onclick="deleteswal()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+<script>
+    function deleteswal() {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimez-le !'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("myForm").submit();
+
+            }
+        })
+    }
+</script>

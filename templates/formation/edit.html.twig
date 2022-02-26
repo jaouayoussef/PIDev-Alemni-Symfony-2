@@ -1,0 +1,156 @@
+
+{% extends 'base-back.html.twig' %}
+{% block title %}Modification Formation{% endblock %}
+
+{% block body %}
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Gestion Formation</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Formation</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> Formation </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Modifier Formation</h4>
+                        <p class="card-description"></p>
+                        {{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+                        <div class="form-group">
+                            <label for="exampleInputName1">Nom</label>
+                            {{ form_widget(form.nomFormation,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom Formation'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Description</label>
+                            {{ form_widget(form.descriptionFormation,{'attr':{'class':'form-control','type':'text','id':'description','placeholder':'Description Formation'}}) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Domaine</label>
+                            {{ form_widget(form.domaine,{'attr':{'class':'form-control','id':'domaine','type':''}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Image </label>
+                            <img src="{{ asset('uploads/formation/' ~ formation.imageFormation) | imagine_filter('square') }}">
+
+                            {{ form_widget(form.imageFormation,{'attr':{'class':'form-control','accept':'image/png, image/jpeg'}})}}
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Formateur</label>
+                            {{ form_widget(form.formateur,{'attr':{'class':'form-control','type':'text','id':'formateur','placeholder':'Formateur Formation'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Prix</label>
+                            {{ form_widget(form.prixFormation,{'attr':{'class':'form-control','type':'number','onchange':'verifPrix(this)','id':'formateur','placeholder':'Prix Formation'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Nombre de places</label>
+                            {{ form_widget(form.nbPlaces,{'attr':{'class':'form-control','type':'number','onchange':'verifPrix(this)','id':'formateur','placeholder':'Nombres de places disponible '}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Lien</label>
+                            {{ form_widget(form.lien,{'attr':{'class':'form-control','type':'text','id':'lien','placeholder':'Lien Formation'}}) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary mr-2"> Modifier </button>
+                        <button class="btn btn-light">Cancel</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Liste des seances </h4><br>
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Heure debut</th>
+                                <th>Heure Fin</th>
+                                <th>Formation</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                {% for for in seances %}
+
+                                <td>{{ for.id }}</td>
+                                <td>{{ for.nomSeance }}</td>
+                                <td>{{ for.descriptionSeance }}</td>
+                                <td>{{ for.dateSeance|date('d/m/Y') }}</td>
+                                <td>{{ for.heureDeb|date('H:i') }}</td>
+                                <td>{{ for.heureFin |date('H:i')}}</td>
+                                <td>{{ for.formation.nomFormation }}</td>
+
+                                <td>                           <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.formation.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('seance/_delete_form.html.twig') }} </div> </td>
+                            </tr>
+
+
+
+
+
+
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">pas de seances</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+    </div>
+
+
+
+
+
+    <script>
+        $( document ).ready(function() {
+            document.getElementById("formation_imageFormation").required = true;
+        });
+        function verifPrix(_this){
+
+            if ( parseInt(_this.value)< 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Le prix de la formation doit etre superieur a zero !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                _this.value = null;
+            }
+        }
+        function verifPlaces(_this){
+
+            if ( parseInt(_this.value)< 1 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Le nombre de places doit etre superieur a zero !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                _this.value = null;
+            }
+        }
+    </script>
+
+{% endblock %}
+

@@ -1,0 +1,73 @@
+{{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+
+<div class="form-group">
+    <label for="exampleInputName1">Nom de l'événement:</label>
+    {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
+
+</div><br>
+<div class="form-group">
+    <label for="exampleTextarea1">description :</label>
+    {{ form_widget(form.E_NOTE,{'attr':{'class':'form-control','type':'textarea','id':'description','placeholder':'description','size':'4'}}) }}
+
+</div><br>
+<div class="form-group">
+    <label for="exampleInputCity1">Adresse de l'événement :</label>
+    {{ form_widget(form.E_Place,{'attr':{'class':'form-control','style':'width: 100%;'}}) }}
+
+</div><br>
+<div class="form-group">
+    <label for="exampleInputName1">Nombre de place :</label>
+    {{ form_widget(form.E_Nbre,{'attr':{'class':'form-control','type':'number','id':'Sexe','onchange':'verifNbr(this)'}}) }}
+</div><br>
+<div class="form-group">
+    <label for="exampleInputEmail3">Date debut :</label>
+    {{ form_widget(form.E_DateDebut,{'attr':{'class':'form-control','id':'DateD','placeholder':'Valeur du code promo en pourcentage', 'onchange':'verifDatedebut()'}}) }}
+</div><br>
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Date fin :</label>
+    {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()'}}) }}
+</div><br>
+
+
+<div class="form-group">
+    <label for="exampleSelectGender">Prix :</label>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-primary text-white">Dt</span>
+            </div>
+            {{ form_widget(form.E_Price,{'attr':{'class':'form-control','id':'Sexe'}}) }}
+            <div class="input-group-append">
+                <span class="input-group-text">.00</span>
+            </div>
+        </div>
+    </div>
+</div><br>
+
+
+
+<div class="form-group">
+    <label for="exampleInputName1">Photo :</label>
+
+    <input type="file" name="img[]" class="file-upload-default" />
+
+    <div class="input-group col-xs-12">
+        {{ form_widget(form.E_PHOTO,{'attr':{'class':'file-upload-browse btn btn-primary','type':'file','id':'Prenom','style':'width: 100%; ','accept':'image/png, image/jpeg'}}) }}
+
+    </div><br>
+    <img src="{{ asset('uploads/Event/' ~ event.EPHOTO) | imagine_filter('squareedit') }}"  >
+
+</div><br>
+<div class="form-group">
+    <label for="exampleInputEmail3">Adresse email :</label>
+    {{ form_widget(form.E_Email,{'attr':{'class':'form-control','type':'email','id':'Email','placeholder':'Addresse email','onchange':'validate()'}}) }}
+</div><br>
+<div class="form-group">
+    <label for="exampleInputEmail3">Numéro de téléphone :</label>
+    {{ form_widget(form.E_TelNumber,{'attr':{'class':'form-control','type':'text','id':'NumTel','placeholder':'Numéro de téléphone','onchange':'verifNumTel(this)'}}) }}
+</div><br>
+<button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+<a href="{{ path('event_new') }}"  class="btn btn-light">Annuler</a>
+
+{{ form_end(form) }}
