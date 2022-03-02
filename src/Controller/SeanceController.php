@@ -51,7 +51,7 @@ class SeanceController extends AbstractController
         return $this->render('seance/new.html.twig', [
             'seance' => $seance,
             'form' => $form->createView(),
-            'seances' => $seanceRepository->findAll(),
+            'seances' => $seanceRepository->findByExampleField($formation->getId()),
         ]);
     }
 
@@ -68,7 +68,7 @@ class SeanceController extends AbstractController
     /**
      * @Route("/{id}/edit", name="seance_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Seance $seance, EntityManagerInterface $entityManager,SeanceRepository $seanceRepository): Response
+    public function edit(Request $request ,Formation $formation, Seance $seance, EntityManagerInterface $entityManager,SeanceRepository $seanceRepository): Response
     {
         $form = $this->createForm(SeanceType::class, $seance);
         $form->handleRequest($request);
@@ -82,7 +82,7 @@ class SeanceController extends AbstractController
         return $this->render('seance/edit.html.twig', [
             'seance' => $seance,
             'form' => $form->createView(),
-            'seances' => $seanceRepository->findAll(),
+            'seances' => $seanceRepository->findByExampleField($formation->getId()),
         ]);
     }
 

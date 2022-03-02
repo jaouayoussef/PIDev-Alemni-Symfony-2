@@ -23,6 +23,7 @@ class SeanceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('q')
             ->andWhere('q.formation = :val')
             ->setParameter('val', $value)
+            ->orderBy('q.dateSeance', 'ASC')
             ->getQuery()
             ->getResult()
             ;

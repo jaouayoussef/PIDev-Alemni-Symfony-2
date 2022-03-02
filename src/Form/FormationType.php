@@ -26,30 +26,7 @@ class FormationType extends AbstractType
             ->add('lien')
             ->add('prixFormation')
             ->add('nbPlaces')
-            ->add('imageFormation', FileType::class, [
 
-
-                // unmapped means that this field is not associated to any entity property
-                'mapped' => false,
-
-                // make it optional so you don't have to re-upload the PDF file
-                // every time you edit the Product details
-                'required' => false,
-
-                // unmapped fields can't define their validation using annotations
-                // in the associated entity, so you can use the PHP constraint classes
-                'constraints' => [
-                    new NotBlank(),
-                    new File([
-
-                        'mimeTypes' => [
-                            'image/*',
-
-                        ],
-                        'mimeTypesMessage' => 'merci d"ajouter une image',
-                    ])
-                ],
-            ])
             ->add('domaine',EntityType::class,[
                 'class'=> Domaine::class,
                 'choice_label'=>'nomDomaine',

@@ -93,7 +93,7 @@
                                 <td>{{ for.formation.nomFormation }}</td>
 
                                 <td>                           <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.formation.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('seance/_delete_form.html.twig') }} </div> </td>
+                                        <a class="btn btn-primary" href="{{ path('seance_edit', {'id': for.formation.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('seance/_delete_form.html.twig') }} </div> </td>
                             </tr>
 
 
@@ -124,7 +124,7 @@
 
     <script>
         $( document ).ready(function() {
-            document.getElementById("formation_imageFormation").required = true;
+            document.getElementById("formation_imageFormation").required = false;
         });
         function verifPrix(_this){
 

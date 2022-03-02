@@ -31,15 +31,15 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">date </label>
-                            {{ form_widget(form.dateSeance,{'attr':{'class':'form-control','type':'text','id':'date','placeholder':'Date Seance'}}) }}
+                            {{ form_widget(form.dateSeance,{'attr':{'class':'form-control','onchange':'verifDatedebut()','type':'text','id':'date','placeholder':'Date Seance'}}) }}
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">heure debut</label>
-                            {{ form_widget(form.heureDeb,{'attr':{'class':'form-control','type':'text','id':'HeureDeb','placeholder':'Heure Debut Seance'}}) }}
+                            {{ form_widget(form.heureDeb,{'attr':{'class':'form-control','onchange':'verifHeureFin()','type':'text','id':'HeureDeb','placeholder':'Heure Debut Seance'}}) }}
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">heure Fin</label>
-                            {{ form_widget(form.heureFin,{'attr':{'class':'form-control','type':'text','id':'HeureFin','placeholder':'Heure Fin Seance'}}) }}
+                            {{ form_widget(form.heureFin,{'attr':{'class':'form-control','onchange':'verifHeureFin()','type':'text','id':'HeureFin','placeholder':'Heure Fin Seance'}}) }}
                         </div>
                         <div class="form-group">
 
@@ -121,6 +121,47 @@
 
 
     {#   {{ include('seance/_form.html.twig') }}#}
+
+    <script>
+        function verifDatedebut() {
+            let dateDebutString = document.getElementById("seance_dateSeance").value.split("-");
+
+            let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+
+            let date = new Date();
+
+            if (dateDebut < date ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Date Invalide !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+
+                document.getElementById("seance_dateSeance").value = 0;
+
+            }
+        }
+        function verifHeureFin() {
+            let HeureDebutString = document.getElementById("seance_heureDeb").value.split(":");
+            let HeureFinString = document.getElementById("seance_heureFin").value.split(":");
+            let heureDebut = new Date (1776, 6, 4, HeureDebutString[0], HeureDebutString[1]-1, 0, 0);
+            let heureFin = new Date (1776, 6, 4, HeureFinString[0], HeureFinString[1]-1, 0, 0);
+            let date = new Date();
+
+            if (heureDebut > heureFin ){
+                Swal.fire({
+                    icon: 'error',
+                    title: "l'heure de debut doit etre inferieur a l'heure de fin !",
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+
+                document.getElementById("seance_heureFin").value = 0;
+
+            }
+        }
+    </script>
 
 
 
