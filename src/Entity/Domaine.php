@@ -40,7 +40,7 @@ class Domaine
     private $formations;
 
     /**
-     * @ORM\OneToOne (targetEntity=Promotion::class, mappedBy="P_Domaine", orphanRemoval=true)
+     * @ORM\OneToMany (targetEntity=Promotion::class, mappedBy="P_Domaine", orphanRemoval=true)
      */
     private $promotions;
 

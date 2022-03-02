@@ -1,0 +1,171 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %} test add {% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2/select2.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css')}}" />
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Réservation événement</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Événements</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Réservation événement</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Réservation événements</h4><br>
+
+                        <div style="overflow-x:auto;">
+                            <table class="table table-bordered table-striped" id="myTable1">
+                                <thead>
+                                <tr>
+                                    <th>Nom client</th>
+                                    <th>Email Client</th>
+                                    <th>Prix reservation (dt)</th>
+                                    <th>Nom événement</th>
+                                    <th>actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for EventReservation in EventReservations %}
+                                    <tr>
+                                        <td>{{ EventReservation.UserId.firstname }} {{ EventReservation.UserId.lastname }}</td>
+                                        <td>{{ EventReservation.UserId.email }}</td>
+                                        <td>{{ EventReservation.PrixReservationEvent }}</td>
+                                        <td>{{ EventReservation.EventId.EName }}</td>
+                                        <td>{{ include('event/show_event_back/_delete_form.html.twig') }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="10">Aucun enregistrement trouvé</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction08()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput9" onkeyup="myFunction9()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput10" onkeyup="myFunction10()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput11" onkeyup="myFunction11()" placeholder="chercher" ></th>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+
+<script>
+    function myFunction08() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput8");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function myFunction9() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput9");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function myFunction10() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput10");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function myFunction11() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput11");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

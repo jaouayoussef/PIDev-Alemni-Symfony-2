@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -61,6 +63,18 @@ class User implements UserInterface
      */
     private $picture;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ReservationEvent::class, mappedBy="UserId", orphanRemoval=true)
+     */
+    private $reservationEvents;
+
+    public function __construct()
+    {
+        $this->reservationEvents = new ArrayCollection();
+    }
+
+
+
 
     public function getId(): ?int
     {
@@ -96,7 +110,7 @@ class User implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = json_encode($this->roles);
 
         return array_unique($roles);
     }
@@ -202,5 +216,37 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|ReservationEvent[]
+     */
+    public function getReservationEvents(): Collection
+    {
+        return $this->reservationEvents;
+    }
+
+    public function addReservationEvent(ReservationEvent $reservationEvent): self
+    {
+        if (!$this->reservationEvents->contains($reservationEvent)) {
+            $this->reservationEvents[] = $reservationEvent;
+            $reservationEvent->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationEvent(ReservationEvent $reservationEvent): self
+    {
+        if ($this->reservationEvents->removeElement($reservationEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationEvent->getUserId() === $this) {
+                $reservationEvent->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
 }

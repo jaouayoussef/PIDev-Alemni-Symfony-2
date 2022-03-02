@@ -2,6 +2,14 @@
 
 
 {% block header %}
+    <style>
+        .hide {
+            display: none;
+        }
+        ::placeholder {
+            font-size: 0.6em;
+        }
+    </style>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.html"><span>Ale</span>mni</a>
@@ -51,23 +59,23 @@
             <div class="row">
                 <div class="col-lg-3 sidebar">
                     <div class="sidebar-box bg-white ftco-animate">
-                        <form action="#" class="search-form">
+                        <form class="search-form">
                             <div class="form-group">
-                                <span class="icon fa fa-search"></span>
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input  type="search"
+                                        id="search-input"
+                                        placeholder="Recherchez le nom de l'événement ici..">
+                                <span class="icon fa fa-search" type="button" id="search"></span>
+
                             </div>
                         </form>
                     </div>
 
                     <div class="sidebar-box bg-white p-4 ftco-animate">
-                        <h3 class="heading-sidebar">Event Category</h3>
-                        <form action="#" class="browse-form">
-                            <label for="option-category-1"><input type="checkbox" id="option-category-1" name="vehicle" value="" checked> Design &amp; Illustration</label><br>
-                            <label for="option-category-2"><input type="checkbox" id="option-category-2" name="vehicle" value=""> Web Development</label><br>
-                            <label for="option-category-3"><input type="checkbox" id="option-category-3" name="vehicle" value=""> Programming</label><br>
-                            <label for="option-category-4"><input type="checkbox" id="option-category-4" name="vehicle" value=""> Music &amp; Entertainment</label><br>
-                            <label for="option-category-5"><input type="checkbox" id="option-category-5" name="vehicle" value=""> Photography</label><br>
-                            <label for="option-category-6"><input type="checkbox" id="option-category-6" name="vehicle" value=""> Health &amp; Fitness</label><br>
+                        <h3 class="heading-sidebar">Catégorie d'événement</h3>
+                            <label for="option-category-3"><input type="radio" onclick="filterProduct('all')" id="option-category-3" name="vehicle" value="" checked> tout</label><br>
+                            <label for="option-category-4"><input type="radio" onclick="filterProduct('Nothing')" id="option-category-4" name="vehicle" value=""> Ordinaire</label><br>
+                            <label for="option-category-5"><input type="radio" onclick="filterProduct('Promo')" id="option-category-5" name="vehicle" value=""> Promotion</label><br>
+                            <label for="option-category-5"><input type="radio"  onclick="filterProduct('Free')" id="option-category-5" name="vehicle" value=""> Gratuit</label><br>
                         </form>
                     </div>
 
@@ -75,51 +83,134 @@
                 <div class="col-lg-9">
                     <div class="row">
                         {% for event in Events %}
+
                             <div class="col-md-6 d-flex align-items-stretch ftco-animate">
-                                <div class="project-wrap">
-                                    <img src="{{ asset('uploads/Event/' ~ event.EPHOTO) | imagine_filter('square') }}" alt="{{ event.EName }}" >
+
+
+                                    {% for pro in Promotions %}
+                                    {% if pro.Event.id == event.id %}
+
+                                        <div class="project-wrap Promo" >
+
+                                        <a class="img" style="background-image: url({{ asset('uploads/Event/' ~ event.EPHOTO) | imagine_filter('square') }}" alt="{{ event.EName }});">
+                                        <span class="price">Promotion -{{ pro.PValue}}% </span>
+                                    </a>
+                                        <div class="text p-4">
+                                            <h3><a  class="event-name">{{ event.EName }}</a></h3>
+                                            <p class="advisor">Le {{ event.EDateDebut |date('d-m-Y h:m') }}</span></p>
+                                            <details>
+                                                <summary style="color: #4986fc" >Details</summary>
+                                                <div class="staff-detail w-100 pl-md-5">
+                                                    <br>
+                                                    <p>description :{{ event.ENote }}</p>
+                                                    <p>Adresse : {{ event.EPlace }}</p>
+                                                    <p>Date debut : {{ event.EDateDebut |date('d-m-Y h:m') }}</p>
+                                                    <p>Date fin : {{ event.EDateFin |date('d-m-Y h:m') }}</p>
+                                                    <p>Contact :<p>
+                                                    <p>Email : {{ event.EEmail }} </p>
+                                                    <p> Numéro de téléphone : {{ event.ETelNumber }}</p>
+                                                </div>
+                                            </details><br>
+                                            <ul class="d-flex justify-content-between">
+                                                <li>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter{{ event.id }}Promo">
+                                                        Réserver
+                                                    </button>
+                                                </li>
+                                                <li class="price"><strike style="color: red">{{ event.EPrice }}dt</strike>/{{ event.EPrice - (event.EPrice * pro.PValue /100) }}dt</li>
+                                            </ul>
+                                        </div>
+                                        </div>
+                                    {% else %}
+                                        {% if event.EPrice ==0 %} <div class="project-wrap Free" > {% else %}<div class="project-wrap Nothing" > {% endif %}
+
+                                     <img src="{{ asset('uploads/Event/' ~ event.EPHOTO) | imagine_filter('square') }}" alt="{{ event.EName }}" >
+
                                     <div class="text p-4">
-                                        <h3><a href="#">{{ event.EName }}</a></h3>
+                                        <h3><a  class="event-name">{{ event.EName }}</a></h3>
                                         <p class="advisor">Le {{ event.EDateDebut |date('d-m-Y h:m') }}</span></p>
+                                        <details>
+                                            <summary style="color: #4986fc" >Details</summary>
+                                            <div class="staff-detail">
+                                                <br>
+                                                <p>description :{{ event.ENote }}</p>
+                                                <p>Adresse : {{ event.EPlace }}</p>
+                                                <p>Date debut : {{ event.EDateDebut |date('d-m-Y h:m') }}</p>
+                                                <p>Date fin : {{ event.EDateFin |date('d-m-Y h:m') }}</p>
+                                                <p>Contact :<p>
+                                                <p>Email : {{ event.EEmail }} </p>
+                                                <p>Numéro de téléphone : {{ event.ETelNumber }}</p>
+
+                                            </div>
+                                        </details><br>
                                         <ul class="d-flex justify-content-between">
-                                            <li><span class="flaticon-shower"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ event.id~event.EName }}">détails</button></li>
-                                            <li class="price">{{ event.EPrice }} dt</li>
+                                            <li>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" {% if event.EPrice ==0 %} data-target="#exampleModalCenter{{ event.id }}Promo" {% else %}data-target="#exampleModalCenter{{ event.id }}"{% endif %}  >
+                                                    Réserver
+                                                </button>
+
+                                               </li>
+
+                                            <li class="price">{% if event.EPrice ==0 %} Gratuit {% else %}{{ event.EPrice }}dt {% endif %} </li>
                                         </ul>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="modal fade bd-example-modal-lga{{ event.id~event.EName }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModalCenter{{ event.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">{{ event.EName }}</h5>
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Réservation pour {{ event.EName }}</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                        <div class="col-md-8 d-flex align-items-center">
-                                            <div class="staff-detail w-100 pl-md-5">
-                                                <h3>description :</h3>
-                                                <p>{{ event.ENote }}</p>
-                                                <h3>Adresse de l'événement :</h3>
-                                                <p>{{ event.EPlace }}</p>
-                                                <h3>Date debut :</h3>
-                                                <p>{{ event.EDateDebut |date('d-m-Y h:m') }}</p>
-                                                <h3>Date fin :</h3>
-                                                <p>{{ event.EDateFin |date('d-m-Y h:m') }}</p>
-                                                <h3>Prix :</h3>
-                                                <p>{{ event.EPrice }} dt</p>
-                                                <h3>Contact :</h3>
-                                                <p>Adresse email : {{ event.EEmail }}<br> Numéro de téléphone : {{ event.ETelNumber }}</p>
-
-                                            </div>
-                                            </div>
+                                            {% for pro in Promotions %}
+                                            {% if pro.Event.id == event.id %}
+                                            <h5>Le Prix Total du reservation est :<span id="prixinput{{ event.id }}"> {{ event.EPrice - (event.EPrice * pro.PValue /100) }}</span> <span style="display: none" id="idevent{{ event.id }}">{{ event.id }}</span> dt</h5>
+                                            {% else %}
+                                            <h5>Le Prix Total du reservation est :<span id="prixinput{{ event.id }}"> {{ event.EPrice }}</span> dt</h5>
+                                            {% endif %}
+                                            {% endfor %}
+                                            <p></p>
+                                            <hr>
+                                            <h5>Promotion code</h5>
+                                           <p><span id="codepromoId{{ event.id }}" style="display: none"></span>  <span id="promocodeOwner{{ event.id }}"><input  type="text" id="codepromoinput{{ event.id }}"> <a onclick="codepromoverif(document.getElementById('codepromoinput{{ event.id }}').value,document.getElementById('prixinput{{ event.id }}'),document.getElementById('promocodeOwner{{ event.id }}'),{{ event.id }},document.getElementById('codepromoId{{ event.id }}'),document.getElementById('codeInvalid{{ event.id }}'))" role="button" class="btn btn-secondary popover-test" title="Popover title" data-content="Popover body content is set in this attribute.">Valider</a></span><br>
+                                           <span id="codeInvalid{{ event.id }}"></span></p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <a  role="button" onclick="reserverEvent(document.getElementById('codepromoId{{ event.id }}').innerText,{{ event.id }},document.getElementById('prixinput{{ event.id }}').innerText)"  class="btn btn-primary" title="Popover title" data-content="Popover body content is set in this attribute.">Réserver</a>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModalCenter{{ event.id }}Promo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Réservation pour {{ event.EName }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% for pro in Promotions %}
+                                                    <h5>Le Prix Total du reservation est :<span id="prixinput{{ event.id }}"> {{ event.EPrice - (event.EPrice * pro.PValue /100) }}</span> dt</h5>
+
+                                            {% endfor %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                            <a type="button" class="btn btn-primary" onclick="reserverEvent(document.getElementById('codepromoId{{ event.id }}').innerText,{{ event.id }},document.getElementById('prixinput{{ event.id }}').innerText)"  id="buttonReserverPromo">Réserver</a>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -128,5 +219,103 @@
 
                 </div>
             </div>
+            </div>
+
     </section>
+
+    <script>
+        function codepromoverif(a,b,c,d,e,f) {
+
+    {% for CodePromo in CodePromos %}
+    var x = "{{ CodePromo.PCCode }}";
+    var prix = {{ CodePromo.PCValue }};
+    var eventid = d;
+    if (a == x) {
+        b.innerHTML = parseFloat(b.innerHTML) - (((parseFloat(b.innerHTML)) * parseFloat(prix)) / 100);
+        c.innerHTML = "<p>{{ CodePromo.CPPCD.PCDName }} {{ CodePromo.CPPCD.PCDFirstName }} : - {{ CodePromo.PCValue }}%</p>";
+        e.innerHTML = "<p>{{ CodePromo.CPPCD.id}}</p>";
+        f.innerHTML = null;
+
+    }
+    else{
+        f.innerHTML = "<p> Code promotion Invalide !! </p>";
+    }
+    {% endfor %}
+
+
+
+
+
+
+        }
+        function reserverEvent(b,a,c){
+            if(b==""){
+                location.href ="/event/EventReservationAvecIncrement/"+a+"/"+c+"/"+1;
+            }else{
+                location.href ="/event/EventReservationAvecIncrement/"+b+"/"+a+"/"+c+"/"+1;
+            }
+        }
+function getPromocodeOwnerId(){
+            return localStorage.getItem("IdPromoCodeOwner");
+}
+        function filterProduct(value) {
+            //Button class code
+            let buttons = document.querySelectorAll(".button-value");
+            buttons.forEach((button) => {
+                //check if value equals innerText
+                if (value.toUpperCase() == button.innerText.toUpperCase()) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            });
+
+            //select all cards
+            let elements = document.querySelectorAll(".project-wrap");
+            //loop through all cards
+            elements.forEach((element) => {
+                //display all cards on 'all' button click
+                if (value == "all") {
+                    element.classList.remove("hide");
+                } else {
+                    //Check if element contains category class
+                    if (element.classList.contains(value)) {
+                        //display element based on category
+                        element.classList.remove("hide");
+                    } else {
+                        //hide other elements
+                        element.classList.add("hide");
+                    }
+                }
+            });
+        }
+
+        //Search button click
+        document.getElementById("search").addEventListener("click", () => {
+
+            //initializations
+            let searchInput = document.getElementById("search-input").value;
+
+            let elements = document.querySelectorAll(".event-name");
+            //console.log(elements);
+            let cards = document.querySelectorAll(".project-wrap");
+           // console.log(cards);
+            //loop through all elements
+            elements.forEach((element, index) => {
+                //check if text includes the search value
+                if (element.innerText.toUpperCase().includes(searchInput.toUpperCase())) {
+                    //display matching card
+                    cards[index].classList.remove("hide");
+                } else {
+                    //hide others
+                    cards[index].classList.add("hide");
+                }
+            });
+        });
+
+        //Initially display all products
+        window.onload = () => {
+            filterProduct("all");
+        };
+    </script>
 {% endblock %}

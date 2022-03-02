@@ -41,12 +41,12 @@
         let dateDebutString = document.getElementById("event_E_DateDebut").value.split("-");
         let datedebuttimeandjour = dateDebutString[2].split("T");
         let datedebuttimea = datedebuttimeandjour[1].split(":");
-        let dateDebut = new Date (dateDebutString[0],dateDebutString[1],datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
+        let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
 
 
         let date = new Date();
 
-        if (dateDebut.getDate() <= date.getDate()  ){
+        if (dateDebut <= date  ){
             Swal.fire({
                 icon: 'error',
                 title: 'Date Invalide !',
@@ -70,11 +70,10 @@
         let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
         let datefintimeandjour = dateFinString[2].split("T");
         let datefintimea = datefintimeandjour[1].split(":");
-        let dateDebut = new Date (dateDebutString[0],dateDebutString[1],datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
-        let dateFin = new Date (dateDebutString[0],dateDebutString[1],datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
+        let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
+        let dateFin = new Date (dateFinString[0],dateFinString[1]-1,datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
 
         let date = new Date();
-
         if (dateDebut >= dateFin ){
             Swal.fire({
                 icon: 'error',

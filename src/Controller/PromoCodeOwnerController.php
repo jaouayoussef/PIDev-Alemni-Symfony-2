@@ -10,6 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 /**
@@ -17,15 +22,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PromoCodeOwnerController extends AbstractController
 {
-    # /**
-    # * @Route("/", name="promo_code_owner_index", methods={"GET"})
-    #  */
-    #   public function index(PromoCodeOwnerRepository $promoCodeOwnerRepository): Response
-    # {
-    #    return $this->render('promo_code_owner/index.html.twig', [
-    #        'promo_code_owners' => $promoCodeOwnerRepository->findAll(),
-    #     ]);
-    # }
+     /**
+     * @Route("/show", name="promo_code_owner_index", methods={"GET"})
+      */
+       public function index(PromoCodeOwnerRepository $promoCodeOwnerRepository , NormalizerInterface $normalizer): Response
+     {
+         $p = $promoCodeOwnerRepository->findAll();
+         $json=$normalizer->normalize($p,'json',['groups'=>'romoodewners']);
+         return new Response(json_encode($json));
+     }
 
     /**
      * @Route("/", name="promo_code_owner_new", methods={"GET", "POST"})
@@ -43,12 +48,27 @@ class PromoCodeOwnerController extends AbstractController
         }
 
         return $this->render('promo_code_owner/new.html.twig', [
-            'promo_code_owner' => $promoCodeOwner,
-            'form' => $form->createView(),
-            'promo_code_owners' => $promoCodeOwnerRepository->findAll(),
+          'promo_code_owner' => $promoCodeOwner,
+        'form' => $form->createView(),
+         'promo_code_owners' => $promoCodeOwnerRepository->findAll(),
         ]);
+        //$promoCodeOwner = $promoCodeOwnerRepository->findAll();
+        //$serializer = new Serializer([new ObjectNormalizer()]);
+        //$formatted = $serializer->normalize($promoCodeOwner);
+       // return new JsonResponse($formatted);
     }
-
+    /**
+     * @Route("/Add", name="promo_code_owner_Add", methods={"GET", "POST"})
+     */
+    public function AddPromoCodeOwner (Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager ): Response
+    {
+       $content = $request->getContent();
+       dd($content);
+       $data=$serializer->deserialize($content,PromoCodeOwner::class,'json');
+        $entityManager->persist($data);
+        $entityManager->flush();
+    return new Response('PromoCodeOwner added successfully');
+    }
     /**
      * @Route("/{id}", name="promo_code_owner_show", methods={"GET"})
      */

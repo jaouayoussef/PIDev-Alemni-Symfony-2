@@ -26,7 +26,9 @@ class PromotionCodeType extends AbstractType
             ->add('PC_Code')
             ->add('PC_Value')
             ->add('PC_ExpirationCode', DateType::class, [
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'required' => false,
+                'empty_data' => null
             ])
             ->add('PC_Note' ,TextareaType::class, [
                 'attr' => array('cols' => '5', 'rows' => '5'),

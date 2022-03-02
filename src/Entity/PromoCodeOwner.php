@@ -6,6 +6,9 @@ use App\Repository\PromoCodeOwnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=PromoCodeOwnerRepository::class)
@@ -16,53 +19,90 @@ class PromoCodeOwner
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"romoodewners"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
+
      */
     private $PCD_Name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PCD_FirstName;
 
     /**
      * @ORM\Column(type="string", length=255 , unique=true)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PCD_Email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PCD_Job;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=0)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PCD_TelephoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PCD_Gender;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PCD_City;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups ({"romoodewners"})
      */
     private $PCD_Note;
 
     /**
      * @ORM\OneToMany(targetEntity=PromotionCode::class, mappedBy="CP_PCD", orphanRemoval=true)
+     * @Groups ({"romoodewners"})
      */
     private $PCD_PromotionCode;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $PCD_NbrePromo = 0;
 
     public function __construct()
     {
@@ -196,6 +236,18 @@ class PromoCodeOwner
                 $pCDPromotionCode->setCPPCD(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPCDNbrePromo(): ?int
+    {
+        return $this->PCD_NbrePromo;
+    }
+
+    public function setPCDNbrePromo(int $PCD_NbrePromo): self
+    {
+        $this->PCD_NbrePromo = $PCD_NbrePromo;
 
         return $this;
     }

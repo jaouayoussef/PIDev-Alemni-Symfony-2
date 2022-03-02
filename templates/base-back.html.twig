@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css')}}" />
     <link rel="stylesheet" href="{{asset('Back/assets/css/style.css')}}" />
     <link rel="shortcut icon" href="{{asset('Back/assets/images/favicon.png')}}" />
+
   {% endblock %}
   <link rel="shortcut icon" href="{{asset('Back/assets/images/favicon.png')}}" />
 </head>
@@ -51,6 +52,12 @@
           </a>
         </li>#}
         <li class="nav-item">
+          <a class="nav-link" href="{{ path('stat')}}">
+            <i class="mdi mdi-chart-bar menu-icon"></i>
+            <span class="menu-title"> Charts</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             <span class="menu-title">Promotion</span>
@@ -69,11 +76,24 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ path('event_new')}}">
+          <a class="nav-link" data-toggle="collapse" href="#ui-basicevent" aria-expanded="false" aria-controls="ui-basicevent">
             <i class="mdi mdi-contacts menu-icon"></i>
             <span class="menu-title">Événements</span>
+            <i class="menu-arrow"></i>
           </a>
+          <div class="collapse" id="ui-basicevent">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('event_new')}}">Gestion événements</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('show_event_back')}}">Réservation événements</a>
+              </li>
+
+            </ul>
+          </div>
         </li>
+
         {#  <li class="nav-item">
           <a class="nav-link" href="pages/icons/mdi.html">
             <i class="mdi mdi-contacts menu-icon"></i>
@@ -293,12 +313,13 @@
   <script src="{{asset('Back/assets/js/file-upload.js')}}"></script>
   <script src="{{asset('Back/assets/js/typeahead.js')}}"></script>
   <script src="{{asset('Back/assets/js/jquery.mask.js')}}"></script>
-  <script src="{{asset('Back-/assets/js/select2.js')}}"></script>
+  <script src="{{asset('Back/assets/js/select2.js')}}"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{{asset('Back/assets/js/chart.js')}}"></script>
+
 
   <!-- End plugin js for this page -->
   <!-- inject:js -->
-  <script src="{{asset('Back/assets/js/off-canvas.js')}}"></script>
   <script src="{{asset('Back/assets/js/hoverable-collapse.js')}}"></script>
   <script src="{{asset('Back/assets/js/misc.js')}}"></script>
 

@@ -6,6 +6,7 @@ use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * @method Event|null find($id, $lockMode = null, $lockVersion = null)
  * @method Event|null findOneBy(array $criteria, array $orderBy = null)
@@ -18,14 +19,19 @@ class EventRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Event::class);
     }
-public function geteventbydatenow(){
+public function geteventbydatenowandreservation($listid){
     $qb = $this->createQueryBuilder('u');
-    $qb->where('u.E_DateDebut >= :identifier')
-        ->setParameter('identifier', new \DateTime('now'));
-
-    return $qb->getQuery()
-        ->getResult();
+    $qb->where('u.E_DateDebut >= :identifier AND u.id NOT IN (:listid)')
+        ->setParameter('identifier', new \DateTime('now'))
+        ->setParameter('listid', $listid);
+    return $qb->getQuery()->getResult();
 }
+    public function geteventbydatenow(){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.E_DateDebut >= :identifier')
+            ->setParameter('identifier', new \DateTime('now'));
+        return $qb->getQuery()->getResult();
+    }
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */

@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\PromotionCodeRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PromotionCodeRepository::class)
@@ -14,21 +16,32 @@ class PromotionCode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"romoodewners"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255 , unique=true)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
+     * @Groups ({"romoodewners"})
      */
     private $PC_Code;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $PC_Value;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $PC_ExpirationCode;
 
@@ -40,8 +53,13 @@ class PromotionCode
     /**
      * @ORM\ManyToOne(targetEntity=PromoCodeOwner::class, inversedBy="PCD_PromotionCode")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $CP_PCD;
+
+
 
     public function getId(): ?int
     {
@@ -107,4 +125,6 @@ class PromotionCode
 
         return $this;
     }
+
+
 }

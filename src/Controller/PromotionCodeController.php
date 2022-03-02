@@ -59,8 +59,8 @@ class PromotionCodeController extends AbstractController
             'promotion' => $promotion,
             'form' => $form->createView(),
             'form1' => $form1->createView(),
-            'promotion_codes' => $promotionCodeRepository->findAll(),
-            'promotions' => $promotionRepository->findAll(),
+            'promotion_codes' => $promotionCodeRepository->getPromotionCodebydatenow(),
+            'promotions' => $promotionRepository->getPromotionbydatenow(),
         ]);
     }
 

@@ -1,7 +1,8 @@
-<form method="post" action="{{ path('event_delete', {'id': event.id}) }}" id="myForm">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+<form method="post" action="{{ path('event_delete', {'id': event.id}) }}" onsubmit="return confirm('Êtes-vous sûr ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}" >
+    <button class="btn btn-danger" id="btn-submit"><i class="fa fa-trash" aria-hidden="true"></i></button>
 </form>
-<button class="btn btn-danger" id="btn-submit" onclick="deleteswal()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+{#
 <script>
 function deleteswal() {
     Swal.fire({
@@ -19,4 +20,4 @@ function deleteswal() {
         }
     })
 }
-</script>
+</script> #}

@@ -24,10 +24,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Ajouter événements</h4><br>
-                        {{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+                        {{ form_start(form,{'attr':{'class':'forms-sample','novalidate':'novalidate'}}) }}
 
                         <div class="form-group">
                             <label for="exampleInputName1">Nom de l'événement:</label>
+                            {{ form_errors(form.E_Name, { 'attr': {'style': 'color:red'}}) }}
                             {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
 
                         </div><br>
@@ -38,21 +39,29 @@
                         </div><br>
                         <div class="form-group">
                             <label for="exampleInputCity1">Adresse de l'événement :</label>
+                            {{ form_errors(form.E_Place) }}
                             {{ form_widget(form.E_Place,{'attr':{'class':'form-control','style':'width: 100%;'}}) }}
 
 
                         </div><br>
                         <div class="form-group">
                             <label for="exampleInputName1">Nombre de place :</label>
-                                    {{ form_widget(form.E_Nbre,{'attr':{'class':'form-control','type':'number','id':'Sexe','onchange':'verifNbr(this)'}}) }}
+                            {{ form_errors(form.E_Nbre) }}
+
+                            {{ form_widget(form.E_Nbre,{'attr':{'class':'form-control','type':'number','id':'Sexe','onchange':'verifNbr(this)'}}) }}
                         </div><br>
                         <div class="form-group">
-                            <label for="exampleInputEmail3">Date debut :</label>
+                            <label >Date debut :</label>
+                            {{ form_errors(form.E_DateDebut) }}
+
                             {{ form_widget(form.E_DateDebut,{'attr':{'class':'form-control','id':'DateD','placeholder':'Valeur du code promo en pourcentage', 'onchange':'verifDatedebut()'}}) }}
                         </div><br>
 
                         <div class="form-group">
-                            <label for="exampleInputEmail3">Date fin :</label>
+
+                            <label> Date fin :</label>
+                            {{ form_errors(form.E_DateFin) }}
+
                             {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage','disabled':'disable' ,'onchange':'verifDate()'}}) }}
                         </div><br>
 
@@ -60,6 +69,8 @@
                         <div class="form-group">
                             <label for="exampleSelectGender">Prix :</label>
                             <div class="form-group">
+                                {{ form_errors(form.E_Price) }}
+
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-primary text-white">Dt</span>
@@ -76,22 +87,25 @@
 
                         <div class="form-group">
                             <label for="exampleInputName1">Photo :</label>
-                            <input type="file" name="img[]" class="file-upload-default" />
                             <div class="input-group col-xs-12">
+                                {{ form_errors(form.E_PHOTO) }}
                                 {{ form_widget(form.E_PHOTO,{'attr':{'class':'file-upload-browse btn btn-primary','type':'file','id':'Prenom','style':'width: 100%; ','accept':'image/png, image/jpeg'}}) }}
 
-                          </span>
                             </div>
 
                         </div><br>
                         <div class="form-group">
                             <label for="exampleInputEmail3">Adresse email :</label>
+                            {{ form_errors(form.E_Email) }}
+
                             {{ form_widget(form.E_Email,{'attr':{'class':'form-control','type':'email','id':'Email','placeholder':'Addresse email','onchange':'validate()'}}) }}
                         </div><br>
 
 
                         <div class="form-group">
                             <label for="exampleInputEmail3">Numéro de téléphone :</label>
+                            {{ form_errors(form.E_TelNumber) }}
+
                             {{ form_widget(form.E_TelNumber,{'attr':{'class':'form-control','type':'text','id':'NumTel','placeholder':'Numéro de téléphone','onchange':'verifNumTel(this)'}}) }}
 
                         </div><br>
@@ -179,9 +193,7 @@
 
 
 <script>
-    $( document ).ready(function() {
-        document.getElementById("event_E_PHOTO").required = true;
-    });
+
     function myFunction08() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput8");
@@ -424,10 +436,10 @@
        }
     }
     function verifNbr(_this){
-        if ( parseInt(_this.value) == 0){
+        if ( parseInt(_this.value) < 0){
             Swal.fire({
                 icon: 'error',
-                title: 'Le nombre de place ne doit pas etre égal à 0 !',
+                title: 'Le nombre de place doit etre supérieur à 0 !',
                 timer: 3000,
                 timerProgressBar: true,
             })

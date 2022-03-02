@@ -1,7 +1,8 @@
-<form method="post" action="{{ path('promo_code_owner_delete', {'id': promo_code_owner.id}) }}" id="myForm">
+<form method="post" action="{{ path('promo_code_owner_delete', {'id': promo_code_owner.id}) }}" onsubmit="return confirm('Êtes-vous sûr ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promo_code_owner.id) }}">
+    <button class="btn btn-danger" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true"></i></button>
 </form>
-<button class="btn btn-danger" id="btn-submit" onclick="deleteswal()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+{#
 <script>
     function deleteswal() {
         Swal.fire({
@@ -14,9 +15,9 @@
             confirmButtonText: 'Oui, supprimez-le !'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById("myForm").submit();
+                console.log(document.getElementById("myForm"));
 
             }
         })
     }
-</script>
+</script> #}
