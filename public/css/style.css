@@ -8615,6 +8615,12 @@ h1, h2, h3, h4, h5,
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center; }
+.hero-wrap.hero-wrap-3 {
+  height: 200px;
+  position: relative;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center; }
     .hero-wrap.hero-wrap-2 .overlay {
       width: 100%;
       opacity: .3;

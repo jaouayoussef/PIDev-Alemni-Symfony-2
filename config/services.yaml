@@ -28,3 +28,12 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:    "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" for Windows users
+        options:    []
+    image:
+        enabled:    true
+        binary:     \C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\"" for Windows users
+        options:    []

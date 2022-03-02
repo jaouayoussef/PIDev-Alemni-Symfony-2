@@ -10,12 +10,15 @@ use App\Form\QuizType;
 use App\Repository\QuizRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\UseranswerRepository;
+use App\Repository\UserresultRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Nucleos\DompdfBundle\Factory\DompdfFactoryInterface;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 
 /**
  * @Route("/quiz")
@@ -29,6 +32,31 @@ class QuizController extends AbstractController
     {
         return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizRepository->findAll(),
+        ]);
+    }
+
+    /**
+     * @Route("/mesquiz", name="mesquiz", methods={"GET"})
+     */
+
+   public function mesquiz( UserresultRepository $userresultRepository)
+    {
+      //récuperer le dernier quiz passer par l'utilisateur : from user result
+
+       return $this->render('quiz/myquiz.html.twig', [
+            'quizresult' => $userresultRepository->findBy(array('id_user'=>1)),
+        ]);
+    }
+    /**
+     * @Route("/certif/{id}", name="quiz_certif", methods={"GET"})
+     */
+
+    public function certif(Quiz $quiz,QuizRepository $quizRepository, DompdfWrapperInterface $wrapper)
+    {
+        //récuperer le dernier quiz passer par l'utilisateur : from user result
+
+        return $this->render('quiz/certification.html.twig', [
+            'quiz' => $quiz,
         ]);
     }
 
@@ -99,7 +127,7 @@ $nbre=0;
     /**
      * @Route("/{id}/question/{nbr}", name="quizz_play")
      */
-    public function play($id, Quiz $quiz, Request $request, $nbr, QuestionRepository $questionRepo){
+    public function play($id, Quiz $quiz, Request $request, $nbr, QuestionRepository $questionRepo, \Swift_Mailer $mailer){
         $useranswer = new Useranswer();
        // $question = $questionRepo->find($nbr);
         $questions = $questionRepo->findBy(array('quiz'=>$id));
@@ -173,6 +201,15 @@ $nbre=0;
                        'score' => $score,
                    ]);
                }else{
+                   $message = (new \Swift_Message('Hello Email'))
+                       ->setFrom('nassim.allouche@gmail.com')
+                       ->setTo('nassim.allouche@esprit.tn')
+                       ->setBody(
+                         'sdcvdsvdsvd'
+                       )
+                   ;
+                   $mailer->send($message);
+
                    return $this->render('quiz/success.html.twig', [
                        'form' => $form->createView(),
                        'question' => $question,
@@ -192,6 +229,16 @@ $nbre=0;
             'question' => $question,
             'nbr' => $nbr,
             'id' => $id,
+        ]);
+    }
+    /**
+     * @Route("/", name="quiz_passer", methods={"GET"})
+     */
+    public function myquiz(QuizRepository $quizRepository): Response
+    {
+
+        return $this->render('quiz/index.html.twig', [
+            'quizzes' => $quizRepository->findAll(),
         ]);
     }
 }

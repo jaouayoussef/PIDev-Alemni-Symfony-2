@@ -1,9 +1,13 @@
-{% extends 'base-front.html.twig' %}
+{% extends 'base-back.html.twig' %}
 
 {% block title %}Question index{% endblock %}
 
+
 {% block body %}
-    <div class="container-lg" style="max-width: 100%;">
+    <div class="container-lg" style="max-width: 100%;"><br>
+        <span class="contact100-form-title">
+					quiz questions
+				</span>
         <div class="table-responsive">
             <div class="table-wrapper">
 
@@ -59,7 +63,7 @@
                         <td>{{ question.reponse4 }}</td>
                         <td>{{ question.repcorrect }}</td>
                         <td>
-                            <a href="{{ path('question_edit', {'id': question.id}) }}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons"></i></a>
+                            <a href="{{ path('question_edit', {'id': question.id}) }}" class="edit" title="Edit" data-toggle="tooltip">edit</a>
 
                         </td>
                     </tr>
@@ -71,8 +75,134 @@
 
                     </tbody>
                 </table>
+                <input type="submit" value="Back to home" class="btn btn-primary">
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
 
+            // Filter table rows based on searched term
+            $("#search1").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(2)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search2").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search3").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(4)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
