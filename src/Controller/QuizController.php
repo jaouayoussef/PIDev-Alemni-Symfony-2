@@ -31,10 +31,19 @@ class QuizController extends AbstractController
     public function index(QuizRepository $quizRepository): Response
     {
         return $this->render('quiz/index.html.twig', [
+            'quizzes' => $quizRepository->findBy(array('id_user'=>1)),
+        ]);
+    }
+    /**
+     * @Route("/all", name="all", methods={"GET"})
+     */
+    public function all(QuizRepository $quizRepository): Response
+    {
+
+        return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizRepository->findAll(),
         ]);
     }
-
     /**
      * @Route("/mesquiz", name="mesquiz", methods={"GET"})
      */
@@ -70,6 +79,8 @@ class QuizController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $quiz->setIdUser(1);
+            $quiz->setIdFormation(2);
             $entityManager->persist($quiz);
             $entityManager->flush();
 $nbre=0;
@@ -201,11 +212,22 @@ $nbre=0;
                        'score' => $score,
                    ]);
                }else{
-                   $message = (new \Swift_Message('Hello Email'))
+                   $message = (new \Swift_Message('Félicitation'))
                        ->setFrom('nassim.allouche@gmail.com')
-                       ->setTo('nassim.allouche@esprit.tn')
+                       ->setTo('mohamed.bouaziz@esprit.tn')
                        ->setBody(
-                         'sdcvdsvdsvd'
+                           $this->renderView(
+                           // templates/emails/registration.html.twig
+                               'quiz/mail.html.twig',[
+
+                       'question' => $question,
+
+
+                       'score' => $score,
+                   ]
+
+                           ),
+                           'text/html'
                        )
                    ;
                    $mailer->send($message);
@@ -231,14 +253,6 @@ $nbre=0;
             'id' => $id,
         ]);
     }
-    /**
-     * @Route("/", name="quiz_passer", methods={"GET"})
-     */
-    public function myquiz(QuizRepository $quizRepository): Response
-    {
 
-        return $this->render('quiz/index.html.twig', [
-            'quizzes' => $quizRepository->findAll(),
-        ]);
-    }
+
 }

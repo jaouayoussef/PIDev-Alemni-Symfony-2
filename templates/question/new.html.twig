@@ -54,9 +54,36 @@
             {{ form_end(form) }}
         </div>
     </div>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function validate() {
+            var email = document.getElementById("promo_code_owner_PCD_Email").value;
 
-        $( 'input[type=text]' ).empty();
+            if (checkEmail(email)) {
+                var table = document.getElementById('myTable');
+                for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+
+                    if (table.rows[r].cells[2].innerHTML == email){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ce Email existe !',
+                            timer: 3000,
+                            timerProgressBar: true,
+                        })
+                        document.getElementById("promo_code_owner_PCD_Email").value = null ;
+                    }
+
+                }            }
+            else {
+                document.getElementById("promo_code_owner_PCD_Email").value = null ;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Email Invalide !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })            }
+            return false;
+        }
     </script>
-
 {% endblock %}

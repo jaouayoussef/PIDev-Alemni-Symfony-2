@@ -28,6 +28,16 @@ class Quiz
     private $questions;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $id_user;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $id_formation;
+
+    /**
      * @return mixed
      */
     public function getQuestions()
@@ -56,6 +66,30 @@ class Quiz
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?int
+    {
+        return $this->id_user;
+    }
+
+    public function setIdUser(int $id_user): self
+    {
+        $this->id_user = $id_user;
+
+        return $this;
+    }
+
+    public function getIdFormation(): ?int
+    {
+        return $this->id_formation;
+    }
+
+    public function setIdFormation(int $id_formation): self
+    {
+        $this->id_formation = $id_formation;
 
         return $this;
     }
