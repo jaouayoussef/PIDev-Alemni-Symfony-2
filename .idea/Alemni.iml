@@ -133,9 +133,19 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dotenv" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/asset" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/expression-language" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jbafford/password-strength-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/core" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/babdev/pagerfanta-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/doctrine-orm-adapter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gregwar/captcha-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gregwar/captcha" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/swiftmailer-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/swiftmailer/swiftmailer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="sweetalert" level="application" />
+    <orderEntry type="library" name="datatables" level="application" />
   </component>
 </module>

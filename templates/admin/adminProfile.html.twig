@@ -14,17 +14,21 @@
                 <div class="row">
                     <div class="col-sm-6">
                         {% if user.roles|join(', ') == "ROLE_ADMIN" %}
-                        <p class="text-muted">You're signed in as an <u style="color: red; font-weight: bold">Admin</u>!</p>
+                            <p class="text-muted">You're signed in as an <u
+                                        style="color: red; font-weight: bold">Admin</u>!</p>
                         {% endif %}
                     </div>
                     <div class="col-sm-3 text-md-right">
-                        <a href="{{ path('edit_admin') }}" type="button" class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-warning font-weight-normal">
+                        <a href="{{ path('edit_admin') }}" type="button"
+                           class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-warning font-weight-normal">
                             <i class="mdi mdi-pen btn-icon-prepend"></i>Edit profile</a>
                     </div>
                     <div class="col-sm-3 text-md-right">
-                        <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" onsubmit="return confirm('All your data will be deleted... Are you sure you want to remove your account?');">
+                        <form method="post" action="{{ path('user_delete', {'id': user.id}) }}"
+                              onsubmit="return confirm('All your data will be deleted... Are you sure you want to remove your account?');">
                             <button class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-danger font-weight-normal">
-                                <i class="mdi mdi-trash-can btn-icon-prepend"></i>Desactivate account</button>
+                                <i class="mdi mdi-trash-can btn-icon-prepend"></i>Desactivate account
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -35,7 +39,8 @@
                                 <p class="m-0 survey-head">Profile Picture</p>
 
                                 <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                                    <img src="{{ asset('uploads/user_picture/' ~ user.picture) }}" class="img-thumbnail">
+                                    <img src="{{ asset('uploads/user_picture/' ~ user.picture) }}"
+                                         class="img-thumbnail">
                                 </div>
                             </div>
                         </div>

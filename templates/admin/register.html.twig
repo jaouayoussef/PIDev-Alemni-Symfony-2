@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Skydash Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{{ asset('Back/user/style.css') }}">
+</head>
+
+<body>
+<div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="content-wrapper d-flex align-items-center auth px-0">
+            <div class="row w-100 mx-0">
+                <div class="col-md-6 mx-auto">
+                    <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+                        <div class="brand-logo text-center">
+                            <img src="{{ asset('Back/user/logoPi.png') }}" alt="logo">
+                        </div>
+                        {{ form_start(registrationForm,{'attr':{'class':'pt-3'}}) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_widget(registrationForm.first_name,{'attr':{'class':'form-control','placeholder':'First name'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_widget(registrationForm.last_name,{'attr':{'class':'form-control','placeholder':'Last name'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_widget(registrationForm.gender,{'attr':{'class':'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_widget(registrationForm.picture,{'attr':{'class':'form-control-file'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form_widget(registrationForm.email,{'attr':{'class':'form-control','placeholder':'Email'}}) }}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_widget(registrationForm.plainPassword.first,{'attr':{'class':'form-control','placeholder':'Password'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_widget(registrationForm.plainPassword.second,{'attr':{'class':'form-control','placeholder':'Confirm password'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <label class="form-check-label text-muted">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit"
+                                    class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                            >SIGN UP
+                            </button>
+                        </div>
+                        <div class="text-center mt-4 font-weight-light">
+                            Already have an account? <a href="{{ path('admin_login') }}" class="text-primary">Login</a>
+                        </div>
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+</body>
+
+</html>
