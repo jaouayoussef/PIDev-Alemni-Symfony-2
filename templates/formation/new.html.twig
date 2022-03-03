@@ -45,10 +45,7 @@
                             {{ form_errors(form.imageFormation) }}
                             {{ form_widget(form.imageFormation,{'attr':{'class':'form-control','accept':'image/png, image/jpeg'}}) }}
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail3">Formateur</label>
-                            {{ form_widget(form.formateur,{'attr':{'class':'form-control','type':'text','id':'formateur','placeholder':'Formateur Formation'}}) }}
-                        </div>
+
                         <div class="form-group">
                             <label for="exampleInputEmail3">Lien</label>
                             {{ form_widget(form.lien,{'attr':{'class':'form-control','type':'text','id':'lien','placeholder':'Lien Formation'}}) }}
@@ -92,12 +89,12 @@
                                 <td>{{ for.domaine.nomDomaine }}</td>
                                 <td>{{ for.prixFormation }}</td>
                                 <td>{{ for.nbPlaces }}</td>
-                                <td>{{ for.formateur }}</td>
+                                <td>{{ for.formateur.firstname }}</td>
                                 <td>{{ for.lien }}</td>
 
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a class="btn btn-secondary" href="{{ path('seance_new', {'id': for.Id,'formation':for.Id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i></a> <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.Id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('formation/_delete_form.html.twig') }} </div></td>
+                                        <a class="btn btn-secondary" href="{{ path('seance_new', {'id': for.Id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i></a> <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.Id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('formation/_delete_form.html.twig') }} </div></td>
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.Id) }}">
                             </tr>
 

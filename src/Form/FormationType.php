@@ -22,7 +22,7 @@ class FormationType extends AbstractType
             ->add('nomFormation')
             ->add('descriptionFormation',TextareaType::class, [
                 'attr' => array('cols' => '5', 'rows' => '5')])
-            ->add('formateur')
+
             ->add('lien')
             ->add('prixFormation')
             ->add('nbPlaces')

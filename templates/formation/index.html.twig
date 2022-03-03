@@ -1,43 +1,148 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Formation index{% endblock %}
+{% extends 'base-back.html.twig' %}
+{% block title %} Formation{% endblock %}
 
 {% block body %}
-    <h1>Formation index</h1>
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Statistique Formation</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Formation</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> Formation  </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Liste des domaines </h4><br>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NomFormation</th>
-                <th>DescriptionFormation</th>
-                <th>Lien</th>
-                <th>PrixFormation</th>
-                <th>ImageFormation</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for formation in formations %}
-            <tr>
-                <td>{{ formation.id }}</td>
-                <td>{{ formation.nomFormation }}</td>
-                <td>{{ formation.descriptionFormation }}</td>
-                <td>{{ formation.lien }}</td>
-                <td>{{ formation.prixFormation }}</td>
-                <td>{{ formation.imageFormation }}</td>
-                <td>
-                    <a href="{{ path('formation_show', {'id': formation.id}) }}">show</a>
-                    <a href="{{ path('formation_edit', {'id': formation.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nom </th>
+                                <th>Description</th>
+                                <th>Formations</th>
+                            </tr>
+                            <tr>
+                                {% for dom in domaines %}
 
-    <a href="{{ path('formation_new') }}">Create new</a>
+                                <td>{{ dom.id }}</td>
+                                <td>{{ dom.nomDomaine }}</td>
+                                <td>{{ dom.descriptionDomaine }}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <li><span class="flaticon-shower"></span>
+                                            {#
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ dom.id }}">Détails</button>
+                                            #}
+                                            <button type="button" data-toggle="modal" data-target="#infos{{dom.id~dom.nomDomaine}}"  class="btn btn-primary">formations</button>
+                                            <div class="modal" id="infos{{dom.id~dom.nomDomaine}}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">listes des formations du domaine {{ dom.nomDomaine }}</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6 grid-margin stretch-card">
+                                                                </div>
+                                                                <div class="col-lg-12 grid-margin stretch-card">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <h4 class="card-title">  </h4><br>
+
+                                                                            <table class="table">
+                                                                                <tbody>
+                                                                                <tr>
+                                                                                    <th>Id</th>
+                                                                                    <th>Nom</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Domaine</th>
+                                                                                    <th>Prix</th>
+                                                                                    <th>Places</th>
+                                                                                    <th>Formateur</th>
+                                                                                    <th>Lien</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    {% for for in formations %}
+                                                                                    {% if for.domaine.id == dom.id %}
+
+                                                                                    <td>{{ for.Id }}</td>
+                                                                                    <td>{{ for.nomFormation }}</td>
+                                                                                    <td>{{ for.descriptionFormation }}</td>
+                                                                                    <td>{{ for.domaine.nomDomaine }}</td>
+                                                                                    <td>{{ for.prixFormation }}</td>
+                                                                                    <td>{{ for.nbPlaces }}</td>
+                                                                                    <td>{{ for.formateur.firstname }}</td>
+                                                                                    <td>{{ for.lien }}</td>
+                                                                                    {% endif%}
+
+
+                                                                                </tr>
+
+
+
+
+
+
+                                                                                {% else %}
+                                                                                    <tr>
+                                                                                        <td colspan="3">pas de formations</td>
+                                                                                    </tr>
+
+                                                                                {% endfor %}
+
+                                                                                </tbody>
+
+                                                                            </table>
+
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <em>Informations sous réserve</em>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                        </li>
+                                </div>
+
+                                    </td>
+
+                            </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3">pas de formations</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
 {% endblock %}
+
+

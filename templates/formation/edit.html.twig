@@ -39,10 +39,7 @@
 
                             {{ form_widget(form.imageFormation,{'attr':{'class':'form-control','accept':'image/png, image/jpeg'}})}}
                         </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail3">Formateur</label>
-                            {{ form_widget(form.formateur,{'attr':{'class':'form-control','type':'text','id':'formateur','placeholder':'Formateur Formation'}}) }}
-                        </div>
+
                         <div class="form-group">
                             <label for="exampleInputEmail3">Prix</label>
                             {{ form_widget(form.prixFormation,{'attr':{'class':'form-control','type':'number','onchange':'verifPrix(this)','id':'formateur','placeholder':'Prix Formation'}}) }}
@@ -93,7 +90,7 @@
                                 <td>{{ for.formation.nomFormation }}</td>
 
                                 <td>                           <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a class="btn btn-primary" href="{{ path('seance_edit', {'id': for.formation.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('seance/_delete_form.html.twig') }} </div> </td>
+                                        <a class="btn btn-primary" href="{{ path('seance1_edit', {'id': for.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> {{ include('seance/_delete_form.html.twig') }} </div> </td>
                             </tr>
 
 

@@ -83,7 +83,8 @@
                                         <p class="advisor"> {{ formation.domaine.nomDomaine }}</span></p>
                                         <p class="advisor"> {{ formation.descriptionFormation }}</span></p>
                                         <ul class="d-flex justify-content-between">
-                                            <li><span class="flaticon-shower"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ formation.id }}">détails</button></li>
+                                            <li><span class="flaticon-shower"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ formation.id }}">Détails</button></li>
+                                            <li><span class="flaticon-shower"></span><button type="button" class="btn btn-primary" href="{{ path('payer', {'id': formation.Id,'formation':formation.Id}) }}">Payer</button> </li>
                                             <li class="price">{{ formation.prixFormation }} dt</li>
                                         </ul>
                                     </div>
@@ -105,7 +106,7 @@
                                                     <h3>Description :</h3>
                                                     <p>{{ formation.descriptionFormation }}</p>
                                                     <h3>Formateur :</h3>
-                                                    <p>{{ formation.formateur }}</p>
+                                                    <p>{{ formation.formateur.firstname }}</p>
                                                     <h3>Nombres places :</h3>
                                                     <p>{{ formation.nbPlaces  }}</p>
                                                     <h3>Prix :</h3>

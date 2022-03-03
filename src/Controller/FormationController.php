@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\ReservationFormation;
 use App\Entity\Seance;
 use App\Form\FormationType;
+use App\Repository\DomaineRepository;
 use App\Repository\FormationRepository;
 use App\Repository\SeanceRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use mysql_xdevapi\CollectionRemove;
@@ -30,17 +33,19 @@ class FormationController extends AbstractController
     /**
      * @Route("/", name="formation_index", methods={"GET"})
      */
-    public function index(FormationRepository $formationRepository): Response
+    public function index(DomaineRepository $domaineRepository,FormationRepository $formationRepository): Response
     {
         return $this->render('formation/index.html.twig', [
+
             'formations' => $formationRepository->findAll(),
+            'domaines' => $domaineRepository->findAll(),
         ]);
     }
 
     /**
      * @Route("/new", name="formation_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,FormationRepository $formationRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,FormationRepository $formationRepository,UserRepository $userRepository): Response
     {
         $formation = new Formation();
         $form = $this->createForm(FormationType::class, $formation)
@@ -87,6 +92,8 @@ class FormationController extends AbstractController
 
                 $formation->setImageFormation($newFilename);
             }
+            $formation->setPlacesReserve(0);
+            $formation->setFormateur($userRepository->find(1));
             $entityManager->persist($formation);
             $entityManager->flush();
 
@@ -110,7 +117,10 @@ class FormationController extends AbstractController
         foreach ($formations as $formation){
             $seances=$seanceRepository->findByExampleField($formation->getId());
             $test=1;
+            if( empty($seances)){
+                $test=0;
 
+            }
             foreach ($seances as $seance){
 
                 if( $seance->getDateSeance() <new \DateTime('now')){
@@ -136,7 +146,7 @@ class FormationController extends AbstractController
     /**
      * @Route("/{id}/edit", name="formation_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Formation $formation, EntityManagerInterface $entityManager,SeanceRepository $seanceRepository): Response
+    public function edit(Request $request, Formation $formation, EntityManagerInterface $entityManager,SeanceRepository $seanceRepository,UserRepository $userRepository): Response
     {
         $form = $this->createForm(FormationType::class, $formation)
             ->add('imageFormation', FileType::class, [
@@ -181,6 +191,7 @@ class FormationController extends AbstractController
 
                 $formation->setImageFormation($newFilename);
             }
+            $formation->setFormateur($userRepository->find(1));
             $entityManager->flush();
 
             return $this->redirectToRoute('formation_new', [], Response::HTTP_SEE_OTHER);
@@ -206,16 +217,23 @@ class FormationController extends AbstractController
         return $this->redirectToRoute('formation_new', [], Response::HTTP_SEE_OTHER);
     }
     /**
-     * @Route("/test", name="test")
+     * @Route("/payer", name="payer")
      */
-    public function sendEmail( \Swift_Mailer $mailer): Response
+    public function sendEmail( \Swift_Mailer $mailer,UserRepository $userRepository,Formation $formation, EntityManagerInterface $entityManager): Response
     {
+        $reservationFormation = new ReservationFormation();
+        $reservationFormation->setUser($userRepository->find(1));
+        $reservationFormation->setDate(new \DateTime('now'));
+        $reservationFormation->setPrix();
+        $reservationFormation->setFormation($formation);
+        $entityManager->persist($reservationFormation);
+        $entityManager->flush();
         $message = (new \Swift_Message('Hello Email'))
             ->setFrom('alemnicontact@gmail.com')
             ->setTo('charfeddine.ahmed@esprit.tn')
             ->setBody(
 
-                'test'
+                'lien'+$formation->getLien()
             );
 
         $mailer->send($message);

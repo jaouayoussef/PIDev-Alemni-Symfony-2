@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -60,6 +62,25 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $picture;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="formateur", orphanRemoval=true)
+     */
+    private $formations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ReservationFormation::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $reservationFormations;
+
+    public function __construct()
+    {
+        $this->formations = new ArrayCollection();
+        $this->reservationFormations = new ArrayCollection();
+    }
+
+
+
 
 
     public function getId(): ?int
@@ -202,5 +223,67 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Formation[]
+     */
+    public function getFormations(): Collection
+    {
+        return $this->formations;
+    }
+
+    public function addFormation(Formation $formation): self
+    {
+        if (!$this->formations->contains($formation)) {
+            $this->formations[] = $formation;
+            $formation->setFormateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormation(Formation $formation): self
+    {
+        if ($this->formations->removeElement($formation)) {
+            // set the owning side to null (unless already changed)
+            if ($formation->getFormateur() === $this) {
+                $formation->setFormateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReservationFormation[]
+     */
+    public function getReservationFormations(): Collection
+    {
+        return $this->reservationFormations;
+    }
+
+    public function addReservationFormation(ReservationFormation $reservationFormation): self
+    {
+        if (!$this->reservationFormations->contains($reservationFormation)) {
+            $this->reservationFormations[] = $reservationFormation;
+            $reservationFormation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationFormation(ReservationFormation $reservationFormation): self
+    {
+        if ($this->reservationFormations->removeElement($reservationFormation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationFormation->getUser() === $this) {
+                $reservationFormation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 
 }
