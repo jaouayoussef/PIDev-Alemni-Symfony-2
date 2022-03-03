@@ -4,6 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
+use Omines\DataTablesBundle\Column\TextColumn;
+use Omines\DataTablesBundle\DataTableFactory;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -21,7 +26,7 @@ class UserController extends AbstractController
      */
     public function notFound()
     {
-        return $this->render('user/404.html.twig');
+        return $this->render('security/404.html.twig');
     }
 
     /**
@@ -52,7 +57,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         if ($user->getRoles() == ["ROLE_ADMIN"]) {
-            return $this->render('user/adminProfile.html.twig', [
+            return $this->render('admin/adminProfile.html.twig', [
                 'user' => $user,
             ]);
         } else {
@@ -75,7 +80,7 @@ class UserController extends AbstractController
                 ->add('old_password', PasswordType::class, [
                     'mapped' => false,
                     'label' => false,
-                    'required'=>false,
+                    'required' => false,
                     'attr' => [
                         'placeholder' => 'old password'
                     ]
@@ -143,7 +148,7 @@ class UserController extends AbstractController
                 ->add('old_password', PasswordType::class, [
                     'mapped' => false,
                     'label' => false,
-                    'required'=>false,
+                    'required' => false,
                     'attr' => [
                         'placeholder' => 'old password'
                     ]
@@ -151,7 +156,7 @@ class UserController extends AbstractController
                 ->add('new_password', RepeatedType::class, [
                     'type' => PasswordType::class,
                     'mapped' => false,
-                    'required'=>false,
+                    'required' => false,
                     'first_options' => [
                         'label' => false,
                     ],
@@ -188,33 +193,39 @@ class UserController extends AbstractController
                     return $this->redirectToRoute('admin_profile');
                 }
             }
-            return $this->render('user/edit_admin_profile.html.twig', [
+            return $this->render('admin/edit_admin_profile.html.twig', [
                 'form' => $form->createView()
             ]);
         }
     }
 
     /**
-     * @Route("/admin/allUsers",name="all_users")
+     * @Route("/admin/allUsers/{page<\d+>}",name="all_users")
      */
-    public function getAllUsers(Request $req): Response
+    public function getAllUsers(UserRepository $repository, Request $req, int $page = 1): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
         if ($user->getRoles() == ["ROLE_ADMIN"]) {
+            $test = $repository->createQueryBuilder('user')->select('user');
+            $pagerfanta = new Pagerfanta(new QueryAdapter($test));
+            $pagerfanta->setMaxPerPage(5);
+            $pagerfanta->setCurrentPage($page);
+
             $userRepo = $this->getDoctrine()->getRepository(User::class);
             $clients = $userRepo->getUserByRole("ROLE_CLIENT");
             $tutors = $userRepo->getUserByRole("ROLE_TUTOR");
             $admins = $userRepo->getUserByRole("ROLE_ADMIN");
             $both = $userRepo->getUserByRole("ROLE_CLIENT");
 
-            return $this->render('user/getallusers.html.twig', [
+            return $this->render('admin/getallusers.html.twig', [
                 'clients' => $clients,
                 'tutors' => $tutors,
                 'admins' => $admins,
                 'both' => $both,
+                'data' => $pagerfanta,
             ]);
         } else {
             return $this->redirectToRoute('error');
@@ -321,6 +332,19 @@ class UserController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('user_profile');
+        }
+    }
+
+    /**
+     * @Route("/admin/dashboard", name="admin_dashboard")
+     */
+    public function adminDashboard(): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            return $this->render('admin/dashboard.html.twig');
         }
     }
 }

@@ -49,71 +49,78 @@
                                 <div class="contact-wrap w-100 p-md-5 p-4">
                                     <h3 class="mb-4">Create your account</h3>
                                     {{ form_start(registrationForm,{'attr':{'class':'contactForm'}}) }}
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="name">First Name</label>
-                                                    {{ form_row(registrationForm.first_name,{'attr':{'class':'form-control'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="email">Last Name</label>
-                                                    {{ form_row(registrationForm.last_name,{'attr':{'class':'form-control'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="name">Gender</label>
-                                                    {{ form_row(registrationForm.gender,{'attr':{'class':'form-control'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="email">Email Address</label>
-                                                    {{ form_row(registrationForm.email,{'attr':{'class':'form-control'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="name">Password</label>
-                                                    {{ form_row(registrationForm.plainPassword.first,{'attr':{'class':'form-control'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="email">Confirm Password</label>
-                                                    {{ form_row(registrationForm.plainPassword.second,{'attr':{'class':'form-control'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="name">Role</label>
-                                                    {{ form_errors(registrationForm.roles) }}
-                                                    {{ form_row(registrationForm.roles[0],{'attr':{'class':'checkbox'}}) }}
-                                                    {{ form_row(registrationForm.roles[1],{'attr':{'class':'checkbox','id':'flexCheckDefault'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="email">Profile Picture</label>
-                                                    {{ form_row(registrationForm.picture,{'attr':{'class':'btn btn-outline-warning'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="label" for="email">Verification file</label>
-                                                    {{ form_row(registrationForm.verificationFile,{'attr':{'class':'btn btn-outline-warning'}}) }}
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input type="submit" value="Create account"
-                                                           class="btn btn-primary">
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">First Name</label>
+                                                {{ form_row(registrationForm.first_name,{'attr':{'class':'form-control'}}) }}
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Last Name</label>
+                                                {{ form_row(registrationForm.last_name,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">Gender</label>
+                                                {{ form_row(registrationForm.gender,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Email Address</label>
+                                                {{ form_row(registrationForm.email,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">Password</label>
+                                                {{ form_row(registrationForm.plainPassword.first,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Confirm Password</label>
+                                                {{ form_row(registrationForm.plainPassword.second,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">Role</label>
+                                                {{ form_errors(registrationForm.roles) }}
+                                                {{ form_row(registrationForm.roles[0],{'attr':{'class':'checkbox'}}) }}
+                                                {{ form_row(registrationForm.roles[1],{'attr':{'class':'checkbox','id':'flexCheckDefault'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Profile Picture</label>
+                                                {{ form_row(registrationForm.picture,{'attr':{'class':'btn btn-outline-warning'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Verification file</label>
+                                                {{ form_row(registrationForm.verificationFile,{'attr':{'class':'btn btn-outline-warning'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                {% block captcha_widget %}
+                                                    {{ form_row(registrationForm.captcha) }}
+                                                    {{ form_widget(registrationForm) }}
+                                                {% endblock %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="submit" value="Create account"
+                                                       class="btn btn-primary">
+                                            </div>
+                                        </div>
+                                    </div>
                                     {{ form_end(registrationForm) }}
                                 </div>
                             </div>
@@ -148,6 +155,7 @@
 <script src="{{ asset('front/js/scrollax.min.js') }}"></script>
 <script src="{{ asset('front/js/google-map.js') }}"></script>
 <script src="{{ asset('front/js/main.js') }}"></script>
+
 
 </body>
 </html>
