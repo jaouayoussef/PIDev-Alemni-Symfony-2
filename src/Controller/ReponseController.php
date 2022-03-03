@@ -62,6 +62,16 @@ class ReponseController extends AbstractController
         ]);
     }
 
+    // /**
+    //  * @Route("/{id}", name="reponse_show", methods={"GET"})
+    //  */
+    // public function show(Reponse $reponse): Response
+    // {
+    //     return $this->render('reponse/show.html.twig', [
+    //         'reponse' => $reponse,
+    //     ]);
+    // }
+
     /**
      * @Route("/edit/{id}", name="edit_reponse", methods={"GET", "POST"})
      */
