@@ -30,7 +30,7 @@ class PromotionCodeController extends AbstractController
     #}
 
     /**
-     * @Route("/new", name="promotion_code_new", methods={"GET", "POST"})
+     * @Route("/", name="promotion_code_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager,PromotionCodeRepository $promotionCodeRepository ,PromotionRepository $promotionRepository): Response
     {
@@ -53,19 +53,36 @@ class PromotionCodeController extends AbstractController
 
             return $this->redirectToRoute('promotion_code_new', [], Response::HTTP_SEE_OTHER);
         }
-
+        $CodePromos = $promotionCodeRepository->CountBydate();
+        $dates=[];
+        $PromoCodesCount=[];
+        foreach ($CodePromos as $CodePromo){
+            $dates[] =  $CodePromo['datePromo'];
+            $PromoCodesCount[] =  $CodePromo['count'];
+        }
+        $Promos = $promotionRepository->CountBydatePromo();
+        $datesPromo=[];
+        $PromosCount=[];
+        foreach ($Promos as $Promo){
+            $datesPromo[] =  $Promo['datePromo'];
+            $PromosCount[] =  $Promo['count'];
+        }
         return $this->render('promotion_code/new.html.twig', [
             'promotion_code' => $promotionCode,
             'promotion' => $promotion,
             'form' => $form->createView(),
             'form1' => $form1->createView(),
             'promotion_codes' => $promotionCodeRepository->findAll(),
-            'promotions' => $promotionRepository->findAll(),
+            'promotions' => $promotionRepository->getPromotionbydatenow(),
+            'codePromoDate' => json_encode($dates),
+            'CodeCount' => json_encode($PromoCodesCount),
+            'PromoDate' => json_encode($datesPromo),
+            'PromoCount' => json_encode($PromosCount),
         ]);
     }
 
     /**
-     * @Route("/{id}/show", name="promotion_code_show", methods={"GET"})
+     * @Route("/{id}", name="promotion_code_show", methods={"GET"})
      */
     public function show(PromotionCode $promotionCode): Response
     {

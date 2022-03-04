@@ -2,6 +2,8 @@
 {% block title %}Ajout Domaine{% endblock %}
 
 {% block body %}
+
+
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">Gestion Domaine</h3>
@@ -29,12 +31,14 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">Image </label>
+                            {{ form_errors(form.imageDomaine) }}
                             {{ form_widget(form.imageDomaine,{'attr':{'class':'form-control','accept':'image/png, image/jpeg'}}) }}
                         </div>
 
                         <button type="submit" class="btn btn-primary mr-2"> Ajouter</button>
                         <button class="btn btn-light">Cancel</button>
                         {{ form_end(form) }}
+
                     </div>
                 </div>
             </div>
@@ -63,7 +67,15 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a class="btn btn-primary" href="{{ path('domaine_edit', {'id': dm.id}) }}"><i
                                                     class="fa fa-pencil-square-o"
-                                                    aria-hidden="true"></i></a> {{ include('domaine/_delete_form.html.twig') }}
+                                                    aria-hidden="true"></i></a>
+                                        <form method="post" action="{{ path('domaine_delete', {'id': dm.id}) }}"
+                                              onsubmit="return confirm('etes vous sur de supprimer ce domaine?');">
+                                            <input type="hidden" name="_token"
+                                                   value="{{ csrf_token('delete' ~ dm.id) }}">
+                                            <button class="btn btn-danger"><i class="fa fa-trash"
+                                                                              aria-hidden="true"></i></button>
+                                        </form>
+
                                     </div>
                                 </td>
                             </tr>
@@ -83,10 +95,13 @@
         $(document).ready(function () {
             document.getElementById("domaine_imageDomaine").required = true;
         });
+
         function verifNomDomaine(_this) {
+
             let table = document.getElementById('test');
+
             for (let r = 1, n = table.rows.length; r < n; r++) {
-                if (table.rows[r].cells[1].innerHTML == _this.value) {
+                if (table.rows[r].cells[1].innerHTML === _this.value) {
                     Swal.fire({
                         icon: 'error',
                         title: 'ce domaine existe deja!',
@@ -98,6 +113,11 @@
             }
         }
     </script>
+
+
+
+
+    {# <a href="{{ path('domaine_index') }}">back to list</a> #}
 {% endblock %}
 
 

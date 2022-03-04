@@ -7,16 +7,16 @@
 
     {% block css %}
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('front/path/to/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="{{asset('front/path/to/font-awesome/css/font-awesome.min.css')}}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="{{ asset('front/css/animate.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/owl.theme.default.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/magnific-popup.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/bootstrap-datepicker.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/jquery.timepicker.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/flaticon.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        <link rel="stylesheet" href="{{asset('front/css/animate.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/owl.carousel.min.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/owl.theme.default.min.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/magnific-popup.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/bootstrap-datepicker.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/jquery.timepicker.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/flaticon.css')}}">
+        <link rel="stylesheet" href="{{asset('front/css/style.css')}}">
     {% endblock %}
 </head>
 <body>
@@ -24,8 +24,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.html"><span>Ale</span>mni</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                    aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
 
@@ -43,15 +42,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right dropdown-default"
                              aria-labelledby="navbarDropdownMenuLink-333">
-                            {% if app.user == null %}
-                                <a class="dropdown-item" href="{{ path('app_login') }}">Login</a>
-                            {% elseif app.user.roles|join(', ')=="ROLE_ADMIN" %}
-                                <a class="dropdown-item" href="{{ path('admin_profile') }}">My profile</a>
-                                <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
-                            {% else %}
-                                <a class="dropdown-item" href="{{ path('user_profile') }}">My profile</a>
-                                <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
-                            {% endif %}
+                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="#">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -59,58 +51,11 @@
         </div>
     </nav>
 
-    <div class="hero-wrap js-fullheight" style="background-image: url('{{ asset('front/images/bg_1.jpg') }}');">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
-                <div class="col-md-7 ftco-animate">
-                    <span class="subheading">Welcome to StudyLab</span>
-                    <h1 class="mb-4">We Are Online Platform For Make Learn</h1>
-                    <p class="caps">Far far away, behind the word mountains, far from the countries Vokalia and
-                        Consonantia</p>
-                    <p class="mb-0"><a href="#" class="btn btn-primary">Our Course</a> <a href="#"
-                                                                                          class="btn btn-white">Learn
-                            More</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-{% block login %}
-    {% if app.user == null %}
-        <section class="ftco-section ftco-no-pb ftco-no-pt">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-7"></div>
-                    <div class="col-md-5 order-md-last">
-                        <div class="login-wrap p-4 p-md-5">
-                            <h3 class="mb-4">Login</h3>
-                            <form action="#" class="signup-form">
 
-                                <div class="form-group">
-                                    <label class="label" for="email">Email Address</label>
-                                    <input type="text" class="form-control" placeholder="...">
-                                </div>
-                                <div class="form-group">
-                                    <label class="label" for="password">Password</label>
-                                    <input id="password-field" type="password" class="form-control" placeholder="...">
-                                </div>
-                                <div class="form-group d-flex justify-content-end mt-4">
-                                    <button type="submit" class="btn btn-primary submit"><span
-                                                class="fa fa-paper-plane"></span></button>
-                                </div>
-                            </form>
-                            <p class="text-center">Don't have an account? <a href="{{ path('user_register') }}">Sign Up</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    {% endif %}
 {% endblock %}
-
 {% block body %}
 {% endblock %}
+
 
 {% block footer %}
     <footer class="ftco-footer ftco-no-pt">
@@ -119,8 +64,7 @@
                 <div class="col-md pt-5">
                     <div class="ftco-footer-widget pt-md-5 mb-4">
                         <h2 class="ftco-heading-2">About</h2>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
-                            there live the blind texts.</p>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
                         <ul class="ftco-footer-social list-unstyled float-md-left float-lft">
                             <li class="ftco-animate"><a href="#"><span class="fa fa-twitter"></span></a></li>
                             <li class="ftco-animate"><a href="#"><span class="fa fa-facebook"></span></a></li>
@@ -159,12 +103,9 @@
                         <h2 class="ftco-heading-2">Have a Questions?</h2>
                         <div class="block-23 mb-3">
                             <ul>
-                                <li><span class="icon fa fa-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span>
-                                </li>
-                                <li><a href="#"><span class="icon fa fa-phone"></span><span
-                                                class="text">+2 392 3929 210</span></a></li>
-                                <li><a href="#"><span class="icon fa fa-paper-plane"></span><span class="text">info@yourdomain.com</span></a>
-                                </li>
+                                <li><span class="icon fa fa-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon fa fa-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                                <li><a href="#"><span class="icon fa fa-paper-plane"></span><span class="text">info@yourdomain.com</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -175,30 +116,24 @@
 {% endblock %}
 
 <!-- loader -->
-<div id="ftco-loader" class="show fullscreen">
-    <svg class="circular" width="48px" height="48px">
-        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
-        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-                stroke="#F96D00"/>
-    </svg>
-</div>
+<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
 {% block js %}
-    <script src="{{ asset('front/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('front/js/jquery-migrate-3.0.1.min.js') }}"></script>
-    <script src="{{ asset('front/js/popper.min.js') }}"></script>
-    <script src="{{ asset('front/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.easing.1.3.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.stellar.min.js') }}"></script>
-    <script src="{{ asset('front/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ asset('front/js/jquery.animateNumber.min.js') }}"></script>
-    <script src="{{ asset('front/js/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('front/js/scrollax.min.js') }}"></script>
+    <script src="{{asset('front/js/jquery.min.js')}}"></script>
+    <script src="{{asset('front/js/jquery-migrate-3.0.1.min.js')}}"></script>
+    <script src="{{asset('front/js/popper.min.js')}}"></script>
+    <script src="{{asset('front/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('front/js/jquery.easing.1.3.js')}}"></script>
+    <script src="{{asset('front/js/jquery.waypoints.min.js')}}"></script>
+    <script src="{{asset('front/js/jquery.stellar.min.js')}}"></script>
+    <script src="{{asset('front/js/owl.carousel.min.js')}}"></script>
+    <script src="{{asset('front/js/jquery.magnific-popup.min.js')}}"></script>
+    <script src="{{asset('front/js/jquery.animateNumber.min.js')}}"></script>
+    <script src="{{asset('front/js/bootstrap-datepicker.js')}}"></script>
+    <script src="{{asset('front/js/scrollax.min.js')}}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="{{ asset('front/js/google-map.js') }}"></script>
-    <script src="{{ asset('front/js/main.js') }}"></script>
+    <script src="{{asset('front/js/google-map.js')}}"></script>
+    <script src="{{asset('front/js/main.js')}}"></script>
 {% endblock %}
 
 </body>

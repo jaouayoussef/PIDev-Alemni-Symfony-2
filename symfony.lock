@@ -88,16 +88,14 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-    "imagine/imagine": {
-        "version": "1.2.4"
     "gregwar/captcha": {
         "version": "v1.1.9"
     },
     "gregwar/captcha-bundle": {
         "version": "v2.1.5"
     },
-    "jbafford/password-strength-bundle": {
-        "version": "v1.0"
+    "imagine/imagine": {
+        "version": "1.2.4"
     },
     "laminas/laminas-code": {
         "version": "4.5.1"

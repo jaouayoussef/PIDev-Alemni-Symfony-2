@@ -10,6 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 /**
@@ -17,20 +22,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PromoCodeOwnerController extends AbstractController
 {
-    # /**
-    # * @Route("/", name="promo_code_owner_index", methods={"GET"})
-    #  */
-    #   public function index(PromoCodeOwnerRepository $promoCodeOwnerRepository): Response
-    # {
-    #    return $this->render('promo_code_owner/index.html.twig', [
-    #        'promo_code_owners' => $promoCodeOwnerRepository->findAll(),
-    #     ]);
-    # }
+    /**
+     * @Route("/show", name="promo_code_owner_index", methods={"GET"})
+     */
+    public function index(PromoCodeOwnerRepository $promoCodeOwnerRepository , NormalizerInterface $normalizer): Response
+    {
+        $p = $promoCodeOwnerRepository->findAll();
+        $json=$normalizer->normalize($p,'json',['groups'=>'romoodewners']);
+        return new Response(json_encode($json));
+    }
 
     /**
-     * @Route("/new", name="promo_code_owner_new", methods={"GET", "POST"})
+     * @Route("/", name="promo_code_owner_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,PromoCodeOwnerRepository $promoCodeOwnerRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,PromoCodeOwnerRepository $promoCodeOwnerRepository,PromoCodeOwnerRepository $codePromoOwner): Response
     {
         $promoCodeOwner = new PromoCodeOwner();
         $form = $this->createForm(PromoCodeOwnerType::class, $promoCodeOwner);
@@ -41,16 +46,44 @@ class PromoCodeOwnerController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('promo_code_owner_new', [], Response::HTTP_SEE_OTHER);
         }
-
+        $codePromOwners = $codePromoOwner->findAll();
+        $codePromoOwner = [];
+        $codePromoCount = [];
+        foreach ($codePromOwners as $codeProm){
+            $codePromoOwner[] = $codeProm->getPCDEmail();
+            $codePromoCount[] = count($codeProm->getPCDPromotionCode());
+        }
+        $codePromoCountnbrePromo = [];
+        foreach ($codePromOwners as $codeProm){
+            $codePromoCountnbrePromo[] = $codeProm->getPCDNbrePromo();
+        }
         return $this->render('promo_code_owner/new.html.twig', [
             'promo_code_owner' => $promoCodeOwner,
             'form' => $form->createView(),
             'promo_code_owners' => $promoCodeOwnerRepository->findAll(),
+            'codeProms' => json_encode($codePromoOwner),
+            'codePromoCount' => json_encode($codePromoCount),
+            'codePromoCountnbrePromo' => json_encode($codePromoCountnbrePromo),
         ]);
+        //$promoCodeOwner = $promoCodeOwnerRepository->findAll();
+        //$serializer = new Serializer([new ObjectNormalizer()]);
+        //$formatted = $serializer->normalize($promoCodeOwner);
+        // return new JsonResponse($formatted);
     }
-
+    /*/**
+     * @Route("/Add", name="promo_code_owner_Add", methods={"GET", "POST"})
+     */
+    /*public function AddPromoCodeOwner (Request $request, SerializerInterface $serializer,EntityManagerInterface $entityManager ): Response
+    {
+        $content = $request->getContent();
+        dd($content);
+        $data=$serializer->deserialize($content,PromoCodeOwner::class,'json');
+        $entityManager->persist($data);
+        $entityManager->flush();
+        return new Response('PromoCodeOwner added successfully');
+    }*/
     /**
-     * @Route("/{id}/show", name="promo_code_owner_show", methods={"GET"})
+     * @Route("/{id}", name="promo_code_owner_show", methods={"GET"})
      */
     public function show(PromoCodeOwner $promoCodeOwner): Response
     {

@@ -9,6 +9,8 @@ use App\Form\ReponseType;
 use App\Repository\ReclamationRepository;
 use App\Repository\ReponseRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,14 +24,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReponseController extends AbstractController
 {
     /**
-     * @Route("/", name="all_reclamation", methods={"GET"})
+     * @Route("//{page<\d+>}", name="all_reclamation", methods={"GET"})
      */
-    public function showBackOffice(ReclamationRepository $reclamationRepository, ReponseRepository $reponseRepository): Response
+    public function showBackOffice(ReclamationRepository $reclamationRepository, ReponseRepository $reponseRepository, int $page = 1): Response
     {
 
-
         return $this->render('reponse/show_all.html.twig', [
-            'recId' => $reclamationRepository->findAll(),
             'reclamations' => $reclamationRepository->getAllAnswers(),
         ]);
     }

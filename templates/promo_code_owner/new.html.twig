@@ -10,13 +10,49 @@
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">Propriétaire du code promo</h3>
+            <button type="button" class="btn btn-inverse-primary btn-rounded btn-icon" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-line-chart" aria-hidden="true"></i></button>
+
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Événements</a></li>
+                    <li class="breadcrumb-item"><a href="#">Promotion</a></li>
                     <li class="breadcrumb-item active" aria-current="page"> Gestion propriétaire du code promo </li>
                 </ol>
             </nav>
         </div>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="chartModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Nombre de code promotion par propriétaire</h4>
+                                    <canvas id="CodePromoOwnerChart" style="height: 250px; width: 250px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Nombre d'utilisation du code promo par les utilisateurs </h4>
+                                    <canvas id="CodePromoOwnerChart2" style="height: 250px; width: 250px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+            </div>
+        </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
             </div>
@@ -24,22 +60,27 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Ajouter propriétaire du code promo</h4><br>
-                        {{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+                        {{ form_start(form,{'attr':{'class':'forms-sample','novalidate':'novalidate'}}) }}
 
                         <div class="form-group">
                             <label for="exampleInputName1">Nom :</label>
+                            {{ form_errors(form.PCD_Name) }}
                             {{ form_widget(form.PCD_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
 
                         </div><br>
 
                         <div class="form-group">
                             <label for="exampleInputName1">Prénom :</label>
+                            {{ form_errors(form.PCD_FirstName) }}
+
                             {{ form_widget(form.PCD_FirstName,{'attr':{'class':'form-control','type':'text','id':'Prenom','placeholder':'Prénom'}}) }}
 
                         </div><br>
 
                         <div class="form-group">
                             <label for="exampleInputEmail3">Addresse email :</label>
+                            {{ form_errors(form.PCD_Email) }}
+
                             {{ form_widget(form.PCD_Email,{'attr':{'class':'form-control','type':'email','id':'Email','placeholder':'Addresse email','onchange':'validate()'}}) }}
 
 
@@ -47,17 +88,23 @@
 
                         <div class="form-group">
                             <label for="exampleInputEmail3">Profession :</label>
+                            {{ form_errors(form.PCD_Job) }}
+
                             {{ form_widget(form.PCD_Job,{'attr':{'class':'form-control','type':'text','id':'Profession','placeholder':'Profession'}}) }}
 
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">Numéro de téléphone :</label>
+                            {{ form_errors(form.PCD_TelephoneNumber) }}
+
                             {{ form_widget(form.PCD_TelephoneNumber,{'attr':{'class':'form-control','type':'number','id':'NumTel','placeholder':'Numéro de téléphone','onchange':'verifNumTel(this)'}}) }}
 
                         </div><br>
 
                         <div class="form-group">
                             <label for="exampleSelectGender">Sexe :</label>
+                            {{ form_errors(form.PCD_Gender) }}
+
                             {{ form_widget(form.PCD_Gender,{'attr':{'class':'form-control','id':'Sexe'}}) }}
 
                         </div><br>
@@ -65,6 +112,8 @@
 
                         <div class="form-group">
                             <label for="exampleInputCity1">Ville :</label>
+                            {{ form_errors(form.PCD_City) }}
+
                             {{ form_widget(form.PCD_City,{'attr':{'class':'form-control','style':'width: 100%;'}}) }}
 
 
@@ -155,10 +204,103 @@
     </div>
     <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Extra large modal -->
     <script>
 
+
+
+        let codePromoOwner = document.getElementById("CodePromoOwnerChart");
+        let CodePromoOwnerChartGraph = new Chart(codePromoOwner,{
+            type : "bar",
+            data:{
+                labels: {{ codeProms|raw }},
+                datasets:[{
+                    label: "Nombre de code promotion par propriétaire ",
+                    data: {{ codePromoCount|raw }},
+
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    },
+                    elements: {
+                        point: {
+                            radius: 0
+                        }
+                    }
+                }],
+
+
+            }
+        })
+        let codePromoOwner1 = document.getElementById("CodePromoOwnerChart2");
+        let CodePromoOwnerChartGraph1 = new Chart(codePromoOwner1,{
+            type : "doughnut",
+            data:{
+                labels: {{ codeProms|raw }},
+                datasets:[{
+                    label: "Nombre d'utilisation du code promo par les utilisateurs ",
+                    data: {{ codePromoCountnbrePromo|raw }},
+
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    },
+                    elements: {
+                        point: {
+                            radius: 0
+                        }
+                    }
+                }],
+
+
+            }
+        })
         function myFunction2() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput2");
@@ -346,6 +488,8 @@
                 _this.value = null;
             }
         }
+
+
     </script>
 
 

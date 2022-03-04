@@ -10,12 +10,15 @@ use App\Form\QuizType;
 use App\Repository\QuizRepository;
 use App\Repository\QuestionRepository;
 use App\Repository\UseranswerRepository;
+use App\Repository\UserresultRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Nucleos\DompdfBundle\Factory\DompdfFactoryInterface;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 
 /**
  * @Route("/quiz")
@@ -28,7 +31,41 @@ class QuizController extends AbstractController
     public function index(QuizRepository $quizRepository): Response
     {
         return $this->render('quiz/index.html.twig', [
+            'quizzes' => $quizRepository->findBy(array('id_user'=>1)),
+        ]);
+    }
+    /**
+     * @Route("/all", name="all", methods={"GET"})
+     */
+    public function all(QuizRepository $quizRepository): Response
+    {
+
+        return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizRepository->findAll(),
+        ]);
+    }
+    /**
+     * @Route("/mesquiz", name="mesquiz", methods={"GET"})
+     */
+
+   public function mesquiz( UserresultRepository $userresultRepository)
+    {
+      //récuperer le dernier quiz passer par l'utilisateur : from user result
+
+       return $this->render('quiz/myquiz.html.twig', [
+            'quizresult' => $userresultRepository->findBy(array('id_user'=>1)),
+        ]);
+    }
+    /**
+     * @Route("/certif/{id}", name="quiz_certif", methods={"GET"})
+     */
+
+    public function certif(Quiz $quiz,QuizRepository $quizRepository)
+    {
+        //récuperer le dernier quiz passer par l'utilisateur : from user result
+
+        return $this->render('quiz/certification.html.twig', [
+            'quiz' => $quiz,
         ]);
     }
 
@@ -42,9 +79,11 @@ class QuizController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $quiz->setIdUser(1);
+            $quiz->setIdFormation(2);
             $entityManager->persist($quiz);
             $entityManager->flush();
-            $nbre=0;
+$nbre=0;
             return $this->redirectToRoute('question_new', ['quiz' => $quiz, 'nbre'=>$nbre], Response::HTTP_SEE_OTHER);
         }
 
@@ -55,7 +94,7 @@ class QuizController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/show", name="quiz_show", methods={"GET"})
+     * @Route("/{id}", name="quiz_show", methods={"GET"})
      */
     public function show(Quiz $quiz): Response
     {
@@ -99,7 +138,7 @@ class QuizController extends AbstractController
     /**
      * @Route("/{id}/question/{nbr}", name="quizz_play")
      */
-    public function play($id, Quiz $quiz, Request $request, $nbr, QuestionRepository $questionRepo){
+    public function play($id, Quiz $quiz, Request $request, $nbr, QuestionRepository $questionRepo, \Swift_Mailer $mailer){
         $useranswer = new Useranswer();
        // $question = $questionRepo->find($nbr);
         $questions = $questionRepo->findBy(array('quiz'=>$id));
@@ -173,6 +212,26 @@ class QuizController extends AbstractController
                        'score' => $score,
                    ]);
                }else{
+                   $message = (new \Swift_Message('Félicitation'))
+                       ->setFrom('nassim.allouche@gmail.com')
+                       ->setTo('mohamed.bouaziz@esprit.tn')
+                       ->setBody(
+                           $this->renderView(
+                           // templates/emails/registration.html.twig
+                               'quiz/mail.html.twig',[
+
+                       'question' => $question,
+
+
+                       'score' => $score,
+                   ]
+
+                           ),
+                           'text/html'
+                       )
+                   ;
+                   $mailer->send($message);
+
                    return $this->render('quiz/success.html.twig', [
                        'form' => $form->createView(),
                        'question' => $question,
@@ -194,4 +253,6 @@ class QuizController extends AbstractController
             'id' => $id,
         ]);
     }
+
+
 }

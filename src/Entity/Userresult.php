@@ -37,7 +37,7 @@ class Userresult
         return $this->id;
     }
 
-    public function getIdQuizz(): ?int
+    public function getId_quizz(): ?int
     {
         return $this->id_quizz;
     }

@@ -81,7 +81,7 @@ class QuestionController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/show", name="question_show", methods={"GET"})
+     * @Route("/{id}", name="question_show", methods={"GET"})
      */
     public function show(Question $question): Response
     {

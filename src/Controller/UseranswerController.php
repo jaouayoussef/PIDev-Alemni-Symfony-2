@@ -51,7 +51,7 @@ class UseranswerController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/show", name="useranswer_show", methods={"GET"})
+     * @Route("/{id}", name="useranswer_show", methods={"GET"})
      */
     public function show(Useranswer $useranswer): Response
     {

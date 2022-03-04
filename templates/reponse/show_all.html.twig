@@ -57,8 +57,8 @@
                             <td>-</td>
                             <td>-</td>
                             {% endif %}
-                            {% if rec.status == 1 %}
-                            <td><a class="btn btn-inverse-success btn-fw" href="{{ asset('uploads/reclamation_picture/' ~ rec.admin_file) }}">View</a></td>
+                            {% if rec.user_file != null %}
+                            <td><a class="btn btn-inverse-success btn-fw" href="{{ asset('uploads/reclamation_picture/' ~ rec.user_file) }}">View</a></td>
                             {% else %}
                             <td> No File Sent</td>
                             {% endif %}
@@ -66,8 +66,7 @@
                             <td>
                               <a class="btn btn-inverse-danger btn-fw" href="{{ path('add_reponse' ,{'id':rec.id})}}">Reply</a>
                             </td>
-                            {% endif %}
-                            {% if rec.status == 1 %}
+                            {% else %}
                             <td>
                                 <a class="btn btn-inverse-warning btn-fw" href="{{ path('edit_reponse' ,{'id':rec.repId})}}">Edit</a>
                             </td>

@@ -6,6 +6,8 @@ use App\Entity\Reclamation;
 use App\Form\ReclamationType;
 use App\Repository\ReclamationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -22,10 +24,14 @@ class ReclamationController extends AbstractController
     /**
      * @Route("/", name="user_reclamation", methods={"GET"})
      */
-    public function index(ReclamationRepository $reclamationRepository): Response
+    public function index(ReclamationRepository $reclamationRepository, int $page = 1): Response
     {
+        $test = $reclamationRepository->getAllAnswers();
+        $pagerfanta = new Pagerfanta(new QueryAdapter($test));
+        $pagerfanta->setMaxPerPage(5);
+        $pagerfanta->setCurrentPage($page);
         return $this->render('reclamation/show_front.html.twig', [
-            'reclamations' => $reclamationRepository->getAllAnswers(),
+            'reclamations' => $pagerfanta,
         ]);
     }
 

@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\PseudoTypes\False_;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\DateTime;
-
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
@@ -22,6 +23,9 @@ class Event
     private $id;
 
     /**
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $E_Name;
@@ -38,27 +42,38 @@ class Event
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_Place;
 
     /**
      * @ORM\Column(type="integer", length=255)
      */
-    private $E_Price;
+    private $E_Price=0;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_TelNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_Email;
 
     /**
      *   @ORM\Column(type="datetime", length=255)
-
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_DateDebut;
 
@@ -96,13 +111,40 @@ class Event
 
     /**
      *   @ORM\Column(type="datetime", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_DateFin;
 
     /**
      * @ORM\Column(type="integer", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_Nbre;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Promotion::class, mappedBy="event")
+     */
+    private $Promotion;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ReservationEvent::class, mappedBy="EventId", orphanRemoval=true)
+     */
+    private $reservationEvents;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $E_PlaceReserver=0;
+
+    public function __construct()
+    {
+        $this->reservationEvents = new ArrayCollection();
+    }
+
 
 
 
@@ -207,7 +249,58 @@ class Event
         return $this;
     }
 
+    public function getPromotion(): ?Promotion
+    {
+        return $this->Promotion;
+    }
 
+    public function setPromotion(?Promotion $Promotion): self
+    {
+        $this->Promotion = $Promotion;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection|ReservationEvent[]
+     */
+    public function getReservationEvents(): Collection
+    {
+        return $this->reservationEvents;
+    }
+
+    public function addReservationEvent(ReservationEvent $reservationEvent): self
+    {
+        if (!$this->reservationEvents->contains($reservationEvent)) {
+            $this->reservationEvents[] = $reservationEvent;
+            $reservationEvent->setEventId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationEvent(ReservationEvent $reservationEvent): self
+    {
+        if ($this->reservationEvents->removeElement($reservationEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationEvent->getEventId() === $this) {
+                $reservationEvent->setEventId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEPlaceReserver(): ?int
+    {
+        return $this->E_PlaceReserver;
+    }
+
+    public function setEPlaceReserver(?int $E_PlaceReserver): self
+    {
+        $this->E_PlaceReserver = $E_PlaceReserver;
+
+        return $this;
+    }
 
 }

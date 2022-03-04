@@ -1,7 +1,8 @@
-<form method="post" action="{{ path('promotion_code_delete', {'id': promotion_code.id}) }}" id="myForm">
+<form method="post" action="{{ path('promotion_code_delete', {'id': promotion_code.id}) }}" onsubmit="return confirm('Êtes-vous sûr ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion_code.id) }}">
+    <button class="btn btn-danger" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true"></i></button>
 </form>
-<button class="btn btn-danger" id="btn-submit" onclick="deleteswal()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+{#
 <script>
     function deleteswal() {
         Swal.fire({
@@ -19,4 +20,4 @@
             }
         })
     }
-</script>
+</script> #}

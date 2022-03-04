@@ -1,6 +1,8 @@
-{% extends 'base-front.html.twig' %}
 
-{% block title %}Edit Question{% endblock %}
+
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Quiz index{% endblock %}
 
 {% block body %}
 
@@ -76,9 +78,5 @@
             </div>
         </div>
     </section>
-    {{ include('question/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('question_index') }}">back to list</a>
-
-    {{ include('question/_delete_form.html.twig') }}
 {% endblock %}

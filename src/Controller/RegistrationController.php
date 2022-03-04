@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationController extends AbstractController
@@ -32,25 +30,25 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user)
-            ->add('plainPassword', RepeatedType::class,[
-                'type'=>PasswordType::class,
-                'required'=>false,
-                'mapped'=>false,
-                'first_options'=>[
-                    'label'=>false,
-                    'attr'=>[
-                        'placeholder'=>'...',
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'required' => false,
+                'mapped' => false,
+                'first_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => '...',
                     ],
-                    'constraints'=>[
+                    'constraints' => [
                         new NotBlank(),
                     ]
                 ],
-                'second_options'=>[
-                    'label'=>false,
-                    'attr'=>[
-                        'placeholder'=>'...'
+                'second_options' => [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => '...'
                     ],
-                    'constraints'=>[
+                    'constraints' => [
                         new NotBlank(),
                     ]
                 ]
@@ -61,7 +59,7 @@ class RegistrationController extends AbstractController
             $picture = $form->get('picture')->getData();
             if ($picture) {
                 // this is needed to safely include the file name as part of the URL
-                $newFilename = uniqid().'.'.$picture->guessExtension();
+                $newFilename = uniqid() . '.' . $picture->guessExtension();
                 // Move the file to the directory where pictures are stored
                 try {
                     $picture->move(
@@ -232,9 +230,13 @@ class RegistrationController extends AbstractController
             $message = (new \Swift_Message('Welcome to Alemni'))
                 ->setFrom('Alemnicontact@gmail.com')
                 ->setTo($user->getEmail());
-                ->setBody(
-                            $this->renderView(
+            $img = $message->embed(\Swift_Image::fromPath('Back/assets/email/images/LogoPi.png'));
+            $message->setBody(
+                $this->renderView(
                     'emails/registration.html.twig',
+                    [
+                        'img' => $img
+                    ]
                 ),
                 'text/html'
             );

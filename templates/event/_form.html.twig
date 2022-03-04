@@ -21,7 +21,7 @@
 </div><br>
 <div class="form-group">
     <label for="exampleInputEmail3">Date debut :</label>
-    {{ form_widget(form.E_DateDebut,{'attr':{'class':'form-control','id':'DateD','placeholder':'Valeur du code promo en pourcentage', 'onchange':'verifDatedebut()'}}) }}
+    {{ form_widget(form.E_DateDebut,{'attr':{'class':'form-control','id':'DateD','placeholder':'Valeur du code promo en pourcentage','onchange':'verifDatedebut()'}}) }}
 </div><br>
 
 <div class="form-group">
@@ -49,8 +49,6 @@
 
 <div class="form-group">
     <label for="exampleInputName1">Photo :</label>
-
-    <input type="file" name="img[]" class="file-upload-default" />
 
     <div class="input-group col-xs-12">
         {{ form_widget(form.E_PHOTO,{'attr':{'class':'file-upload-browse btn btn-primary','type':'file','id':'Prenom','style':'width: 100%; ','accept':'image/png, image/jpeg'}}) }}

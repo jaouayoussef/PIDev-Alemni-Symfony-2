@@ -1,0 +1,46 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Quiz index{% endblock %}
+
+{% block body %}
+  <br>  <h1 style="position:center;">Mes Quiz</h1><br>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Nom du Quiz</th>
+                <th>Score </th>
+                <th>Créer par</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for quiz in quizresult %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ quiz.id }}</td>
+                <td>{{ quiz.result}} </td>
+                <td> Nassim Allouche</td>
+                {% if quiz.result > 16 %}
+                    <td>
+
+                        <a href="{{ path('quiz_certif', {'id': quiz.id_quizz}) }}">Certification</a>
+
+                    </td>
+
+                {% else %}
+                    <td> </td>
+                {% endif %}
+
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
