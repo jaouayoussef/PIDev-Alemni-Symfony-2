@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+
 use App\Entity\ReservationEvent;
 use App\Entity\User;
 use App\Form\EventType;
@@ -132,8 +133,10 @@ class EventController extends AbstractController
     /**
      * @Route("/EventReservationAvecIncrement/{id}/{eventid}/{PrixReservaion}/{userid}", name="EventReservationAvecIncrement")
      */
-    public function Increment_PCD_NbrePromo($id,$eventid ,$userid,$PrixReservaion,PromoCodeOwnerRepository $PromotionCodeOwnerRepository,EntityManagerInterface $entityManager,UserRepository $userRepository,EventRepository $eventRepository):Response
+    public function Increment_PCD_NbrePromo($id,$eventid ,$userid,$PrixReservaion,PromoCodeOwnerRepository $PromotionCodeOwnerRepository, \Swift_Mailer $mailer,EntityManagerInterface $entityManager,UserRepository $userRepository,EventRepository $eventRepository):Response
     {
+
+        $this->addFlash('message','teb3ath');
         $reservationEvent = new ReservationEvent();
         $event = $eventRepository->findOneBy(['id' => $eventid]);
         $event->setEPlaceReserver($event->getEPlaceReserver()+1);
@@ -145,14 +148,36 @@ class EventController extends AbstractController
         $entityManager->persist($reservationEvent);
         $promocodeOwner = $PromotionCodeOwnerRepository->findOneBy(['id' => $id]);
         $promocodeOwner->setPCDNbrePromo($promocodeOwner->getPCDNbrePromo()+1);
+
+        $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
+            ->setFrom('alemnicontact@gmail.com')
+            ->setTo($this->getUser()->getEmail())
+            ->setBody(
+                $this->renderView(
+                // templates/emails/registration.html.twig
+                    'event/show_event/mail.html.twig',
+                    ['nameevent' => $event->getEName(),
+                        'firstname'=> $this->getUser()->getFirstName() ,
+                        'lastname' =>$this->getUser()->getLastName() ,
+                        'montant'=>$PrixReservaion,
+
+                    ]
+                ),
+                'text/html'
+            )
+        ;
+
+        $mailer->send($message);
         $entityManager->flush();
+
         return $this->redirectToRoute('show_event');
     }
     /**
      * @Route("/EventReservationAvecIncrement/{eventid}/{PrixReservaion}/{userid}", name="aJouterReservation")
      */
-    public function aJouterReservation($eventid ,$userid,$PrixReservaion,EntityManagerInterface $entityManager,UserRepository $userRepository,EventRepository $eventRepository):Response
+    public function aJouterReservation($eventid ,$userid,$PrixReservaion,EntityManagerInterface $entityManager,UserRepository $userRepository, \Swift_Mailer $mailer,EventRepository $eventRepository):Response
     {
+
         $reservationEvent = new ReservationEvent();
         $event = $eventRepository->findOneBy(['id' => $eventid]);
         $user = $userRepository->findOneBy(['id' => $userid]);
@@ -162,6 +187,26 @@ class EventController extends AbstractController
         $reservationEvent->setPrixReservationEvent($PrixReservaion);
         $reservationEvent->setDateReservationEvent(new \DateTime('now'));
         $entityManager->persist($reservationEvent);
+
+        $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
+            ->setFrom('alemnicontact@gmail.com')
+            ->setTo($this->getUser()->getEmail())
+            ->setBody(
+                $this->renderView(
+                // templates/emails/registration.html.twig
+                    'event/show_event/mail.html.twig',
+                    ['nameevent' => $event->getEName(),
+                        'firstname'=> $this->getUser()->getFirstName() ,
+                        'lastname' =>$this->getUser()->getLastName() ,
+                        'montant'=>$PrixReservaion,
+
+                    ]
+                ),
+                'text/html'
+            )
+        ;
+
+        $mailer->send($message);
         $entityManager->flush();
         return $this->redirectToRoute('show_event');
     }
@@ -328,13 +373,32 @@ class EventController extends AbstractController
     /**
      * @Route("/eventreservation/{id}", name="eventreservation_delete", methods={"POST"})
      */
-    public function deletereservation(Request $request,EventRepository $eventRepository, ReservationEvent $eventReservation, EntityManagerInterface $entityManager): Response
+    public function deletereservation(Request $request,EventRepository $eventRepository, ReservationEvent $eventReservation, \Swift_Mailer $mailer,EntityManagerInterface $entityManager): Response
     {
 
         if ($this->isCsrfTokenValid('delete'.$eventReservation->getId(), $request->request->get('_token'))) {
             $event = $eventRepository->findOneBy(['id' => $eventReservation->getEventId()]);
             $event->setEPlaceReserver($event->getEPlaceReserver()-1);
             $entityManager->remove($eventReservation);
+            $message = (new \Swift_Message('ALEMNI, Paiement Annulé!'))
+                ->setFrom('alemnicontact@gmail.com')
+                ->setTo($this->getUser()->getEmail())
+                ->setBody(
+                    $this->renderView(
+                    // templates/emails/registration.html.twig
+                        'event/show_event_back/mail.html.twig',
+                        ['nameevent' => $event->getEName(),
+                            'firstname'=> $this->getUser()->getFirstName() ,
+                            'lastname' =>$this->getUser()->getLastName() ,
+                            'montant'=>$eventReservation->getPrixReservationEvent(),
+
+                        ]
+                    ),
+                    'text/html'
+                )
+            ;
+
+            $mailer->send($message);
             $entityManager->flush();
         }
 

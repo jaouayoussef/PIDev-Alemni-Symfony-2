@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0eff30cc-ddc7-4f6e-996c-c9c5f38e769a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/templates/event/show_event/mail.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/event/show_event_back/mail.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/event/show_event/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/event/show_event/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user/userProfile.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user/userProfile.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/EventController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/EventController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,11 +176,17 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/event/show_event_back" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Mohamed\Documents\GitHub\PiDev\templates\event\show_event_back" />
+      <recent name="C:\Users\Mohamed\Documents\GitHub\PiDev\templates\event\show_event" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="phpunit.xml.dist" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -206,7 +213,7 @@
       <workItem from="1646432473901" duration="618000" />
       <workItem from="1646436596926" duration="15296000" />
       <workItem from="1646452266931" duration="6000" />
-      <workItem from="1646486720467" duration="5555000" />
+      <workItem from="1646486720467" duration="14934000" />
     </task>
     <servers />
   </component>
