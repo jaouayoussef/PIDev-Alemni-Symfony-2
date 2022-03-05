@@ -1,6 +1,6 @@
 {% extends 'base-back.html.twig' %}
 
-{% block title %} test add {% endblock %}
+{% block title %} Gestion événements {% endblock %}
 
 {% block body %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -98,7 +98,7 @@
                             <label> Date fin :</label>
                             {{ form_errors(form.E_DateFin) }}
 
-                            {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage','disabled':'disable' ,'onchange':'verifDate()'}}) }}
+                            {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()'}}) }}
                         </div><br>
 
 
@@ -510,23 +510,29 @@
         let datedebuttimea = datedebuttimeandjour[1].split(":");
         let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
 
+        let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
+        let datefintimeandjour = dateFinString[2].split("T");
+        let datefintimea = datefintimeandjour[1].split(":");
+        let dateFin = new Date (dateFinString[0],dateFinString[1]-1,datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
 
         let date = new Date();
 
-        if (dateDebut <= date  ){
+        if (dateDebut <= date && dateDebut >= dateFin ){
             Swal.fire({
                 icon: 'error',
                 title: 'Date Invalide !',
                 timer: 3000,
                 timerProgressBar: true,
             })
-            document.getElementById("event_E_DateFin").disabled = true;
             document.getElementById("event_E_DateDebut").value = 0;
             document.getElementById("event_E_DateFin").value = 0;
-
-
 }else {
-            document.getElementById("event_E_DateFin").disabled = false;
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Fin Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
             document.getElementById("event_E_DateFin").value = 0;
         }
     }
@@ -534,10 +540,11 @@
         let dateDebutString = document.getElementById("event_E_DateDebut").value.split("-");
         let datedebuttimeandjour = dateDebutString[2].split("T");
         let datedebuttimea = datedebuttimeandjour[1].split(":");
+        let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
+
         let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
         let datefintimeandjour = dateFinString[2].split("T");
         let datefintimea = datefintimeandjour[1].split(":");
-        let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
         let dateFin = new Date (dateFinString[0],dateFinString[1]-1,datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
 
         let date = new Date();
