@@ -5,10 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/event/edit.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/event/edit.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/event/new.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/event/new.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/event/show_event_back/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/event/show_event_back/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/promo_code_owner/edit.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/promo_code_owner/edit.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/promotion/edit.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/promotion/edit.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/promotion_code/edit.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/promotion_code/edit.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/promotion/_form.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/promotion/_form.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/promotion_code/new.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/promotion_code/new.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -211,7 +208,7 @@
       <workItem from="1646432473901" duration="618000" />
       <workItem from="1646436596926" duration="15296000" />
       <workItem from="1646452266931" duration="6000" />
-      <workItem from="1646486720467" duration="1723000" />
+      <workItem from="1646486720467" duration="3143000" />
     </task>
     <servers />
   </component>
