@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+use App\Entity\Quiz;
 use App\Form\QuestionType;
 use App\Repository\QuestionRepository;
+use App\Repository\QuizRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +28,15 @@ class QuestionController extends AbstractController
             'questions' => $questionRepository->findAll(),
         ]);
     }
+    /**
+     * @Route("/myquestion/{id}", name="myquestion", methods={"GET"})
+     */
+    public function myquestion(Quiz $question): Response
+    {
+        return $this->render('question/index.html.twig', [
+            'questions' => $this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getId()),
+        ]);
+    }
 
     /**
      * @Route("/new", name="question_new", methods={"GET", "POST"})
@@ -32,19 +44,39 @@ class QuestionController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $question = new Question();
+
+        $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findAll()) ;
+        $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findAll();
+        $quiz=$quizs[$nbr -1];
+        //$quiz =$this->getDoctrine()->getRepository(Quiz::class)->find(50);
         $form = $this->createForm(QuestionType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $question->setQuiz($quiz);
             $entityManager->persist($question);
             $entityManager->flush();
 
-            return $this->redirectToRoute('question_index', [], Response::HTTP_SEE_OTHER);
-        }
+
+
+         $nbre = count($this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getQuiz()->getId()));
+          if ( $nbre < 20){
+
+            return $this->redirectToRoute('question_new', [
+                'quiz' =>  $quiz,
+                'question' => $question,
+                'form' => $form->createView(),
+                'nbre'=> $nbre,
+            ],Response::HTTP_SEE_OTHER);
+        } else{ return $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$quiz]);}
+    }
+        $nbre = count($this->getDoctrine()->getRepository(Question::class)->findByExampleField($quiz->getId()));
 
         return $this->render('question/new.html.twig', [
+            'quiz' =>  $quiz,
             'question' => $question,
             'form' => $form->createView(),
+            'nbre'=>$nbre,
         ]);
     }
 
@@ -69,7 +101,7 @@ class QuestionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('question_index', [], Response::HTTP_SEE_OTHER);
+            return  $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$question->getQuiz()]);;
         }
 
         return $this->render('question/edit.html.twig', [

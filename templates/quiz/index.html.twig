@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-back.html.twig' %}
 
 {% block title %}Quiz index{% endblock %}
 
@@ -8,19 +8,23 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
+                <th>N°</th>
+                <th>Nom du Quiz</th>
+                <th>Nom du formation </th>
+                <th>Créer par</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for quiz in quizzes %}
             <tr>
-                <td>{{ quiz.id }}</td>
+                <td>{{ loop.index }}</td>
                 <td>{{ quiz.name }}</td>
+                <td>formation {{ loop.index }} </td>
+                <td> Nassim Allouche</td>
                 <td>
                     <a href="{{ path('quiz_show', {'id': quiz.id}) }}">show</a>
-                    <a href="{{ path('quiz_edit', {'id': quiz.id}) }}">edit</a>
+                    <a href="{{ path('myquestion', {'id': quiz.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('quiz_new') }}">Create new</a>
+
 {% endblock %}

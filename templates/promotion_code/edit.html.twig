@@ -1,13 +1,98 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-back.html.twig' %}
 
-{% block title %}Edit PromotionCode{% endblock %}
+{% block title %} test add {% endblock %}
 
 {% block body %}
-    <h1>Edit PromotionCode</h1>
 
-    {{ include('promotion_code/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('promotion_code_index') }}">back to list</a>
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Propriétaire du code promo</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Promotion</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> Gestion code promo </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Modifier propriétaire du code promo</h4><br>
+                        {{ include('promotion_code/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+                    </div>
+                </div>
+            </div >
 
-    {{ include('promotion_code/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+    <table class="table table-bordered table-striped" style="display:none"  id="myTable">
+        <thead>
+        <tr>
+            <th>Propriétaire </th>
+            <th>Code </th>
+            <th>Valeur du code promo </th>
+            <th>Date d'expiration </th>
+            <th>Description </th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for promotion_code in promotion_codes %}
+            <tr>
+                <td style="display:none">{{ promotion_code.id }}</td>
+                <td>{{ promotion_code.CPPCD.PCDEmail }}</td>
+                <td>{{ promotion_code.PCCode }}</td>
+                <td>{{ promotion_code.PCValue }}</td>
+                <td>{{ promotion_code.PCExpirationCode ? promotion_code.PCExpirationCode|date('Y-m-d') : '' }}</td>
+                <td>{{ promotion_code.PCNote }}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+
+
+                        <a type="button" class="btn btn-primary" href="{{ path('promotion_code_edit', {'id': promotion_code.id}) }}">  <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        {{ include('promotion_code/_delete_form.html.twig') }}
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucun enregistrement trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="chercher" ></th>
+            <th><input style="width: 90%" type="text" id="myInput4" onkeyup="myFunction4()" placeholder="chercher" ></th>
+            <th><input style="width: 90%" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="chercher" ></th>
+            <th><input style="width: 90%" type="text" id="myInput6" onkeyup="myFunction6()" placeholder="chercher" ></th>
+            <th><input style="width: 90%" type="text" id="myInput7" onkeyup="myFunction7()" placeholder="chercher" ></th>
+        </tr>
+        </tfoot>
+    </table>
+    <script>
+        function verifCodepromo(_this){
+            var table = document.getElementById('myTable');
+            for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+                if (table.rows[r].cells[2].innerHTML == _this.value){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ce code promo existe !',
+                        timer: 3000,
+                        timerProgressBar: true,
+                    })
+                    document.getElementById("promotion_code_PC_Code").value = null;
+
+                }
+
+            }
+        }
+    </script>
 {% endblock %}
+

@@ -6,6 +6,10 @@
 parameters:
     user_picture: '%kernel.project_dir%/public/uploads/user_picture'
     verification_file: '%kernel.project_dir%/public/uploads/verification_file'
+    event_picture: '%kernel.project_dir%/public/uploads/Event'
+    image_domaine: '%kernel.project_dir%/public/uploads/domaine'
+    image_formation: '%kernel.project_dir%/public/uploads/formation'
+    reclamation_file_dir: '%kernel.project_dir%/public/uploads/reclamation_picture'
 
 services:
     # default configuration for services in *this* file

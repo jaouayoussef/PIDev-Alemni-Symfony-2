@@ -5,11 +5,16 @@ namespace App\Controller;
 use App\Entity\Reclamation;
 use App\Form\ReclamationType;
 use App\Repository\ReclamationRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\File;
 
 /**
  * @Route("/reclamation")
@@ -17,77 +22,80 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReclamationController extends AbstractController
 {
     /**
-     * @Route("/", name="reclamation_index", methods={"GET"})
+     * @Route("/", name="user_reclamation", methods={"GET"})
+     * @throws Exception
      */
-    public function index(ReclamationRepository $reclamationRepository): Response
+    public function index(ReclamationRepository $reclamationRepository, Request $req, PaginatorInterface $paginator): Response
     {
-        return $this->render('reclamation/index.html.twig', [
-            'reclamations' => $reclamationRepository->findAll(),
+        $data = $reclamationRepository->getAllAnswers();
+        $pagination = $paginator->paginate(
+            $data,
+            $req->query->getInt('page', 1),
+            2
+        );
+        return $this->render('reclamation/show_front.html.twig', [
+            'reclamations' => $pagination,
         ]);
+
     }
 
     /**
-     * @Route("/new", name="reclamation_new", methods={"GET", "POST"})
+     * @Route("/add", name="add_reclamation", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function addReclamation(Request $request, EntityManagerInterface $entityManager): Response
     {
         $reclamation = new Reclamation();
-        $form = $this->createForm(ReclamationType::class, $reclamation);
+        $form = $this->createForm(ReclamationType::class, $reclamation)->add('UserFile', FileType::class, [
+            'required' => false,
+            'mapped' => false,
+            'constraints' => [
+                new File()
+            ]
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('UserFile')->getData();
+            if ($file) {
+                // this is needed to safely include the file name as part of the URL
+                $newFilename = uniqid() . '.' . $file->guessExtension();
+                // Move the file to the directory where pictures are stored
+                try {
+                    $file->move(
+                        $this->getParameter('reclamation_file_dir'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $reclamation->setUserFile($newFilename);
+            }
+            $reclamation->setSendingDate(new \DateTime());
             $entityManager->persist($reclamation);
             $entityManager->flush();
 
-            return $this->redirectToRoute('reclamation_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('user_reclamation', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('reclamation/new.html.twig', [
+        return $this->render('reclamation/add_rec.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="reclamation_show", methods={"GET"})
-     */
-    public function show(Reclamation $reclamation): Response
-    {
-        return $this->render('reclamation/show.html.twig', [
-            'reclamation' => $reclamation,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="reclamation_edit", methods={"GET", "POST"})
-     */
-    public function edit(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ReclamationType::class, $reclamation);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('reclamation_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('reclamation/edit.html.twig', [
-            'reclamation' => $reclamation,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="reclamation_delete", methods={"POST"})
+     * @Route("/{id}", name="delete_reclamation", methods={"POST"})
      */
     public function delete(Request $request, Reclamation $reclamation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reclamation->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reclamation->getId(), $request->request->get('_token'))) {
             $entityManager->remove($reclamation);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('reclamation_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('user_reclamation', [], Response::HTTP_SEE_OTHER);
     }
 }

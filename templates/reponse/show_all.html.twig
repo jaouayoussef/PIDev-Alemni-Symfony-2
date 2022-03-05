@@ -1,0 +1,94 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %} All reclamations {% endblock %}
+
+{% block body %}
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Toutes les reclamations</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div style="overflow-x: auto;">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Type</th>
+                                        <th>Titre</th>
+                                        <th>Message</th>
+                                        <th>Date d'envoi</th>
+                                        <th>état</th>
+                                        <th>Fichier reçu</th>
+                                        <th>Répose</th>
+                                        <th>Date de réponse</th>
+                                        <th>Fichier envoyé</th>
+                                        <th>Réponde</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for rec in reclamations %}
+                                        <tr>
+                                            <td>{{ rec.name }}</td>
+                                            <td>{{ rec.type }}</td>
+                                            <td>{{ rec.title }}</td>
+                                            <td>{{ rec.message }}</td>
+                                            <td class="text-success">{{ rec.sendingDate ? rec.sendingDate|date('d-m-Y H:i') : '' }}</td>
+                                            <td>
+                                                {% if rec.status == 0 %}
+                                                    <label class="badge badge-danger">En attente</label>
+                                                {% else %}
+                                                    <label class="badge badge-success">Répondu</label>
+                                                {% endif %}
+                                            </td>
+                                            {% if rec.userFile != null %}
+                                                <td><a class="btn btn-inverse-success btn-fw"
+                                                       href="{{ asset('uploads/reclamation_picture/' ~ rec.userFile) }}">Voir</a>
+                                                </td>
+                                            {% else %}
+                                                <td> Pas de fichier reçu</td>
+                                            {% endif %}
+                                            {% if rec.reponse %}
+                                                <td>{{ rec.reponse.answer }}</td>
+                                                <td>{{ rec.reponse.replyDate ? rec.reponse.replyDate|date('d-m-Y H:i') : '' }}</td>
+                                            {% else %}
+                                                <td>-</td>
+                                                <td>-</td>
+                                            {% endif %}
+                                            {% if rec.reponse %}
+                                                <td><a class="btn btn-inverse-success btn-fw"
+                                                       href="{{ asset('uploads/reclamation_picture/' ~ rec.reponse.adminFile) }}">Voir</a>
+                                                </td>
+                                            {% else %}
+                                                <td>-</td>
+                                            {% endif %}
+                                            {% if rec.reponse == null %}
+                                                <td>
+                                                    <a class="btn btn-inverse-danger btn-fw"
+                                                       href="{{ path('add_reponse' ,{'id':rec.id}) }}">Répondre</a>
+                                                </td>
+                                            {% else %}
+                                                <td>
+                                                    <a class="btn btn-inverse-warning btn-fw"
+                                                       href="{{ path('edit_reponse' ,{'id':rec.reponse.id}) }}">Modifier</a>
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="navigation">
+                                {{ knp_pagination_render(reclamations) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -18,7 +18,16 @@ class SeanceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Seance::class);
     }
-
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.formation = :val')
+            ->setParameter('val', $value)
+            ->orderBy('q.dateSeance', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     // /**
     //  * @return Seance[] Returns an array of Seance objects
     //  */

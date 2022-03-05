@@ -18,7 +18,15 @@ class PromoCodeOwnerRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PromoCodeOwner::class);
     }
+    public function getWhatYouWant($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.id != :identifier')
+            ->setParameter('identifier', $id);
 
+        return $qb->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return PromoCodeOwner[] Returns an array of PromoCodeOwner objects
     //  */

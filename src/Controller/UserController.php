@@ -335,16 +335,4 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/admin/dashboard", name="admin_dashboard")
-     */
-    public function adminDashboard(): Response
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        } else {
-            return $this->render('admin/dashboard.html.twig');
-        }
-    }
 }

@@ -1,52 +1,52 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}PromoCodeOwner{% endblock %}
+<title>PromoCodeOwner</title>
 
 {% block body %}
     <h1>PromoCodeOwner</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ promo_code_owner.id }}</td>
-            </tr>
-            <tr>
-                <th>PCD_Name</th>
-                <td>{{ promo_code_owner.PCDName }}</td>
-            </tr>
-            <tr>
-                <th>PCD_FirstName</th>
-                <td>{{ promo_code_owner.PCDFirstName }}</td>
-            </tr>
-            <tr>
-                <th>PCD_Email</th>
-                <td>{{ promo_code_owner.PCDEmail }}</td>
-            </tr>
-            <tr>
-                <th>PCD_Job</th>
-                <td>{{ promo_code_owner.PCDJob }}</td>
-            </tr>
-            <tr>
-                <th>PCD_TelephoneNumber</th>
-                <td>{{ promo_code_owner.PCDTelephoneNumber }}</td>
-            </tr>
-            <tr>
-                <th>PCD_Gender</th>
-                <td>{{ promo_code_owner.PCDGender }}</td>
-            </tr>
-            <tr>
-                <th>PCD_City</th>
-                <td>{{ promo_code_owner.PCDCity }}</td>
-            </tr>
-            <tr>
-                <th>PCD_Note</th>
-                <td>{{ promo_code_owner.PCDNote }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ promo_code_owner.id }}</td>
+        </tr>
+        <tr>
+            <th>PCD_Name</th>
+            <td>{{ promo_code_owner.PCDName }}</td>
+        </tr>
+        <tr>
+            <th>PCD_FirstName</th>
+            <td>{{ promo_code_owner.PCDFirstName }}</td>
+        </tr>
+        <tr>
+            <th>PCD_Email</th>
+            <td>{{ promo_code_owner.PCDEmail }}</td>
+        </tr>
+        <tr>
+            <th>PCD_Job</th>
+            <td>{{ promo_code_owner.PCDJob }}</td>
+        </tr>
+        <tr>
+            <th>PCD_TelephoneNumber</th>
+            <td>{{ promo_code_owner.PCDTelephoneNumber }}</td>
+        </tr>
+        <tr>
+            <th>PCD_Gender</th>
+            <td>{{ promo_code_owner.PCDGender }}</td>
+        </tr>
+        <tr>
+            <th>PCD_City</th>
+            <td>{{ promo_code_owner.PCDCity }}</td>
+        </tr>
+        <tr>
+            <th>PCD_Note</th>
+            <td>{{ promo_code_owner.PCDNote }}</td>
+        </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('promo_code_owner_index') }}">back to list</a>
+    <a href="{{ path('promo_code_owner_new') }}">back to list</a>
 
     <a href="{{ path('promo_code_owner_edit', {'id': promo_code_owner.id}) }}">edit</a>
 

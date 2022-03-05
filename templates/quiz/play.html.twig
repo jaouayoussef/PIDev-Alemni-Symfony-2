@@ -1,0 +1,58 @@
+{% extends 'base-quiz.twig' %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block body %}
+    <div class="container-contact100">
+        <div class="wrap-contact100">
+            {{ form_start(form,{'attr':{'class':'contact100-form validate-form'}}) }}
+            <span class="contact100-form-title">
+					 {{ form_label(form.rep_correct) }} <h1>00:00</h1>
+				</span>
+
+            <div class="wrap-input100 input100-select bg1">
+                <span class="label-input100">Correct reponse *</span>
+                <div>
+
+                    {{ form_widget(form.rep_correct,{'attr':{'class':'js-select2'}}) }}
+
+                    <div class="dropDownSelect2"></div>
+                </div>
+            </div>
+
+            <div class="container-contact100-form-btn">
+                <button class="contact100-form-btn" id="bouton">
+						<span>
+							Submit
+							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+						</span>
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <script>
+        let timeSecond = 30;
+        const timeH = document.querySelector("h1");
+        displayTime(timeSecond);
+        const countDown = setInterval(() => {
+            timeSecond--;
+            displayTime(timeSecond);
+            if (timeSecond == 0 || timeSecond < 1) {
+                endCount();
+                clearInterval(countDown);
+            }
+        }, 1000);
+        function displayTime(second) {
+            const min = Math.floor(second / 60);
+            const sec = Math.floor(second % 60);
+            timeH.innerHTML = `
+  ${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}
+  `;
+        }
+        function endCount() {
+            timeH.innerHTML = "Time out";
+            $('#bouton').click();
+        }
+    </script>
+{% endblock %}

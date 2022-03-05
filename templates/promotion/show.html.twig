@@ -1,36 +1,40 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}Promotion{% endblock %}
+<title>Promotion</title>
 
 {% block body %}
     <h1>Promotion</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ promotion.id }}</td>
-            </tr>
-            <tr>
-                <th>P_Name</th>
-                <td>{{ promotion.PName }}</td>
-            </tr>
-            <tr>
-                <th>P_Value</th>
-                <td>{{ promotion.PValue }}</td>
-            </tr>
-            <tr>
-                <th>P_DateB</th>
-                <td>{{ promotion.PDateB ? promotion.PDateB|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>P_DateF</th>
-                <td>{{ promotion.PDateF ? promotion.PDateF|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>P_Note</th>
-                <td>{{ promotion.PNote }}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ promotion.id }}</td>
+        </tr>
+        <tr>
+            <th>P_Name</th>
+            <td>{{ promotion.PName }}</td>
+        </tr>
+        <tr>
+            <th>P_Value</th>
+            <td>{{ promotion.PValue }}</td>
+        </tr>
+        <tr>
+            <th>P_Domaine</th>
+            <td>{{ promotion.PDomaine }}</td>
+        </tr>
+        <tr>
+            <th>P_DateB</th>
+            <td>{{ promotion.PDateB ? promotion.PDateB|date('Y-m-d') : '' }}</td>
+        </tr>
+        <tr>
+            <th>P_DateF</th>
+            <td>{{ promotion.PDateF ? promotion.PDateF|date('Y-m-d') : '' }}</td>
+        </tr>
+        <tr>
+            <th>P_Note</th>
+            <td>{{ promotion.PNote }}</td>
+        </tr>
         </tbody>
     </table>
 

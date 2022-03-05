@@ -1,25 +1,27 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}PromotionCode index{% endblock %}
+<title>PromotionCode index</title>
 
 {% block body %}
     <h1>PromotionCode index</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>PC_Code</th>
-                <th>PC_Value</th>
-                <th>PC_ExpirationCode</th>
-                <th>PC_Note</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>CP_PCD</th>
+            <th>PC_Code</th>
+            <th>PC_Value</th>
+            <th>PC_ExpirationCode</th>
+            <th>PC_Note</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for promotion_code in promotion_codes %}
             <tr>
                 <td>{{ promotion_code.id }}</td>
+                <td>{{ promotion_code.CPPCD }}</td>
                 <td>{{ promotion_code.PCCode }}</td>
                 <td>{{ promotion_code.PCValue }}</td>
                 <td>{{ promotion_code.PCExpirationCode ? promotion_code.PCExpirationCode|date('Y-m-d') : '' }}</td>
@@ -31,7 +33,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="7">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

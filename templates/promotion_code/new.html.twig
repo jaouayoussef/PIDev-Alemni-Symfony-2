@@ -1,11 +1,774 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-back.html.twig' %}
 
-{% block title %}New PromotionCode{% endblock %}
 
 {% block body %}
-    <h1>Create new PromotionCode</h1>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Promotion</h3>
+            <button type="button" class="btn btn-inverse-primary btn-rounded btn-icon" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-line-chart" aria-hidden="true"></i></button>
 
-    {{ include('promotion_code/_form.html.twig') }}
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Promotion</li>
+                    <li class="breadcrumb-item active" aria-current="page"> Gestion Promotions </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="chartModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
-    <a href="{{ path('promotion_code_index') }}">back to list</a>
+                        <div class="row">
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Code promotion par date d'expiration</h4>
+                                        <canvas id="CodePromoOwnerChart" style="height: 250px; width: 250px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Promotion par date d'expiration </h4>
+                                       <canvas id="CodePromoOwnerChart2" style="height: 250px; width: 250px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="card">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Code promotion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Promotion</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="col-12" id="form1">
+                                    <div class="grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Ajouter Code Promotion</h4><br>
+                                                {{ form_start(form,{'attr':{'class':'forms-sample','novalidate':'novalidate'}}) }}
+                                                <div class="form-group">
+                                                    <label for="exampleInputName1">Propriétaire du code promo :</label>
+                                                    {{ form_errors(form.CP_PCD) }}
+                                                    {{ form_widget(form.CP_PCD,{'attr':{'class':'form-control','id':'CodePromo','placeholder':'Code promotion','type':'int','style':'width: 100%;'}}) }}
+                                                </div><br>
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail3">Code promotion :</label>
+                                                    {{ form_errors(form.PC_Code) }}
+
+                                                    {{ form_widget(form.PC_Code,{'attr':{'class':'form-control','type':'text','id':'CodePromo','placeholder':'Code promotion','onchange':'verifCodepromo(this)'}}) }}
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+                                                    <div class="form-group">
+                                                        {{ form_errors(form.PC_Value) }}
+
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text bg-primary text-white">-</span>
+                                                            </div>
+                                                            {{ form_widget(form.PC_Value,{'attr':{'class':'form-control','type':'text','min':'5','max':'60','id':'ValeurCodePromo','placeholder':'Valeur du code promo en pourcentage entre 5 et 60','onchange':'verifValCodePromo(this)'}}) }}
+
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div><br>
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail3">Date d'expiration du code :</label>
+                                                    {{ form_errors(form.PC_ExpirationCode) }}
+                                                    {{ form_widget(form.PC_ExpirationCode,{'attr':{'class':'form-control','id':'DateExpiration','placeholder':'Valeur du code promo en pourcentage','onchange':'verifDatePromo()'}}) }}
+                                                </div>
+
+                                                <br>
+
+                                                <div class="form-group">
+                                                    <label for="exampleTextarea1">Description :</label>
+                                                    {{ form_widget(form.PC_Note,{'attr':{'class':'form-control','type':'textarea','id':'description','placeholder':'description','size':'4'}}) }}
+                                                </div>
+                                                <br>
+
+                                                <button class="btn btn-primary mr-2">{{ button_label|default('Sauvegarder') }}</button>
+                                                {{ form_end(form) }}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="grid-margin stretch-card" >
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Codes Promotion</h4><br>
+                                                <div style="overflow-x:auto;">
+                                                    <table class="table table-bordered table-striped" id="myTable">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Propriétaire </th>
+                                                            <th>Code </th>
+                                                            <th>Valeur du code promo </th>
+                                                            <th>Date d'expiration </th>
+                                                            <th>Description </th>
+                                                            <th>actions</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for promotion_code in promotion_codes %}
+                                                            <tr>
+                                                                <td style="display:none">{{ promotion_code.id }}</td>
+                                                                <td>{{ promotion_code.CPPCD.PCDEmail }}</td>
+                                                                <td>{{ promotion_code.PCCode }}</td>
+                                                                <td>{{ promotion_code.PCValue }}</td>
+                                                                <td>{{ promotion_code.PCExpirationCode ? promotion_code.PCExpirationCode|date('Y-m-d') : '' }}</td>
+                                                                <td>{{ promotion_code.PCNote }}</td>
+                                                                <td>
+                                                                    <div class="btn-group" role="group" aria-label="Basic example">
+
+
+                                                                        <a type="button" class="btn btn-primary" href="{{ path('promotion_code_edit', {'id': promotion_code.id}) }}">  <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                                        {{ include('promotion_code/_delete_form.html.twig') }}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% else %}
+                                                            <tr>
+                                                                <td colspan="7">Aucun enregistrement trouvé</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                        <tfoot>
+                                                        <tr>
+                                                            <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="chercher" ></th>
+                                                            <th><input style="width: 90%" type="text" id="myInput4" onkeyup="myFunction4()" placeholder="chercher" ></th>
+                                                            <th><input style="width: 90%" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="chercher" ></th>
+                                                            <th><input style="width: 90%" type="text" id="myInput6" onkeyup="myFunction6()" placeholder="chercher" ></th>
+                                                            <th><input style="width: 90%" type="text" id="myInput7" onkeyup="myFunction7()" placeholder="chercher" ></th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div >
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="col-12" id="form2">
+                                    <div class="grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Ajouter Promotion</h4><br>
+                                                {{ form_start(form1,{'attr':{'class':'forms-sample','novalidate':'novalidate','id':'PromotionForm'}}) }}
+                                                <div class="form-group">
+                                                    <label for="exampleInputName1">Nom Promotion :</label>
+                                                    {{ form_errors(form1.P_Name) }}
+                                                    {{ form_widget(form1.P_Name,{'attr':{'class':'form-control','type':'text','id':'NomPromo','placeholder':'Nom promotion'}}) }}
+                                                </div>
+                                                <br>
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+                                                    <div class="form-group">
+                                                        {{ form_errors(form1.P_Value) }}
+
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text bg-primary text-white">-</span>
+                                                            </div>
+                                                            {{ form_widget(form1.P_Value,{'attr':{'class':'form-control','type':'text','id':'NomPromo','aria-label':'Amount (to the nearest dollar)','onchange':'verifValCodePromo(this)'}}) }}
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text">%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="form-group">
+                                                    <div id="myRadioGroup">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row">
+                                                    <div class="col-sm-4">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            Domaines <input class="form-check-input" type="radio" name="cars" checked="checked" value="2"  /></label>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            Événements<input class="form-check-input" type="radio" name="cars" value="3" /></label>
+                                                    </div>
+                                                    </div>
+                                                    </div>
+                                                    </div>
+
+
+                                                    <div id="Cars2" class="desc">
+
+                                                        <label>Domaine :</label>
+                                                        {{ form_errors(form1.P_Domaine) }}
+                                                        {{ form_widget(form1.P_Domaine,{'attr':{'class':'form-control','style':'width: 100%;'}}) }}
+                                                    </div>
+                                                    <div id="Cars3" class="desc" style="display: none;">
+                                                        <label>Événements :</label>
+                                                        {{ form_errors(form1.event) }}
+
+                                                        {{ form_widget(form1.event,{'attr':{'class':'form-control','style':'width: 100%;'}}) }}
+                                                    </div>
+                                                    </div>
+
+
+                                                </div><br>
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail3">Date debut :</label>
+                                                    {{ form_errors(form1.P_DateB) }}
+
+                                                    {{ form_widget(form1.P_DateB,{'attr':{'class':'form-control','id':'DateD','placeholder':'Valeur du code promo en pourcentage', 'onchange':'verifDatedebut()'}}) }}
+                                                </div><br>
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail3">Date fin :</label>
+                                                    {{ form_errors(form1.P_DateF) }}
+
+                                                    {{ form_widget(form1.P_DateF,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()','disabled':'disabled'}}) }}
+                                                </div><br>
+
+
+                                                <div class="form-group">
+                                                    <label for="exampleTextarea1">Description :</label>
+                                                    {{ form_widget(form1.P_Note,{'attr':{'class':'form-control','type':'textarea','id':'description','placeholder':'description','size':'4'}}) }}
+
+                                                </div><br>
+
+
+
+                                                {{ form_end(form1) }}
+                                                <button class="btn btn-primary mr-2" onclick="submitformAddPromo()">Sauvegarder</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid-margin stretch-card" >
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Codes Promotion</h4><br>
+                                                <div style="overflow-x:auto;">
+                                                    <table class="table table-bordered table-striped" id="myTable1">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Nom Promotion</th>
+                                                            <th>Valeur du code promo
+                                                            </th>
+                                                            <th>Domaine</th>
+                                                            <th>Date debut</th>
+                                                            <th>Date fin</th>
+                                                            <th>Description</th>
+                                                            <th>actions</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for promotion in promotions %}
+                                                            <tr>
+                                                                <td style="display:none">{{ promotion.id }}</td>
+                                                                <td>{{ promotion.PName }}</td>
+                                                                <td>{{ promotion.PValue }}</td>
+                                                                <td>{% if promotion.PDomaine is not null %}{{ promotion.PDomaine.nomDomaine }} {% else %} {{ promotion.event.EName }}{% endif %}</td>
+                                                                <td>{{ promotion.PDateB ? promotion.PDateB|date('Y-m-d') : '' }}</td>
+                                                                <td>{{ promotion.PDateF ? promotion.PDateF|date('Y-m-d') : '' }}</td>
+                                                                <td>{{ promotion.PNote }}</td>
+                                                                <td>
+                                                                    <div class="btn-group" role="group" aria-label="Basic example">
+
+                                                                        <a type="button" class="btn btn-primary" href="{{ path('promotion_edit', {'id': promotion.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                                        {{ include('promotion/_delete_form.html.twig') }}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% else %}
+                                                            <tr>
+                                                                <td colspan="8">Aucun enregistrement trouvé</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                        <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction08()" placeholder="chercher" ></th>
+                                                        <th><input style="width: 90%" type="text" id="myInput9" onkeyup="myFunction9()" placeholder="chercher" ></th>
+                                                        <th><input style="width: 90%" type="text" id="myInput10" onkeyup="myFunction10()" placeholder="chercher" ></th>
+                                                        <th><input style="width: 90%" type="text" id="myInput11" onkeyup="myFunction11()" placeholder="chercher" ></th>
+                                                        <th><input style="width: 90%" type="text" id="myInput12" onkeyup="myFunction12()" placeholder="chercher" ></th>
+                                                        <th><input style="width: 90%" type="text" id="myInput130" onkeyup="myFunction13()" placeholder="chercher" ></th>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+
+        <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script>
+            let codePromoOwner = document.getElementById("CodePromoOwnerChart");
+            let CodePromoOwnerChartGraph = new Chart(codePromoOwner,{
+                type : "bar",
+                data:{
+                    labels: {{ codePromoDate|raw }},
+                    datasets:[{
+                        label: "nbre de code promo",
+                        data: {{ CodeCount|raw }},
+
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }],
+
+
+                }
+            })
+            let codePromoOwner1 = document.getElementById("CodePromoOwnerChart2");
+            let CodePromoOwnerChartGraph1 = new Chart(codePromoOwner1,{
+                type : "bar",
+                data:{
+                    labels: {{ PromoDate|raw }},
+                    datasets:[{
+                        label: "nbre de promotion",
+                        data: {{ PromoCount|raw }},
+
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(255, 159, 64, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: false
+                        },
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }],
+
+
+                }
+            })
+            $(document).ready(function() {
+                $("input[name$='cars']").click(function() {
+                    var test = $(this).val();
+
+                    $("div.desc").hide();
+                    $("#Cars" + test).show();
+                    document.getElementById("promotion_event").selectedIndex = 0;
+                    document.getElementById("promotion_P_Domaine").selectedIndex = 0;
+                });
+                var options = document.getElementById('promotion_P_Domaine').options;
+                var table = document.getElementById('myTable1');
+                for (let i = 1; i < options.length; i++) {
+                    for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+                        if (table.rows[r].cells[3].innerHTML.replace(/\s/g, '') == options[i].innerHTML.replace(/\s/g, '')){
+                            options[i].style.display='none';
+                        }
+                    }
+                }
+                var optionsE = document.getElementById('promotion_event').options;
+                for (let i = 1; i < optionsE.length; i++) {
+                    for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+                        if (table.rows[r].cells[3].innerHTML.replace(/\s/g, '') == optionsE[i].innerHTML.replace(/\s/g, '')){
+                            optionsE[i].style.display='none';
+                        }
+                    }
+                }
+            });
+            function myFunction2() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput2");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction3() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput3");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[2];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction4() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput4");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[2];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction5() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput5");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[3];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction6() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput6");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[4];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction7() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput7");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[5];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction08() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput8");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function myFunction9() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput9");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[2];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction10() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput10");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[3];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction11() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput11");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[4];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function myFunction12() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput12");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[5];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+            function myFunction13() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("myInput130");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable1");
+                tr = table.getElementsByTagName("tr");
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[6];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function verifDate() {
+                let dateDebutString = document.getElementById("promotion_P_DateB").value.split("-");
+                let dateFinString = document.getElementById("promotion_P_DateF").value.split("-");
+                let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+                let dateFin = new Date(dateFinString[0],dateFinString[1]-1,dateFinString[2]);
+
+                let date = new Date();
+
+                 if (dateDebut >= dateFin ){
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Date Invalide !',
+                         timer: 3000,
+                         timerProgressBar: true,
+                     })
+                     document.getElementById("promotion_P_DateF").value = 0;
+
+                 }
+            }
+            function verifDatedebut() {
+                let dateDebutString = document.getElementById("promotion_P_DateB").value.split("-");
+                let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+                let date = new Date();
+                if (dateDebut < date ){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Date Invalide !',
+                        timer: 3000,
+                        timerProgressBar: true,
+                    })
+                    document.getElementById("promotion_P_DateF").disabled = true;
+                    document.getElementById("promotion_P_DateB").value = 0;
+                    document.getElementById("promotion_P_DateF").value = 0;
+                }else {
+                    document.getElementById("promotion_P_DateF").disabled = false;
+                    document.getElementById("promotion_P_DateF").value = 0;
+                }
+            }
+            function verifDatePromo() {
+                let dateDebutString = document.getElementById("promotion_code_PC_ExpirationCode").value.split("-");
+                let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+                let date = new Date();
+                if (dateDebut < date ){
+                    let timerInterval
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Date Invalide !',
+                        timer: 3000,
+                        timerProgressBar: true,
+                    })
+                    document.getElementById("promotion_code_PC_ExpirationCode").value = 0;
+                }
+            }
+            function verifCodepromo(_this){
+                var table = document.getElementById('myTable');
+                for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+                        if (table.rows[r].cells[2].innerHTML == _this.value){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'ce code promo existe !',
+                                timer: 3000,
+                                timerProgressBar: true,
+                            })
+                            document.getElementById("promotion_code_PC_Code").value = null;
+
+                        }
+
+                }
+            }
+function verifValCodePromo(_this){
+    if (60 < parseInt(_this.value) || parseInt(_this.value) < 5){
+        Swal.fire({
+            icon: 'error',
+            title: 'Valeur du code promo doit etre comprise entre 5 et 60 !',
+            timer: 3000,
+            timerProgressBar: true,
+        })
+        _this.value = null;
+    }
+}
+function submitformAddPromo(){
+    if( document.getElementById('promotion_P_Domaine').value  == "" && document.getElementById('promotion_event').value == ""){
+        Swal.fire({
+            icon: 'error',
+            title: 'veuillez sélectionner un domaine ou un événement !',
+            timer: 3000,
+            timerProgressBar: true,
+        })
+    }else{
+       document.getElementById("PromotionForm").submit();
+    }
+}
+        </script>
 {% endblock %}

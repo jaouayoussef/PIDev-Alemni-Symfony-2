@@ -18,7 +18,15 @@ class DomaineRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Domaine::class);
     }
+    public function getWhatYouWant($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.id != :identifier')
+            ->setParameter('identifier', $id);
 
+        return $qb->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Domaine[] Returns an array of Domaine objects
     //  */

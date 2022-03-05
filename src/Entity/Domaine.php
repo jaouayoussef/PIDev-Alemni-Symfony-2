@@ -6,6 +6,7 @@ use App\Repository\DomaineRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DomaineRepository::class)
@@ -16,31 +17,37 @@ class Domaine
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("domaine")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("domaine")
      */
     private $nomDomaine;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("domaine")
      */
     private $descriptionDomaine;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("domaine")
      */
     private $imageDomaine;
 
     /**
      * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="domaine", orphanRemoval=true)
+     * @Groups("domaine")
      */
     private $formations;
 
     /**
      * @ORM\ManyToMany(targetEntity=Promotion::class, mappedBy="P_Domaine")
+     * @Groups("domaine")
      */
     private $promotions;
 

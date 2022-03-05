@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 /**
  * @Route("/promotion")
  */
@@ -69,12 +68,13 @@ class PromotionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('promotion_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('promotion_code_new', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('promotion/edit.html.twig', [
             'promotion' => $promotion,
             'form' => $form->createView(),
+
         ]);
     }
 
@@ -88,6 +88,6 @@ class PromotionController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('promotion_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('promotion_code_new', [], Response::HTTP_SEE_OTHER);
     }
 }

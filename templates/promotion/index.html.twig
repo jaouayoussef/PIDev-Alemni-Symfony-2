@@ -1,21 +1,22 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}Promotion index{% endblock %}
+<title>Promotion index</title>
 
 {% block body %}
     <h1>Promotion index</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>P_Name</th>
-                <th>P_Value</th>
-                <th>P_DateB</th>
-                <th>P_DateF</th>
-                <th>P_Note</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>P_Name</th>
+            <th>P_Value</th>
+            <th>P_Domaine</th>
+            <th>P_DateB</th>
+            <th>P_DateF</th>
+            <th>P_Note</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for promotion in promotions %}
@@ -23,6 +24,7 @@
                 <td>{{ promotion.id }}</td>
                 <td>{{ promotion.PName }}</td>
                 <td>{{ promotion.PValue }}</td>
+                <td>{{ promotion.PDomaine }}</td>
                 <td>{{ promotion.PDateB ? promotion.PDateB|date('Y-m-d') : '' }}</td>
                 <td>{{ promotion.PDateF ? promotion.PDateF|date('Y-m-d') : '' }}</td>
                 <td>{{ promotion.PNote }}</td>
@@ -33,7 +35,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="8">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

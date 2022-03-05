@@ -6,6 +6,8 @@ use App\Repository\PromotionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=PromotionRepository::class)
@@ -17,43 +19,59 @@ class Promotion
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $P_Name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $P_Value;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $P_DateB;
 
     /**
      * @ORM\Column(type="date")
-     * 
+     * @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $P_DateF;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
      */
     private $P_Note;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Domaine::class, inversedBy="promotions")
+     * @ORM\ManyToOne(targetEntity=Domaine::class, inversedBy="promotions")
      */
     private $P_Domaine;
 
-    public function __construct()
-    {
-        $this->P_Domaine = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity=Event::class, inversedBy="Promotion")
+     */
+    private $event;
+
+
+
+
 
     public function getId(): ?int
     {
@@ -120,26 +138,36 @@ class Promotion
         return $this;
     }
 
-    /**
-     * @return Collection|Domaine[]
-     */
-    public function getPDomaine(): Collection
+    public function getPDomaine(): ?Domaine
     {
         return $this->P_Domaine;
     }
 
-    public function addPDomaine(Domaine $pDomaine): self
+    public function setPDomaine(?Domaine $P_Domaine): self
     {
-        if (!$this->P_Domaine->contains($pDomaine)) {
-            $this->P_Domaine[] = $pDomaine;
-        }
+        $this->P_Domaine = $P_Domaine;
 
         return $this;
     }
 
-    public function removePDomaine(Domaine $pDomaine): self
+    public function getEvent(): ?Event
     {
-        $this->P_Domaine->removeElement($pDomaine);
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($event === null && $this->event !== null) {
+            $this->event->setPromotion(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($event !== null && $event->getPromotion() !== $this) {
+            $event->setPromotion($this);
+        }
+
+        $this->event = $event;
 
         return $this;
     }

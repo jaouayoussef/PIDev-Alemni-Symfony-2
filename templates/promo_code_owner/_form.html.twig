@@ -1,4 +1,49 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{#{{ form_start(form) }}
+#    {{ form_widget(form) }}
+#    <button class="btn">{{ button_label|default('Save') }}</button>
+#{{ form_end(form) }}#}
+  {{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+
+<div class="form-group">
+    <label for="exampleInputName1">Nom :</label>
+    {{ form_widget(form.PCD_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
+
+</div>
+<div class="form-group">
+    <label for="exampleInputName1">Prénom :</label>
+    {{ form_widget(form.PCD_FirstName,{'attr':{'class':'form-control','type':'text','id':'Prenom','placeholder':'Prénom'}}) }}
+</div>
+<div class="form-group">
+    <label for="exampleInputEmail3">Addresse email :</label>
+    {{ form_widget(form.PCD_Email,{'attr':{'class':'form-control','type':'text','id':'Email','placeholder':'Addresse email','onchange':'validate()'}}) }}
+
+</div>
+<div class="form-group">
+    <label for="exampleInputEmail3">Profession :</label>
+    {{ form_widget(form.PCD_Job,{'attr':{'class':'form-control','type':'text','id':'Profession','placeholder':'Profession'}}) }}
+
+</div>
+<div class="form-group">
+    <label for="exampleInputEmail3">Numéro de téléphone :</label>
+    {{ form_widget(form.PCD_TelephoneNumber,{'attr':{'class':'form-control','type':'text','id':'NumTel','placeholder':'Numéro de téléphone','onchange':'verifNumTel(this)'}}) }}
+
+</div>
+<div class="form-group">
+    <label for="exampleSelectGender">Sexe :</label>
+    {{ form_widget(form.PCD_Gender,{'attr':{'class':'form-control','id':'Sexe'}}) }}
+</div>
+
+<div class="form-group">
+    <label for="exampleInputCity1">Ville :</label>
+    {{ form_widget(form.PCD_City,{'attr':{'class':'form-control','style':'width: 100%;'}}) }}
+
+</div>
+<div class="form-group">
+    <label for="exampleTextarea1">description :</label>
+    {{ form_widget(form.PCD_Note,{'attr':{'class':'form-control','type':'textarea','id':'description','placeholder':'description','size':'4'}}) }}
+
+</div>
+<button class="btn btn-primary mr-2">{{ button_label|default('Sauvegarder') }}</button>
+<a href="{{ path('promo_code_owner_new') }}"  class="btn btn-light">Annuler</a>
+
 {{ form_end(form) }}

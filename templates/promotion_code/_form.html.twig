@@ -1,4 +1,80 @@
-{{ form_start(form) }}
+{# {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+#}
+ {{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+<div class="form-group">
+    <label for="exampleInputName1">Propriétaire du code promo :</label>
+    {{ form_widget(form.CP_PCD,{'attr':{'class':'form-control','id':'CodePromo','placeholder':'Code promotion','type':'int','style':'width: 100%;'}}) }}
+</div><br>
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Code promotion :</label>
+    {{ form_widget(form.PC_Code,{'attr':{'class':'form-control','type':'text','id':'CodePromo','placeholder':'Code promotion','onchange':'verifCodepromo(this)'}}) }}
+</div>
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-primary text-white">-</span>
+            </div>
+            {{ form_widget(form.PC_Value,{'attr':{'class':'form-control','type':'text','min':'5','max':'100','id':'ValeurCodePromo','placeholder':'Valeur du code promo en pourcentage entre 5 et 60' ,'onchange':'verifValCodePromo(this)'}}) }}
+
+            <div class="input-group-append">
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+    </div>
+</div><br>
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Date d'expiration du code :</label>
+    {{ form_widget(form.PC_ExpirationCode,{'attr':{'class':'form-control','id':'DateExpiration','placeholder':'Valeur du code promo en pourcentage','onchange':'verifDatePromo()'}}) }}
+</div>
+
+<br>
+
+<div class="form-group">
+    <label for="exampleTextarea1">Description :</label>
+    {{ form_widget(form.PC_Note,{'attr':{'class':'form-control','type':'textarea','id':'description','placeholder':'description','size':'4'}}) }}
+</div>
+<br>
+<div class="btn-group" role="group" aria-label="Basic example">
+
+<button class="btn btn-primary mr-2">{{ button_label|default('Save') }}</button>
+<a href="{{ path('promotion_code_new') }}"  class="btn btn-light">Cancel</a>
+</div>
+
+<script>
+    function verifDatePromo() {
+        let dateDebutString = document.getElementById("promotion_code_PC_ExpirationCode").value.split("-");
+        let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+        let date = new Date();
+        if (dateDebut < date ){
+            let timerInterval
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            document.getElementById("promotion_code_PC_ExpirationCode").value = 0;
+        }
+    }
+
+    function verifValCodePromo(_this){
+        if (60 < parseInt(_this.value) || parseInt(_this.value) < 5){
+            Swal.fire({
+                icon: 'error',
+                title: 'Valeur du code promo doit etre comprise entre 5 et 60 !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            _this.value = null;
+        }
+    }
+</script>
 {{ form_end(form) }}

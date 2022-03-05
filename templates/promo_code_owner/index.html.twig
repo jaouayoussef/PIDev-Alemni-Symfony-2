@@ -1,32 +1,32 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}PromoCodeOwner index{% endblock %}
+<title>PromoCodeOwner index</title>
 
 {% block body %}
     <h1>PromoCodeOwner index</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>PCD_Name</th>
-                <th>PCD_FirstName</th>
-                <th>PCD_Email</th>
-                <th>PCD_Job</th>
-                <th>PCD_TelephoneNumber</th>
-                <th>PCD_Gender</th>
-                <th>PCD_City</th>
-                <th>PCD_Note</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>PCD_Name</th>
+            <th>PCD_FirstName</th>
+            <th>PCD_Email</th>
+            <th>PCD_Job</th>
+            <th>PCD_TelephoneNumber</th>
+            <th>PCD_Gender</th>
+            <th>PCD_City</th>
+            <th>PCD_Note</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for promo_code_owner in promo_code_owners %}
             <tr>
-                <td>{{ promo_code_owner.id }}</td>
-                <td>{{ promo_code_owner.PCDName }}</td>
-                <td>{{ promo_code_owner.PCDFirstName }}</td>
-                <td>{{ promo_code_owner.PCDEmail }}</td>
+                <td class="align-middle">{{ promo_code_owner.id }}</td>
+                <td class="align-middle">{{ promo_code_owner.PCDName }}</td>
+                <td class="align-middle">{{ promo_code_owner.PCDFirstName }}</td>
+                <td class="align-middle">{{ promo_code_owner.PCDEmail }}</td>
                 <td>{{ promo_code_owner.PCDJob }}</td>
                 <td>{{ promo_code_owner.PCDTelephoneNumber }}</td>
                 <td>{{ promo_code_owner.PCDGender }}</td>

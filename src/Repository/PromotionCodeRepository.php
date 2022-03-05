@@ -18,6 +18,32 @@ class PromotionCodeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PromotionCode::class);
     }
+    public function getWhatYouWantPromotionCode($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.id != :identifier')
+            ->setParameter('identifier', $id);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return void
+     */
+    public function CountBydate(){
+        $query = $this->createQueryBuilder('a')
+            ->select('SUBSTRING(a.PC_ExpirationCode,1,10) as datePromo, COUNT(a) as count')
+            -> groupBy('datePromo');
+        return $query->getQuery()->getResult();
+    }
+    public function getPromotionCodebydatenow(){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.PC_ExpirationCode >= :identifier')
+            ->setParameter('identifier', new \DateTime('now'));
+
+        return $qb->getQuery()->getResult();
+    }
 
     // /**
     //  * @return PromotionCode[] Returns an array of PromotionCode objects

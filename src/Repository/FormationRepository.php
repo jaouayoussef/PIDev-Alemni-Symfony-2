@@ -18,7 +18,46 @@ class FormationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Formation::class);
     }
+    public function getFormation(){
 
+       return $this->getEntityManager()
+           ->createQuery('select f from App\Entity\Formation f WHERE f  NOT IN (select  s from App\Entity\Seance s WHERE s.dateSeance >= :date)')
+           ->setParameter('date' , new \DateTime('now'))
+           ->getResult();
+
+       /* return $this->getEntityManager()
+            ->createQuery('SELECT
+        f.id,
+        f.nomFormation,
+        f.descriptionFormation,
+        f.lien,
+        f.prixFormation,
+        f.imageFormation,
+        f.formateur,
+        f.nbPlaces,
+
+    FROM
+                App\Entity\Formation f
+        LEFT JOIN
+                f.seances s
+
+
+    WHERE
+           (s.dateSeance < :date)
+       ')
+            ->setParameter('date' , new \DateTime('now'))
+            ->getResult();*/
+    }
+    public function getFormationDispo()
+    {
+        return $this->createQueryBuilder('q')
+            ->expr()->notIn('q.formation',array('?1'))
+            ->setParameter(1, 100)
+            ->orderBy('q.dateSeance', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     // /**
     //  * @return Formation[] Returns an array of Formation objects
     //  */
@@ -36,15 +75,17 @@ class FormationRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Formation
+    /**
+    * @return Formation[] Returns an array of Formation objects
+    */
+    public function getFormationByUser($value)
     {
         return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
+            ->andWhere('f.formateur = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
-    */
+
 }

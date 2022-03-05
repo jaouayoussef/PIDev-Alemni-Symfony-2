@@ -4,8 +4,12 @@ namespace App\Form;
 
 use App\Entity\Domaine;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DomaineType extends AbstractType
 {
@@ -13,9 +17,10 @@ class DomaineType extends AbstractType
     {
         $builder
             ->add('nomDomaine')
-            ->add('descriptionDomaine')
-            ->add('imageDomaine')
-            ->add('promotions')
+            ->add('descriptionDomaine',TextareaType::class, [
+                'attr' => array('cols' => '5', 'rows' => '5')])
+
+            #->add('promotions')
         ;
     }
 

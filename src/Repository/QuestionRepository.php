@@ -35,7 +35,34 @@ class QuestionRepository extends ServiceEntityRepository
         ;
     }
     */
-
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.quiz = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    public function findallByid($value)
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.quiz = :val')
+            ->setParameter('val', $value)
+            ->setMaxResults(21)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    public function findByid($value): ?Question
+    {
+        return $this->createQueryBuilder('q')
+            ->andWhere('q.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     /*
     public function findOneBySomeField($value): ?Question
     {
