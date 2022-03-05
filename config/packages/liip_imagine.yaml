@@ -15,3 +15,9 @@ liip_imagine:
                 thumbnail:
                     size : [100,100]
                     mode : outbound
+        squareshowprofile:
+            quality: 75
+            filters:
+                thumbnail:
+                    size: [ 50,50 ]
+                    mode: outbound

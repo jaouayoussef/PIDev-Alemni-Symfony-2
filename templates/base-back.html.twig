@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>Alemni Admin | {% block title %}{% endblock %}</title>
+    <title>Alemni | {% block title %}{% endblock %}</title>
     {% block css %}
         <link rel="stylesheet" href="{{ asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css') }}"/>
         <link rel="stylesheet" href="{{ asset('Back/assets/vendors/flag-icon-css/css/flag-icon.min.css') }}"/>
@@ -115,14 +115,30 @@
                     <div class="collapse" id="event">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">champs 1</a>
+                                <a class="nav-link" href="{{ path('event_new')}}">Gestion événements</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">champs 2</a>
+                                <a class="nav-link" href="{{ path('show_event_back')}}">Réservation événements</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <i class="mdi mdi-bullhorn menu-icon"></i>
+                        <span class="menu-title">Promotion</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('promo_code_owner_new')}}">Propriétaire du code</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">champs 3</a>
+                                <a class="nav-link" href="{{ path('promotion_code_new')}}">Promotion</a>
                             </li>
+
                         </ul>
                     </div>
                 </li>
@@ -227,6 +243,12 @@
                 {% block body %}
                 {% endblock %}
             </div>
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © alemni.com 2022</span>
+                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Développé par Technocrats</span>
+                </div>
+            </footer>
         </div>
     </div>
 </div>

@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\EventRepository;
+use App\Repository\ReservationEventRepository;
 use App\Repository\UserRepository;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
@@ -32,7 +34,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/profile", name="user_profile")
      */
-    public function getUserProfile(): Response
+    public function getUserProfile( ReservationEventRepository $reservationevent): Response
     {
         $user = $this->getUser();
         if (!$user) {
@@ -43,6 +45,7 @@ class UserController extends AbstractController
         } else {
             return $this->render('user/userProfile.html.twig', [
                 'user' => $user,
+                'events' => $reservationevent->getbyuser($user->getId()),
             ]);
         }
     }

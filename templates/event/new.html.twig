@@ -198,7 +198,12 @@
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 <a type="button" class="btn btn-primary" href="{{ path('event_edit', {'id': event.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                            {% if event.EPlaceReserver ==0  %}{{ include('event/_delete_form.html.twig') }}{% endif %}
+                                            {% if event.EPlaceReserver ==0  %}
+                                                <form method="post" action="{{ path('event_delete', {'id': event.id}) }}" id="formdelete{{event.id}}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                                </form>
+                                                <button class="btn btn-danger" onclick="deleteswal({{event.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
+                                            {% endif %}
                                             </div>
                                         </td>
                                     </tr>
@@ -230,6 +235,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+    function deleteswal(a) {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimez-le !'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formdelete'+a).submit();
+            }
+        })
+    }
     let codePromoOwner = document.getElementById("CodePromoOwnerChart");
     let CodePromoOwnerChartGraph = new Chart(codePromoOwner,{
         type : "bar",

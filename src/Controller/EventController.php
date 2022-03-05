@@ -43,7 +43,7 @@ class EventController extends AbstractController
      */
     public function index(EventRepository $eventRepository, PromotionRepository $promotionRepository,PromotionCodeRepository $promotionCodeRepository,ReservationEventRepository $reservationEvent): Response
     {
-        $eventreservers =  $reservationEvent->findBy(array('UserId' => 1));
+        $eventreservers =  $reservationEvent->findBy(array('UserId' => $this->getUser()->getId()));
         $listid=[];
         $i=0;
         foreach ($eventreservers as $eventreserver){
@@ -57,6 +57,7 @@ class EventController extends AbstractController
                 'CodePromos'=>  $promotionCodeRepository -> getPromotionCodebydatenow()
             ]);
         }
+
         return $this->render('event/show_event/index.html.twig', [
             'Events' => $eventRepository->geteventbydatenowandreservation($listid),
             'Promotions' => $promotionRepository -> getPromotionEVENTbydatenow(),
@@ -66,12 +67,66 @@ class EventController extends AbstractController
     /**
      * @Route("/showback", name="show_event_back")
      */
-    public function showback(ReservationEventRepository $reservationEvent): Response
+    public function showback(ReservationEventRepository $reservationEvent , EventRepository $event): Response
     {
+        $eventcharts = $event->findAll();
+        $eventname=[];
+        $placedispo=[];
+        foreach ($eventcharts as $eventchart){
+            $eventname[] = $eventchart->getEName();
+            $placedispo[] = $eventchart->getENbre() - $eventchart->getEPlaceReserver();
+
+        }
+
+        $reservationEvents = $reservationEvent->AvgBydate();
+        $dates=[];
+        $PromoCodesCount=[];
+        foreach ($reservationEvents as $reservationEven){
+            if ($reservationEven['dateMonth'] == "01"){
+                $dates[] = "Janvier";
+            }
+            if ($reservationEven['dateMonth'] == "02"){
+                $dates[] = "Février";
+            }
+            if ($reservationEven['dateMonth'] == "03"){
+                $dates[] = "Mars";
+            }
+            if ($reservationEven['dateMonth'] == "04"){
+                $dates[] = "Avril";
+            }
+            if ($reservationEven['dateMonth'] == "05"){
+                $dates[] = "Mai";
+            }
+            if ($reservationEven['dateMonth'] == "06"){
+                $dates[] = "Juin";
+            }
+            if ($reservationEven['dateMonth'] == "07"){
+                $dates[] = "Juillet";
+            }
+            if ($reservationEven['dateMonth'] == "08"){
+                $dates[] = "Août";
+            }
+            if ($reservationEven['dateMonth'] == "09"){
+                $dates[] = "Septembre";
+            }
+            if ($reservationEven['dateMonth'] == "10"){
+                $dates[] = "Octobre";
+            }
+            if ($reservationEven['dateMonth'] == "11"){
+                $dates[] = "Novembre ";
+            }
+            if ($reservationEven['dateMonth'] == "12"){
+                $dates[] = "Décembre";
+            }
+            $PromoCodesCount[] =  $reservationEven['SUM'];
+        }
 
         return $this->render('event/show_event_back/index.html.twig',[
-            'EventReservations' => $reservationEvent->findAll()
-
+            'EventReservations' => $reservationEvent->findAll(),
+            'PromoDate' => json_encode($dates),
+            'PromoCount' => json_encode($PromoCodesCount),
+            'nomevent' => json_encode($eventname),
+            'nbreplacedispo' => json_encode($placedispo),
         ]);
     }
     /**

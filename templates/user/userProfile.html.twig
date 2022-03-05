@@ -90,8 +90,55 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
+    </div>
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Vos évènements</h4>
+
+                <div id="accordion">
+                    {% for event in events %}
+                    <div class="card">
+                        <div class="card-header" id="headingOne{{ event.id }}">
+                            <h5 class="mb-0">
+                                <img src="{{ asset('uploads/Event/' ~ event.EventId.EPHOTO) | imagine_filter('squareshowprofile') }}" alt="{{ event.EventId.EName }}" >
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne{{ event.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                    {{ event.EventId.EName }}
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne{{ event.id }}" class="collapse" aria-labelledby="headingOne{{ event.id }}" data-parent="#accordion">
+                            <div class="card-body">
+                                <br>
+                                <p>description :{{ event.EventId.ENote }}</p>
+                                <p>Adresse : {{ event.EventId.EPlace }}</p>
+                                <p>Date debut : {{ event.EventId.EDateDebut |date('d-m-Y h:m') }}</p>
+                                <p>Date fin : {{ event.EventId.EDateFin |date('d-m-Y h:m') }}</p>
+                                <p>Prix : {{ event.PrixReservationEvent }} dt</p>
+                                <p>Contact :<p>
+                                <p>Email : {{ event.EventId.EEmail }} </p>
+                                <p> Numéro de téléphone : {{ event.EventId.ETelNumber }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Vos quiz</h4>
+            </div>
+        </div>
+    </div>
     </div>
 
 {% endblock %}

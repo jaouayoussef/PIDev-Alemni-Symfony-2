@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="{{ asset('front/css/jquery.timepicker.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/flaticon.css') }}">
         <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        <link rel="shortcut icon" href="{{ asset('Back/assets/images/favicon.png') }}"/>
     {% endblock %}
 </head>
 <body>
@@ -33,7 +34,7 @@
                     <li class="nav-item active"><a href="{{ path('home') }}" class="nav-link">Accueil</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Nos formations</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Nos formateurs</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Nos évènements</a></li>
+                    <li class="nav-item"><a href="{{ path('show_event') }}" class="nav-link">Nos évènements</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Contactez Nous</a></li>
                     {% if app.user == null %}
                     {% else %}

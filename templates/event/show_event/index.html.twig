@@ -1,5 +1,5 @@
 {% extends 'base-front.html.twig' %}
-
+{% block title %}Nos évènements{% endblock %}
 
 {% block header %}
     <style>
@@ -19,22 +19,29 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="course.html" class="nav-link">Our courses</a></li>
-                    <li class="nav-item"><a href="about.html" class="nav-link">All Tutors</a></li>
-                    <li class="nav-item"><a href="instructor.html" class="nav-link">Our events</a></li>
-                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact us</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-default"
-                             aria-labelledby="navbarDropdownMenuLink-333">
-                            <a class="dropdown-item" href="#">My profile</a>
-                            <a class="dropdown-item" href="#">Logout</a>
-                        </div>
-                    </li>
+                    <li class="nav-item"><a href="{{ path('home') }}" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Nos formations</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Nos formateurs</a></li>
+                    <li class="nav-item active"><a href="{{ path('show_event') }}" class="nav-link">Nos évènements</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Contactez Nous</a></li>
+                    {% if app.user == null %}
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                                 aria-labelledby="navbarDropdownMenuLink-333">
+                                {% if app.user.roles|join(', ')=="ROLE_ADMIN" %}
+                                    <a class="dropdown-item" href="{{ path('admin_profile') }}">Mon profil</a>
+                                {% else %}
+                                    <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
+                                {% endif %}
+                                <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnectez</a>
+                            </div>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -44,8 +51,8 @@
         <div class="container">
             <div class="row no-gutters slider-text align-items-end justify-content-center">
                 <div class="col-md-9 ftco-animate pb-5 text-center">
-                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="fa fa-chevron-right"></i></a></span> <span>Events Lists <i class="fa fa-chevron-right"></i></span></p>
-                    <h1 class="mb-0 bread">Events Lists</h1>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Accueil <i class="fa fa-chevron-right"></i></a></span> <span>Nos évènements<i class="fa fa-chevron-right"></i></span></p>
+                    <h1 class="mb-0 bread"> Événements</h1>
                 </div>
             </div>
         </div>
@@ -157,7 +164,45 @@
 
                                 </div>
                                 {% endif %}
+
                                 {% endfor %}
+                                    {% if  Promotions|length == 0 %}
+                                    {% if event.EPrice ==0 %} <div class="project-wrap Free" > {% else %}<div class="project-wrap Nothing" > {% endif %}
+
+                                            <img src="{{ asset('uploads/Event/' ~ event.EPHOTO) | imagine_filter('square') }}" alt="{{ event.EName }}" >
+
+                                            <div class="text p-4">
+                                                <h3><a  class="event-name">{{ event.EName }}</a></h3>
+                                                <p class="advisor">Le {{ event.EDateDebut |date('d-m-Y h:m') }}</span></p>
+                                                <details>
+                                                    <summary style="color: #4986fc" >Details</summary>
+                                                    <div class="staff-detail">
+                                                        <br>
+                                                        <p>description :{{ event.ENote }}</p>
+                                                        <p>Adresse : {{ event.EPlace }}</p>
+                                                        <p>Date debut : {{ event.EDateDebut |date('d-m-Y h:m') }}</p>
+                                                        <p>Date fin : {{ event.EDateFin |date('d-m-Y h:m') }}</p>
+                                                        <p>Contact :<p>
+                                                        <p>Email : {{ event.EEmail }} </p>
+                                                        <p>Numéro de téléphone : {{ event.ETelNumber }}</p>
+
+                                                    </div>
+                                                </details><br>
+                                                <ul class="d-flex justify-content-between">
+                                                    <li>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" {% if event.EPrice ==0 %} data-target="#exampleModalCenter{{ event.id }}Promo" {% else %}data-target="#exampleModalCenter{{ event.id }}"{% endif %}  >
+                                                            Réserver
+                                                        </button>
+
+                                                    </li>
+
+                                                    <li class="price">{% if event.EPrice ==0 %} Gratuit {% else %}{{ event.EPrice }}dt {% endif %} </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                        {% endif %}
                             </div>
                             <!-- Modal -->
                             <div class="modal fade" id="exampleModalCenter{{ event.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -170,13 +215,9 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            {% for pro in Promotions %}
-                                            {% if pro.Event.id == event.id %}
-                                            <h5>Le Prix Total du reservation est :<span id="prixinput{{ event.id }}"> {{ event.EPrice - (event.EPrice * pro.PValue /100) }}</span> <span style="display: none" id="idevent{{ event.id }}">{{ event.id }}</span> dt</h5>
-                                            {% else %}
+
                                             <h5>Le Prix Total du reservation est :<span id="prixinput{{ event.id }}"> {{ event.EPrice }}</span> dt</h5>
-                                            {% endif %}
-                                            {% endfor %}
+
                                             <p></p>
                                             <hr>
                                             <h5>Promotion code</h5>
@@ -220,10 +261,12 @@
                 </div>
             </div>
             </div>
+            </div>
 
     </section>
 
     <script>
+
         function codepromoverif(a,b,c,d,e,f) {
 
     {% for CodePromo in CodePromos %}
@@ -250,9 +293,9 @@
         }
         function reserverEvent(b,a,c){
             if(b==""){
-                location.href ="/event/EventReservationAvecIncrement/"+a+"/"+c+"/"+1;
+                location.href ="/event/EventReservationAvecIncrement/"+a+"/"+c+"/"+{{  app.user.id }};
             }else{
-                location.href ="/event/EventReservationAvecIncrement/"+b+"/"+a+"/"+c+"/"+1;
+                location.href ="/event/EventReservationAvecIncrement/"+b+"/"+a+"/"+c+"/"+{{  app.user.id }};
             }
         }
 function getPromocodeOwnerId(){

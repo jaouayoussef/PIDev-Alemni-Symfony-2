@@ -33,7 +33,7 @@ class PromotionRepository extends ServiceEntityRepository
     }
     public function getPromotionEVENTbydatenow(){
         $qb = $this->createQueryBuilder('u');
-        $qb->where('u.P_DateF >= :identifier and u.event is not null')
+        $qb->where('u.P_DateF >= :identifier and u.P_DateB <= :identifier and u.event is not null')
             ->setParameter('identifier', new \DateTime('now'));
 
         return $qb->getQuery()->getResult();
