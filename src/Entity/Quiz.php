@@ -23,7 +23,7 @@ class Quiz
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="quiz", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="quiz", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $questions;
 
@@ -33,7 +33,7 @@ class Quiz
     private $id_user;
 
     /**
-     * @ORM\OneToOne(targetEntity=Formation::class, inversedBy="quiz", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Formation::class, inversedBy="quiz")
      */
     private $id_formation;
 

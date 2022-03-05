@@ -78,6 +78,7 @@
                                 <th>Places</th>
                                 <th>Formateur</th>
                                 <th>Lien</th>
+                                <th>Quiz</th>
                                 <th>Action</th>
                             </tr>
                             <tr>
@@ -91,10 +92,17 @@
                                 <td>{{ for.nbPlaces }}</td>
                                 <td>{{ for.formateur.firstname }}</td>
                                 <td>{{ for.lien }}</td>
-
+                                <td>
+                                    {% if for.quiz == null and  for.seances|length > 0 %}
+                                        <a class="btn btn-primary" href="{{ path('quiz_new', {'id': for.Id}) }}">+</a>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a class="btn btn-secondary" href="{{ path('seance_new', {'id': for.Id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i></a> <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.Id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> <form method="post" action="{{ path('formation_delete', {'id': for.Id}) }}" onsubmit="return confirm('etes vous sur de supprimer cette formation?');">
+
+                                        <a class="btn btn-secondary" href="{{ path('seance_new', {'id': for.Id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i></a>
+                                        <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.Id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                        <form method="post" action="{{ path('formation_delete', {'id': for.Id}) }}" onsubmit="return confirm('etes vous sur de supprimer cette formation?');">
                                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.Id) }}">
                                             <button class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </form> </div></td>

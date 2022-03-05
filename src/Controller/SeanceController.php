@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\Quiz;
 use App\Entity\Seance;
 use App\Form\SeanceType;
 use App\Repository\FormationRepository;
+use App\Repository\QuizRepository;
 use App\Repository\SeanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -109,13 +111,19 @@ class SeanceController extends AbstractController
     /**
      * @Route("/{id}", name="seance_delete", methods={"POST"})
      */
-    public function delete(Request $request, Seance $seance, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Seance $seance, EntityManagerInterface $entityManager, QuizRepository $quizRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$seance->getId(), $request->request->get('_token'))) {
             $entityManager->remove($seance);
             $entityManager->flush();
         }
-
+       $quiz = $quizRepository->find($seance->getFormation()->getQuiz()->getId());
+        if ($seance->getFormation()->getSeances()->count() == 0){
+            if ($seance->getFormation()->getQuiz() != null){
+                $entityManager->remove($quiz);
+                $entityManager->flush();
+            }
+        }
         return $this->redirectToRoute('formation_new', [], Response::HTTP_SEE_OTHER);
     }
 }

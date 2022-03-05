@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Formation;
 use App\Entity\Question;
 use App\Entity\Quiz;
 use App\Entity\Useranswer;
@@ -62,25 +63,31 @@ class QuizController extends AbstractController
 
     public function certif(Quiz $quiz,QuizRepository $quizRepository)
     {
-        //récuperer le dernier quiz passer par l'utilisateur : from user result
 
+        $username = $this->getUser() ;
+
+        $userlastname = (string)$this->getUser()->getLastName();
         return $this->render('quiz/certification.html.twig', [
             'quiz' => $quiz,
+            'username' => $username,
+            'userlastname' => $userlastname,
+
         ]);
     }
 
     /**
-     * @Route("/new", name="quiz_new", methods={"GET", "POST"})
+     * @Route("/new/{id}", name="quiz_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Formation $formation ,Request $request, EntityManagerInterface $entityManager): Response
     {
+
         $quiz = new Quiz();
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
-
+        $user = $this->getUser()->getId();
         if ($form->isSubmitted() && $form->isValid()) {
-            $quiz->setIdUser(1);
-            $quiz->setIdFormation(2);
+            $quiz->setIdUser($user);
+            $quiz->setIdFormation($formation);
             $entityManager->persist($quiz);
             $entityManager->flush();
 $nbre=0;
@@ -214,7 +221,7 @@ $nbre=0;
                }else{
                    $message = (new \Swift_Message('Félicitation'))
                        ->setFrom('nassim.allouche@gmail.com')
-                       ->setTo('mohamed.bouaziz@esprit.tn')
+                       ->setTo($this->getUser()->getUsername())
                        ->setBody(
                            $this->renderView(
                            // templates/emails/registration.html.twig

@@ -19,9 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class QuestionController extends AbstractController
 {
+
     /**
      * @Route("/", name="question_index", methods={"GET"})
      */
+
     public function index(QuestionRepository $questionRepository): Response
     {
         return $this->render('question/index.html.twig', [
@@ -41,12 +43,44 @@ class QuestionController extends AbstractController
     /**
      * @Route("/new", name="question_new", methods={"GET", "POST"})
      */
+  /*  public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $array = array();
+        $question = new Question();
+        $indice =count($array);
+        $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()))) ;
+        $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()));
+        $quiz=$quizs[$nbr -1];
+        $form = $this->createForm(QuestionType::class, $question);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            if ( $indice < 4){
+                $array[$indice++] = $question;
+                return $this->redirectToRoute('question_new', [
+                    'quiz' =>  $quiz,
+                    'question' => $question,
+                    'form' => $form->createView(),
+                    'nbre'=> $indice,
+                ],Response::HTTP_SEE_OTHER);
+            } else{ dd($array);return $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$quiz]);}
+        }
+        return $this->render('question/new.html.twig', [
+            'quiz' =>  $quiz,
+            'question' => $question,
+            'form' => $form->createView(),
+            'nbre'=>$indice ,
+        ]);
+
+    }*/
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
         $question = new Question();
 
-        $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findAll()) ;
-        $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findAll();
+        $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()))) ;
+        $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()));
         $quiz=$quizs[$nbr -1];
         //$quiz =$this->getDoctrine()->getRepository(Quiz::class)->find(50);
         $form = $this->createForm(QuestionType::class, $question);
@@ -54,6 +88,8 @@ class QuestionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $question->setQuiz($quiz);
+
+
             $entityManager->persist($question);
             $entityManager->flush();
 
