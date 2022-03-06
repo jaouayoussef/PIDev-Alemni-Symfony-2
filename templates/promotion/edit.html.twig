@@ -1,0 +1,41 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Modifier Promotion {% endblock %}
+
+{% block body %}
+
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Promotion</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Promotion</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"> Gestion Promotion </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Modifier Promotion</h4><br>
+
+                        {{ include('promotion/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+
+
+
+                    </div>
+                </div>
+            </div >
+
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+
+
+{% endblock %}
+
