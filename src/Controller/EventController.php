@@ -303,7 +303,7 @@ class EventController extends AbstractController
     /**
      * @Route("/{id}/edit", name="event_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Event $event, EntityManagerInterface $entityManager,EventRepository $eventRepository, $id): Response
     {
         $form = $this->createForm(EventType::class, $event)->add('E_PHOTO', FileType::class, [
             // unmapped means that this field is not associated to any entity property
@@ -355,6 +355,8 @@ class EventController extends AbstractController
         return $this->render('event/edit.html.twig', [
             'event' => $event,
             'form' => $form->createView(),
+            'events' => $eventRepository->getWhatYouWant($id),
+
         ]);
     }
 

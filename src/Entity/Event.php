@@ -23,10 +23,10 @@ class Event
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
      *     message = "Cette valeur ne doit pas être vide"
      * )
-     * @ORM\Column(type="string", length=255)
      */
     private $E_Name;
 

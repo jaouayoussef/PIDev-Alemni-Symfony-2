@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <label for="exampleInputName1">Nom de l'événement:</label>
                             {{ form_errors(form.E_Name, { 'attr': {'style': 'color:red'}}) }}
-                            {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
+                            {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom','onchange':'verifNomEvent(this)'}}) }}
 
                         </div><br>
                         <div class="form-group">
@@ -235,6 +235,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+    function verifNomEvent(_this){
+        var table = document.getElementById('myTable');
+        for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+            if (table.rows[r].cells[1].innerHTML == _this.value){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Nom Promotion existe !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                document.getElementById("event_E_Name").value = null;
+
+            }
+
+        }
+    }
     function deleteswal(a) {
         Swal.fire({
             title: 'Êtes-vous sûr ?',

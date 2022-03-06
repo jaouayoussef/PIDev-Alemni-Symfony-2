@@ -48,6 +48,15 @@ class EventRepository extends ServiceEntityRepository
             -> groupBy('datefin');
         return $query->getQuery()->getResult();
     }
+    public function getWhatYouWant($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.id != :identifier')
+            ->setParameter('identifier', $id);
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 
     // /**
     //  * @return Event[] Returns an array of Event objects
