@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Alemni | Register</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('front/path/to/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/bootstrap-datepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/jquery.timepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/flaticon.css') }}">
+    <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('home') }}"><span>Ale</span>mni</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a href="{{ path('home') }}" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Our courses</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">All Tutors</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Our events</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Contact us</a></li>
+                <li class="nav-item dropdown"><a href="{{ path('app_login') }}" class="nav-link">Login</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-wrap js-fullheight" style="background-image: url('{{ asset('front/images/bg_1.jpg') }}');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
+            <div class="col-md-auto ftco-animate">
+                <section class="ftco-section">
+                    <div class="col-md-12">
+                        <div class="row no-gutters">
+                            <div class="col-lg-12 col-md-12 order-md-last d-flex align-items-stretch">
+                                <div class="contact-wrap w-100 p-md-5 p-4">
+                                    <h3 class="mb-4">Create your account</h3>
+                                    {{ form_start(registrationForm,{'attr':{'class':'contactForm','id':'myForm'}}) }}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">First Name</label>
+                                                {{ form_row(registrationForm.first_name,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Last Name</label>
+                                                {{ form_row(registrationForm.last_name,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">Gender</label>
+                                                {{ form_row(registrationForm.gender,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Email Address</label>
+                                                {{ form_row(registrationForm.email,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">Password</label>
+                                                {{ form_row(registrationForm.plainPassword.first,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Confirm Password</label>
+                                                {{ form_row(registrationForm.plainPassword.second,{'attr':{'class':'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="name">Role</label>
+                                                {{ form_errors(registrationForm.roles) }}
+                                                {{ form_row(registrationForm.roles[0],{'attr':{'class':'checkbox'}}) }}
+                                                {{ form_row(registrationForm.roles[1],{'attr':{'class':'checkbox','id':'flexCheckDefault'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Profile Picture</label>
+                                                {{ form_row(registrationForm.picture,{'attr':{'class':'btn btn-outline-warning'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="label" for="email">Verification file</label>
+                                                {{ form_row(registrationForm.verificationFile,{'attr':{'class':'btn btn-outline-warning'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                {% block captcha_widget %}
+                                                    {{ form_row(registrationForm.captcha) }}
+                                                    {{ form_widget(registrationForm) }}
+                                                {% endblock %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <a onclick="registerUser()" class="btn btn-primary">Créer votre compte</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ form_end(registrationForm) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- loader -->
+<div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00"/>
+    </svg>
+</div>
+
+<script type="text/javascript">
+    var form = $(document).getElementById("#myForm")
+
+    function registerUser() {
+        Swal.fire({
+            title: 'Bienvenue à',
+            text: "ALEMNI!",
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Mail',
+                    text: 'Vous allez reçevoir un mail de confirmation',
+                    icon: 'info',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK!',
+                }).then(() => {
+                    $('#myForm').submit()
+                })
+            }
+        })
+    }
+</script>
+
+<script src="{{ asset('front/js/jquery.min.js') }}"></script>
+<script src="{{ asset('front/js/jquery-migrate-3.0.1.min.js') }}"></script>
+<script src="{{ asset('front/js/popper.min.js') }}"></script>
+<script src="{{ asset('front/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('front/js/jquery.easing.1.3.js') }}"></script>
+<script src="{{ asset('front/js/jquery.waypoints.min.js') }}"></script>
+<script src="{{ asset('front/js/jquery.stellar.min.js') }}"></script>
+<script src="{{ asset('front/js/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('front/js/jquery.magnific-popup.min.js') }}"></script>
+<script src="{{ asset('front/js/jquery.animateNumber.min.js') }}"></script>
+<script src="{{ asset('front/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('front/js/scrollax.min.js') }}"></script>
+<script src="{{ asset('front/js/google-map.js') }}"></script>
+<script src="{{ asset('front/js/main.js') }}"></script>
+<script src="{{ asset('back/assets/js/sweet-alert.js') }}"></script>
+
+
+</body>
+</html>
+
+
+{# {% block body %}
+    <h1>Register</h1>
+
+    {{ form_start(registrationForm) }}
+    {{ form_row(registrationForm.first_name) }}
+    {{ form_row(registrationForm.last_name) }}
+    {{ form_row(registrationForm.gender) }}
+    {{ form_row(registrationForm.roles) }}
+    {{ form_row(registrationForm.email) }}
+    {{ form_row(registrationForm.plainPassword.first, {
+        label: 'Password'
+    }) }}
+    {{ form_row(registrationForm.plainPassword.second, {
+        label: 'Confirm password'
+    }) }}
+    {{ form_row(registrationForm.picture) }}
+    {{ form_row(registrationForm.verificationFile) }}
+
+    <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}   #}

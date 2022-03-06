@@ -1,0 +1,91 @@
+
+{{ form_start(form,{'attr':{'class':'forms-sample'}}) }}
+<div class="form-group">
+    <label for="exampleInputName1">Nom Promotion :</label>
+    {{ form_widget(form.P_Name,{'attr':{'class':'form-control','type':'text','id':'NomPromo','placeholder':'Nom promotion'}}) }}
+</div>
+<br>
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-primary text-white">-</span>
+            </div>
+            {{ form_widget(form.P_Value,{'attr':{'class':'form-control','type':'text','id':'NomPromo','aria-label':'Amount (to the nearest dollar)','onchange':'verifValCodePromo(this)'}}) }}
+            <div class="input-group-append">
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+    {{ form_widget(form.P_Domaine,{'attr':{'class':'form-control','style':'width: 100%;', 'style':'display:none'}}) }}
+    {{ form_widget(form.event,{'attr':{'class':'form-control','style':'width: 100%;', 'style':'display:none'}}) }}
+
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Date debut :</label>
+    {{ form_widget(form.P_DateB,{'attr':{'class':'form-control','id':'DateD','placeholder':'Valeur du code promo en pourcentage', 'onchange':'verifDatedebut()'}}) }}
+</div><br>
+
+<div class="form-group">
+    <label for="exampleInputEmail3">Date fin :</label>
+    {{ form_widget(form.P_DateF,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()'}}) }}
+</div><br>
+
+
+<div class="form-group">
+    <label for="exampleTextarea1">Description :</label>
+    {{ form_widget(form.P_Note,{'attr':{'class':'form-control','type':'textarea','id':'description','placeholder':'description','size':'4'}}) }}
+
+</div><br>
+
+<div class="btn-group" role="group" aria-label="Basic example">
+
+    <button class="btn btn-primary mr-2">{{ button_label|default('Sauvegarder') }}</button>
+    <a href="{{ path('promotion_code_new') }}"  class="btn btn-light">Annuler</a>
+</div>
+
+{{ form_end(form) }}
+<script>
+    function verifDatedebut() {
+        let dateDebutString = document.getElementById("promotion_P_DateB").value.split("-");
+        let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+        let date = new Date();
+        if (dateDebut < date ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            document.getElementById("promotion_P_DateF").disabled = true;
+            document.getElementById("promotion_P_DateB").value = 0;
+            document.getElementById("promotion_P_DateF").value = 0;
+        }else {
+            document.getElementById("promotion_P_DateF").disabled = false;
+            document.getElementById("promotion_P_DateF").value = 0;
+        }
+    }
+    function verifDate() {
+        let dateDebutString = document.getElementById("promotion_P_DateB").value.split("-");
+        let dateFinString = document.getElementById("promotion_P_DateF").value.split("-");
+        let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+        let dateFin = new Date(dateFinString[0],dateFinString[1]-1,dateFinString[2]);
+
+        let date = new Date();
+
+        if (dateDebut >= dateFin ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            document.getElementById("promotion_P_DateF").value = 0;
+
+        }
+    }
+</script>
