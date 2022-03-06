@@ -1,4 +1,0 @@
-<form method="post" action="{{ path('domaine_delete', {'id': dm.id}) }}" onsubmit="return confirm('etes vous sur de supprimer ce domaine?');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dm.id) }}">
-    <button class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
-</form>
