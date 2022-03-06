@@ -1,0 +1,35 @@
+{% extends 'base-quiz.twig' %}
+
+{% block title %}New Quiz{% endblock %}
+
+{% block body %}
+
+    <div class="container-contact100">
+        <div class="wrap-contact100">
+            {{ form_start(form,{'attr':{'class':'contact100-form validate-form'}}) }}
+
+				<span class="contact100-form-title">
+					Add quiz
+				</span>
+
+                <div class="wrap-input100 validate-input bg1" data-validate="Please Type Your Name">
+                    <span class="label-input100">Quiz name *</span>
+                    {{ form_widget(form.name,{'attr':{'class':'input100','type':'text','placeholder':'Enter Your quiz name'}}) }}
+
+                </div>
+
+
+
+                <div class="container-contact100-form-btn">
+                    <button class="contact100-form-btn">
+						<span>
+							Submit
+							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+						</span>
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

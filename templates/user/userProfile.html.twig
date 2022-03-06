@@ -1,0 +1,178 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %} Profile {% endblock %}
+
+{% block body %}
+
+    <div class="page-header flex-wrap">
+        <h3 class="mb-0">Welcome to your profile, {{ user.firstname }}!</h3>
+    </div>
+
+    <div class="col-xl-12 stretch-card grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {% if (user.roles|join(', ') == "ROLE_CLIENT, ROLE_TUTOR" or user.roles|join(', ') == "ROLE_TUTOR, ROLE_CLIENT" ) %}
+                            <p class="text-muted">You're signed in as a <u
+                                        style="color: green;font-weight: bold">Tutor </u>and a <u
+                                        style="color: green;font-weight: bold">Client</u>!</p>
+                        {% elseif user.roles|join(', ') == "ROLE_CLIENT" %}
+                            <p class="text-muted">You're signed in as a <u
+                                        style="color: green;font-weight: bold">Client</u>!<a
+                                        class="text-muted font-weight-medium pl-2" href="{{ path('second_role') }}"><u>
+                                        Become a tutor ?</u></a></p>
+                        {% else %}
+                            <p class="text-muted">You're signed in as a <u
+                                        style="color: green;font-weight: bold">Tutor</u>!<a
+                                        class="text-muted font-weight-medium pl-2" href="{{ path('second_role') }}"><u>
+                                        Become a Client ?</u></a></p>
+                        {% endif %}
+
+                    </div>
+                    <div class="col-sm-3 text-md-right">
+                        <a href="{{ path('edit_user') }}" type="button"
+                           class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-warning font-weight-normal">
+                            <i class="mdi mdi-pen btn-icon-prepend"></i>Edit profile</a>
+                    </div>
+                    <div class="col-sm-3 text-md-right">
+                        <form method="post" action="{{ path('user_delete', {'id': user.id}) }}"
+                              onsubmit="return confirm('All your data will be deleted... Are you sure you want to remove your account?');">
+                            <a onclick="deleteConfirmation()" class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-danger font-weight-normal">
+                                <i class="mdi mdi-trash-can btn-icon-prepend"></i>Desactivate account
+                            </a>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card mb-3 mb-sm-0">
+                            <div class="card-body py-3 px-4">
+                                <p class="m-0 survey-head">Profile Picture</p>
+
+                                <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
+                                    <img src="{{ asset('uploads/user_picture/' ~ user.picture) }}"
+                                         class="img-thumbnail">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Profile details</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th class="text-center">First name</th>
+                                            <td class="text-center">{{ user.firstName }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">Last name</th>
+                                            <td class="text-center">{{ user.lastName }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">Email</th>
+                                            <td class="text-center">{{ user.email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">Gender</th>
+                                            <td class="text-center">{{ user.gender }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center">Creation Date</th>
+                                            <td class="text-center">{{ user.createdAt|date("d/m/y") }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<div class="row">
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Vos évènements</h4>
+
+                <div id="accordion">
+                    {% for event in events %}
+                    <div class="card">
+                        <div class="card-header" id="headingOne{{ event.id }}">
+                            <h5 class="mb-0">
+                                <img src="{{ asset('uploads/Event/' ~ event.EventId.EPHOTO) | imagine_filter('squareshowprofile') }}" alt="{{ event.EventId.EName }}" >
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne{{ event.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                    {{ event.EventId.EName }}
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne{{ event.id }}" class="collapse" aria-labelledby="headingOne{{ event.id }}" data-parent="#accordion">
+                            <div class="card-body">
+                                <br>
+                                <p><b>Description :</b>{{ event.EventId.ENote }}</p>
+                                <p><b>Adresse : </b>{{ event.EventId.EPlace }}</p>
+                                <p><b>Date debut : </b>{{ event.EventId.EDateDebut |date('d-m-Y h:m') }}</p>
+                                <p><b>Date fin : </b>{{ event.EventId.EDateFin |date('d-m-Y h:m') }}</p>
+                                <p><b>Prix : </b>{{ event.PrixReservationEvent }} dt</p>
+                                <p><b>Contact :</b><p>
+                                <p><b>Email : </b>{{ event.EventId.EEmail }} </p>
+                                <p> <b>Numéro de téléphone : </b>{{ event.EventId.ETelNumber }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Vos quiz</h4>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+        function deleteConfirmation(){
+            Swal.fire({
+                title: 'Vous êtes sûr ?',
+                text: "Vous ne pouvez plus utiliser ce compte!",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelText: 'annuler',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        {
+                            title: 'Fait!',
+                            text:'Votre compte est supprimé.',
+                            type:'success',
+                            timer:3000
+                        }
+                    ).then(()=>{
+                        window.location.href= "{{ path('home') }}"
+                    })
+                }
+                else{
+                    Swal.fire({
+                        title: 'Annulé!',
+                        type: 'success',
+                        timer: 3000
+                    })
+                }
+
+            })
+        }
+    </script>
+
+{% endblock %}

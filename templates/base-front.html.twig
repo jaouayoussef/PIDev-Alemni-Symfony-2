@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Alemni | {% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block css %}
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('front/path/to/font-awesome/css/font-awesome.min.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{{ asset('front/css/animate.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/owl.theme.default.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/magnific-popup.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/bootstrap-datepicker.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/jquery.timepicker.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/flaticon.css') }}">
+        <link rel="stylesheet" href="{{ asset('front/css/style.css') }}">
+        <link rel="shortcut icon" href="{{ asset('Back/assets/images/favicon.png') }}"/>
+    {% endblock %}
+</head>
+<body>
+{% block header %}
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ path('home') }}"><span>Ale</span>mni</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                    aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="{{ path('home') }}" class="nav-link">Accueil</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Nos formations</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Nos formateurs</a></li>
+                    <li class="nav-item"><a href="{{ path('show_event') }}" class="nav-link">Nos évènements</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Contactez Nous</a></li>
+                    {% if app.user == null %}
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                                 aria-labelledby="navbarDropdownMenuLink-333">
+                                {% if app.user.roles|join(', ')=="ROLE_ADMIN" %}
+                                    <a class="dropdown-item" href="{{ path('admin_profile') }}">Mon profil</a>
+                                {% else %}
+                                    <a class="dropdown-item" href="{{ path('user_profile') }}">Mon profil</a>
+                                {% endif %}
+                                <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnectez</a>
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-wrap js-fullheight" style="background-image: url('{{ asset('front/images/bg_1.jpg') }}');">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate">
+                    <span class="subheading">Bienvenue à Alemni</span>
+                    <h1 class="mb-4">Platforme de formations en ligne</h1>
+                    <p class="caps">Far far away, behind the word mountains, far from the countries Vokalia and
+                        Consonantia</p>
+                    <p class="mb-0">
+                        <a href="#" class="btn btn-primary">Nos formations</a>
+                        <a href="#" class="btn btn-white">Plus d'informations</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block login %}
+    {% if app.user == null %}
+        <section class="ftco-section ftco-no-pb ftco-no-pt">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7"></div>
+                    <div class="col-md-5 order-md-last">
+                        <div class="login-wrap p-4 p-md-5">
+                            <h3 class="mb-4">Login</h3>
+                            <form action="#" class="signup-form">
+
+                                <div class="form-group">
+                                    <label class="label" for="email">Email Address</label>
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label" for="password-field">Password</label>
+                                    <input id="password-field" name="password-field" type="password" class="form-control" placeholder="...">
+                                </div>
+                                <div class="form-group d-flex justify-content-end mt-4">
+                                    <button type="submit" class="btn btn-primary submit"><span
+                                                class="fa fa-paper-plane"></span></button>
+                                </div>
+                            </form>
+                            <p class="text-center">Don't have an account? <a href="{{ path('user_register') }}">Sign
+                                    Up</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}
+{% block body %}
+{% endblock %}
+{% block footer %}
+    <footer class="ftco-footer ftco-no-pt">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md pt-5">
+                    <div class="ftco-footer-widget pt-md-5 mb-4">
+                        <h2 class="ftco-heading-2">À propos</h2>
+                        <p>Alemni est une plateforme des formations en ligne certifiée et des événements</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft">
+                            <li class="ftco-animate"><a href="#"><span class="fa fa-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="https://www.facebook.com/Alemni-102260802379484"><span class="fa fa-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="fa fa-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+               {# <div class="col-md pt-5">
+                    <div class="ftco-footer-widget pt-md-5 mb-4 ml-md-5">
+                        <h2 class="ftco-heading-2">Help Desk</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Customer Care</a></li>
+                            <li><a href="#" class="py-2 d-block">Legal Help</a></li>
+                            <li><a href="#" class="py-2 d-block">Services</a></li>
+                            <li><a href="#" class="py-2 d-block">Privacy and Policy</a></li>
+                            <li><a href="#" class="py-2 d-block">Refund Policy</a></li>
+                            <li><a href="#" class="py-2 d-block">Call Us</a></li>
+                        </ul>
+                    </div>
+                </div>#}
+                <div class="col-md pt-5">
+                    <div class="ftco-footer-widget pt-md-5 mb-4">
+                        <h2 class="ftco-heading-2">Recent Courses</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">Accueil</a></li>
+                            <li><a href="#" class="py-2 d-block">Nos formations</a></li>
+                            <li><a href="#" class="py-2 d-block">Nos formateurs</a></li>
+                            <li><a href="{{ path('show_event') }}" class="py-2 d-block">Nos évènements</a></li>
+                            <li><a href="#" class="py-2 d-block">Contactez Nous</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md pt-5">
+                    <div class="ftco-footer-widget pt-md-5 mb-4">
+                        <h2 class="ftco-heading-2">Vous avez une question?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon fa fa-map-marker"></span><span class="text">ESPRIT : Ecole Sup Privée d'Ingénierie et de Technologies <br> 1, 2 rue André Ampère - 2083 - Pôle Technologique - El Ghazala.</span>
+                                </li>
+                                <li><a href="#"><span class="icon fa fa-phone"></span><span
+                                                class="text">+216 29 488 365</span></a></li>
+                                <li><a href="#"><span class="icon fa fa-paper-plane"></span><span class="text">alemni@gmail.com</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+<div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00"/>
+    </svg>
+</div>
+{% block js %}
+    <script src="{{ asset('front/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('front/js/jquery-migrate-3.0.1.min.js') }}"></script>
+    <script src="{{ asset('front/js/popper.min.js') }}"></script>
+    <script src="{{ asset('front/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('front/js/jquery.easing.1.3.js') }}"></script>
+    <script src="{{ asset('front/js/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('front/js/jquery.stellar.min.js') }}"></script>
+    <script src="{{ asset('front/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('front/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('front/js/jquery.animateNumber.min.js') }}"></script>
+    <script src="{{ asset('front/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('front/js/scrollax.min.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="{{ asset('front/js/google-map.js') }}"></script>
+    <script src="{{ asset('front/js/main.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% endblock %}
+</body>
+</html>
