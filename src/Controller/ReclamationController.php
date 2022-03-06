@@ -98,4 +98,87 @@ class ReclamationController extends AbstractController
 
         return $this->redirectToRoute('user_reclamation', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+    public function getStatDate($data)
+    {
+        $res = array(0,0,0,0,0,0,0,0,0,0,0,0) ;
+        foreach ($data as $r)
+        {
+            $index = $r->getSendingDate()->format('m') ;
+            if ((int)$index >= 10)
+                $index = $r->getSendingDate()->format('m') - 1 ;
+            else
+                $index = $r->getSendingDate()->format('m')[1] - 1 ;
+            $res[$index]++ ;
+        }
+
+        return $res ;
+    }
+
+
+    /**
+     * @Route("/stat", name="stat_reclamation", methods={"GET"})
+     */
+    public function stat(ReclamationRepository $reclamationRepository)
+    {
+        $data=$reclamationRepository->findAll();
+        $res = $this->getStatDate($data) ;
+        $repondu = 0 ;
+        $nonRepondu = 0 ;
+        $type1 = 0 ;
+        $type2 = 0 ;
+        $type3 = 0 ;
+        $type4 = 0 ;
+        foreach ($data as $t)
+        {
+            $type=$t->getType();
+            if ($type=="Account"){
+                $type1++;
+            }
+            elseif ($type=="Course"){
+                $type2++;
+            }
+            elseif ($type=="Event"){
+                $type3++;
+            }
+            elseif ($type=="Others"){
+                $type4++;
+            }
+
+            if ($t->getReponse() == null)
+            {
+                $nonRepondu++ ;
+            } elseif ($t->getReponse() != null)
+            {
+                $repondu++ ;
+            }
+
+        }
+        $reclamation= $reclamationRepository->countbydate();
+        $dates = [];
+        $reclamationcount = [];
+
+        foreach ($reclamation as $reclame){
+            $dates[]= $reclame['date_reclamtion'];
+            $reclamationcount[]=$reclame['count'];
+
+        }
+        $choice=['Account','Course','Event','Others'];
+
+        return $this->render('reponse/stat.html.twig' ,
+            [
+                'type1' => $type1,
+                'type2' => $type2,
+                'type3' => $type3,
+                'type4' => $type4,
+                'choice'=>json_encode($choice),
+                'dates'=>json_encode($dates),
+                'reclamationcount'=>json_encode($reclamationcount) ,
+                'etat' => [$repondu,$nonRepondu] ,
+                'res' => $res
+            ]
+        );
+    }
 }

@@ -237,11 +237,11 @@ class UserController extends AbstractController
      */
     public function banUser($id): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
+        $currentUser = $this->getUser();
+        if (!$currentUser) {
             return $this->redirectToRoute('app_login');
         }
-        if ($user->getRoles() == ["ROLE_ADMIN"]) {
+        if ($currentUser->getRoles() == ["ROLE_ADMIN"]) {
             $em = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()->getRepository(User::class)->find($id);
             $user->setIsBanned(true);
@@ -334,5 +334,4 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_profile');
         }
     }
-
 }

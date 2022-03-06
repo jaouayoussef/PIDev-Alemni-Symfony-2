@@ -16,6 +16,31 @@ class AdminController extends AbstractController
      */
     public function index(UserRepository $userRepository, PaginatorInterface $paginator,Request $request): Response
     {
+        $users = $userRepository->findAll();
+        $nbAdmins = 0;
+        $nbTutors = 0;
+        $nbClients = 0;
+        $nbBanned = 0;
+
+        foreach ($users as $user)
+        {
+            if ($user->getRoles()[0]=="ROLE_ADMIN")
+            {
+                $nbAdmins++;
+            }
+            elseif ($user->getRoles()[0]=="ROLE_TUTOR")
+            {
+                $nbTutors++;
+            }
+            elseif ($user->getRoles()[0]=="ROLE_CLIENT")
+            {
+                $nbClients++;
+            }
+            if($user->getIsBanned() === true){
+                $nbBanned++;
+            }
+        }
+
         $userByDate = $userRepository->findByCreationDate();
         $userByRoles = $userRepository->getUserByRole("ROLE_TUTOR");
         $datePagination = $paginator->paginate(
@@ -30,7 +55,11 @@ class AdminController extends AbstractController
         );
         return $this->render('admin/dashboard.html.twig',[
             'datedUsers' => $datePagination,
-            'roledUsers' => $rolePagination
+            'roledUsers' => $rolePagination,
+            "nbAdmins" => $nbAdmins,
+            "nbClients" => $nbClients,
+            "nbBanned" => $nbBanned,
+            "nbTutors" => $nbTutors,
         ]);
     }
 }

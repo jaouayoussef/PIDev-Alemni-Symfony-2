@@ -20,6 +20,15 @@ class ReclamationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reclamation::class);
     }
 
+    public function countbydate()
+    {
+        $query = $this->createQueryBuilder('a')
+            ->select('SUBSTRING(a.sending_date,1,7)as date_reclamtion , count(a) as count')
+            ->groupBy('date_reclamtion');
+        return $query->getQuery()->getResult();
+
+    }
+
     /**
      * @throws Exception
      */
@@ -42,7 +51,7 @@ class ReclamationRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function getNonTreatedReports()
+    public function getNonTreatedReports(): int
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT * FROM reclamation WHERE status = 0';
@@ -55,7 +64,7 @@ class ReclamationRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function getTreatedReports()
+    public function getTreatedReports(): int
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT * FROM reclamation WHERE status = 1';

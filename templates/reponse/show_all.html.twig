@@ -68,13 +68,63 @@
                                             {% endif %}
                                             {% if rec.reponse == null %}
                                                 <td>
-                                                    <a class="btn btn-inverse-danger btn-fw"
-                                                       href="{{ path('add_reponse' ,{'id':rec.id}) }}">Répondre</a>
+                                                    <script type="text/javascript">
+                                                        function addConfirmation(){
+                                                            Swal.fire({
+                                                                title: 'Vous êtes sûr ?',
+                                                                text: "Vous allez répondre à cette réclamation!",
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                cancelText: 'annuler',
+                                                                confirmButtonColor: '#3085d6',
+                                                                cancelButtonColor: '#d33',
+                                                                confirmButtonText: 'Oui!',
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href= "{{ path('add_reponse' ,{'id':rec.id}) }}"
+                                                                }
+                                                                else{
+                                                                    Swal.fire({
+                                                                        title: 'Annulé!',
+                                                                        type: 'success',
+                                                                        timer: 3000
+                                                                    })
+                                                                }
+
+                                                            })
+                                                        }
+                                                    </script>
+                                                    <a class="btn btn-inverse-danger btn-fw" onclick="addConfirmation()">Répondre</a>
                                                 </td>
                                             {% else %}
                                                 <td>
-                                                    <a class="btn btn-inverse-warning btn-fw"
-                                                       href="{{ path('edit_reponse' ,{'id':rec.reponse.id}) }}">Modifier</a>
+                                                    <script type="text/javascript">
+                                                        function editConfirmation(){
+                                                            Swal.fire({
+                                                                title: 'Vous êtes sûr ?',
+                                                                text: "Vous allez modifier votre réponse!",
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                cancelText: 'annuler',
+                                                                confirmButtonColor: '#3085d6',
+                                                                cancelButtonColor: '#d33',
+                                                                confirmButtonText: 'Oui!',
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href= "{{ path('edit_reponse' ,{'id':rec.reponse.id}) }}"
+                                                                }
+                                                                else{
+                                                                    Swal.fire({
+                                                                        title: 'Annulé!',
+                                                                        type: 'success',
+                                                                        timer: 3000
+                                                                    })
+                                                                }
+
+                                                            })
+                                                        }
+                                                    </script>
+                                                    <a class="btn btn-inverse-warning btn-fw" onclick="editConfirmation()">Modifier</a>
                                                 </td>
                                             {% endif %}
                                         </tr>
