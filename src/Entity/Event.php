@@ -49,7 +49,10 @@ class Event
     private $E_Place;
 
     /**
-     * @ORM\Column(type="integer", length=255)
+     * @ORM\Column(type="float", length=255)
+     *  @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_Price=0;
 

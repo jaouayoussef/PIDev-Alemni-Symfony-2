@@ -274,7 +274,7 @@
     var prix = {{ CodePromo.PCValue }};
     var eventid = d;
     if (a == x) {
-        b.innerHTML = parseFloat(b.innerHTML) - (((parseFloat(b.innerHTML)) * parseFloat(prix)) / 100);
+        b.innerHTML = (parseFloat(b.innerHTML) - (((parseFloat(b.innerHTML)) * parseFloat(prix)) / 100)).toFixed(2);
         c.innerHTML = "<p>{{ CodePromo.CPPCD.PCDName }} {{ CodePromo.CPPCD.PCDFirstName }} : - {{ CodePromo.PCValue }}%</p>";
         e.innerHTML = "<p>{{ CodePromo.CPPCD.id}}</p>";
         f.innerHTML = null;
