@@ -20,9 +20,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 class RegistrationController extends AbstractController
 {
+    private $verifyEmailHelper;
+    private $mailer;
+
+    public function __construct(VerifyEmailHelperInterface $helper, Swift_Mailer $mailer)
+    {
+        $this->verifyEmailHelper = $helper;
+        $this->mailer = $mailer;
+    }
+
     /**
      * @Route("/admin/register", name="admin_register")
      */
@@ -169,6 +180,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $name = $form->get('first_name')->getData();
             $picture = $form->get('picture')->getData();
             $verif = $form->get('verificationFile')->getData();
             $role = $form->get('roles')->getData();
@@ -227,19 +239,33 @@ class RegistrationController extends AbstractController
 
             //generate a signed url and email it to the user
             //do anything else you need here, like send an email
-            $message = (new \Swift_Message('Welcome to Alemni'))
-                ->setFrom('Alemnicontact@gmail.com')
-                ->setTo($user->getEmail());
-            $img = $message->embed(\Swift_Image::fromPath('Back/assets/email/images/LogoPi.png'));
-            $message->setBody(
-                $this->renderView(
-                    'emails/registration.html.twig',
-                    [
-                        'img' => $img
-                    ]
-                ),
-                'text/html'
+            $signatureComponents = $this->verifyEmailHelper->generateSignature(
+                'registration_confirmation_route',
+                $user->getId(),
+                $user->getEmail()
             );
+
+            $message = (new \Swift_Message('Bienvenue'))
+                ->setFrom('Alemnicontact@gmail.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView('emails/mail_confirmation.html.twig',[
+                        'signedUrl' => $signatureComponents->getSignedUrl()
+                    ]),
+                    'text/html'
+                );
+
+
+            /*$message = (new \Swift_Message('Welcome to Alemni'))
+                ->setFrom('Alemnicontact@gmail.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'emails/registration.html.twig',
+                        ['name' => $name]
+                    ),
+                    'text/html'
+                );*/
 
             $mailer->send($message);
 
@@ -254,5 +280,25 @@ class RegistrationController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/email/verify", name="registration_confirmation_route")
+     */
+    public function verifyUserEmail(Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+
+        // Do not get the User's Id or Email Address from the Request object
+        try {
+            $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+        } catch (VerifyEmailExceptionInterface $e) {
+            $this->addFlash('verify_email_error', $e->getReason());
+
+            return $this->redirectToRoute('user_register');
+        }
+
+        return $this->redirectToRoute('home');
     }
 }

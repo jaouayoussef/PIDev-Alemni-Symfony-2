@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-
 use App\Entity\ReservationEvent;
 use App\Entity\User;
 use App\Form\EventType;
@@ -58,7 +57,6 @@ class EventController extends AbstractController
                 'CodePromos'=>  $promotionCodeRepository -> getPromotionCodebydatenow()
             ]);
         }
-
         return $this->render('event/show_event/index.html.twig', [
             'Events' => $eventRepository->geteventbydatenowandreservation($listid),
             'Promotions' => $promotionRepository -> getPromotionEVENTbydatenow(),

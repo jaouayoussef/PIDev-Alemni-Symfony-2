@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Bafford\PasswordStrengthBundle\Validator\Constraints as BAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -78,7 +77,21 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified;
+    private $isVerified = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="formateur", orphanRemoval=true)
+     */
+    private $formations;
+    /**
+     * @ORM\OneToMany(targetEntity=ReservationFormation::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $reservationFormations;
+    public function __construct()
+    {
+        $this->formations = new ArrayCollection();
+        $this->reservationFormations = new ArrayCollection();
+    }
 
     /**
      * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="formateur", orphanRemoval=true)

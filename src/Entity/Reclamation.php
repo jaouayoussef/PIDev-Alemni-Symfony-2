@@ -50,7 +50,7 @@ class Reclamation
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $status = 'not answered';
+    private $status = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)

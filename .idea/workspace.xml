@@ -12,6 +12,7 @@
       <change beforePath="$PROJECT_DIR$/templates/event/new.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/event/new.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/promotion_code/new.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/promotion_code/new.html.twig" afterDir="false" />
     </list>
+    <list default="true" id="0eff30cc-ddc7-4f6e-996c-c9c5f38e769a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -167,6 +168,22 @@
       <path value="$PROJECT_DIR$/vendor/pagerfanta/twig" />
       <path value="$PROJECT_DIR$/vendor/imagine/imagine" />
       <path value="$PROJECT_DIR$/vendor/liip/imagine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/knplabs/knp-paginator-bundle" />
+      <path value="$PROJECT_DIR$/vendor/knplabs/knp-components" />
+      <path value="$PROJECT_DIR$/vendor/symfonycasts/verify-email-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfonycasts/reset-password-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/google-mailer" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/knpuniversity/oauth2-client-bundle" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-google" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/ux-chartjs" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -179,9 +196,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/event/show_event_back" />
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
@@ -191,6 +210,8 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Mohamed\Documents\GitHub\PiDev\templates\event\show_event_back" />
       <recent name="C:\Users\Mohamed\Documents\GitHub\PiDev\templates\event\show_event" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\louay\Documents\integration\src\Security" />
     </key>
   </component>
   <component name="RunManager">
@@ -220,6 +241,12 @@
       <workItem from="1646452266931" duration="6000" />
       <workItem from="1646486720467" duration="15334000" />
       <workItem from="1646568734369" duration="4310000" />
+      <workItem from="1646341926852" duration="8840000" />
+      <workItem from="1646413397300" duration="603000" />
+      <workItem from="1646414363280" duration="28722000" />
+      <workItem from="1646477646419" duration="35935000" />
+      <workItem from="1646563917738" duration="1291000" />
+      <workItem from="1646565236132" duration="17030000" />
     </task>
     <servers />
   </component>

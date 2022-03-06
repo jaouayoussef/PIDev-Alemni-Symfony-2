@@ -14,9 +14,11 @@ class ReponseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('answer',TextareaType::class)
-            ->add('admin_file', FileType::class, array('data_class' => null))
-        ;
+            ->add('answer', TextareaType::class)
+            ->add('admin_file', FileType::class, array(
+                'data_class' => null,
+                'required'=>false,
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
