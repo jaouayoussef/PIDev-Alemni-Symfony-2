@@ -94,20 +94,6 @@ class User implements UserInterface
     }
 
     /**
-     * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="formateur", orphanRemoval=true)
-     */
-    private $formations;
-    /**
-     * @ORM\OneToMany(targetEntity=ReservationFormation::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $reservationFormations;
-    public function __construct()
-    {
-        $this->formations = new ArrayCollection();
-        $this->reservationFormations = new ArrayCollection();
-    }
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $verification_file;
