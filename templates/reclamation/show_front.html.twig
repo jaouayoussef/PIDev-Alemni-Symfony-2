@@ -32,16 +32,16 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for rec in reclamations %}
+                                            {% for rec in test %}
                                                 <tr>
                                                     <td>{{ rec.name }}</td>
                                                     <td>{{ rec.type }}</td>
                                                     <td>{{ rec.title }}</td>
                                                     <td>{{ rec.message }}</td>
-                                                    <td>{{ rec.sending_date ? rec.sending_date|date('d-m-Y H:i') : '' }}</td>
-                                                    {% if rec.user_file != null %}
+                                                    <td>{{ rec.sendingDate ? rec.sendingDate|date('d-m-Y H:i') : '' }}</td>
+                                                    {% if rec.userFile != null %}
                                                         <td><a class="btn btn-success "
-                                                               href="{{ asset('uploads/reclamation_picture/' ~ rec.user_file) }}">Voir</a>
+                                                               href="{{ asset('uploads/reclamation_picture/' ~ rec.userFile) }}">Voir</a>
                                                         </td>
                                                     {% else %}
                                                         <td>Pas de fichier envoyé</td>
@@ -59,13 +59,13 @@
                                                         <td>
                                                             {{ rec.answer }}
                                                         </td>
-                                                        <td>{{ rec.reply_date }}</td>
-                                                        {% if rec.admin_file == null %}
+                                                        <td>{{ rec.replyDate }}</td>
+                                                        {% if rec.adminFile == null %}
                                                             <td>Pas de fichier envoyé</td>
                                                         {% else %}
                                                             <
                                                             <td><a class="btn btn-success"
-                                                                   href="{{ asset('uploads/reclamation_picture/' ~ rec.admin_file) }}">Voir</a>
+                                                                   href="{{ asset('uploads/reclamation_picture/' ~ rec.adminFile) }}">Voir</a>
                                                             </td>
                                                         {% endif %}
                                                     {% endif %}
@@ -88,7 +88,7 @@
                                         </table>
                                     </div>
                                     <div class="navigation">
-                                        {{ knp_pagination_render(reclamations) }}
+                                        {{ knp_pagination_render(test) }}
                                     </div>
                                 </div>
                             </div>

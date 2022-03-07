@@ -28,13 +28,15 @@ class ReclamationController extends AbstractController
     public function index(ReclamationRepository $reclamationRepository, Request $req, PaginatorInterface $paginator): Response
     {
         $data = $reclamationRepository->getAllAnswers();
+        $test = $reclamationRepository->findBy(["user"=>$this->getUser()]);
         $pagination = $paginator->paginate(
-            $data,
+            $test,
             $req->query->getInt('page', 1),
             2
         );
         return $this->render('reclamation/show_front.html.twig', [
-            'reclamations' => $pagination,
+            //'reclamations' => $pagination,
+            'test'=>$pagination
         ]);
 
     }
@@ -74,6 +76,10 @@ class ReclamationController extends AbstractController
                 $reclamation->setUserFile($newFilename);
             }
             $reclamation->setSendingDate(new \DateTime());
+            if($this->getUser())
+            {
+                $reclamation->setUser($this->getUser());
+            }
             $entityManager->persist($reclamation);
             $entityManager->flush();
 
