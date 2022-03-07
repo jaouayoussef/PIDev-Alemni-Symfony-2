@@ -11,23 +11,19 @@
             <th>N°</th>
             <th>Nom du Quiz</th>
             <th>Nom du formation </th>
-
-            <th>actions</th>
+            <th>Nom du participant</th>
+            <th>Score</th>
         </tr>
         </thead>
         <tbody>
-        {% for quiz in quizzes %}
+        {% for res in results %}
             <tr>
                 <td>{{ loop.index }}</td>
-                <td>{{ quiz.name }}</td>
-                <td>{{ quiz.idFormation.nomFormation }} </td>
-
+                <td>{{ res.quiz.name }} </td>
+                <td>formation {{ res.quiz.IdFormation.NomFormation }} </td>
+                <td> {{ res.iduser.firstname }} {{ res.iduser.lastname }}</td>
                 <td>
-                    <a href="{{ path('results', {'id': quiz.id}) }}">resultats</a>
-                    {%  if (quiz.idFormation.seances|last).dateSeance > date() %}
-                        <a href="{{ path('myquestion', {'id': quiz.id}) }}">edit</a>
-                    {% endif%}
-
+                    {{ res.result }}
                 </td>
             </tr>
         {% else %}

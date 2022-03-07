@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\ReservationEventRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserresultRepository;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -35,7 +36,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/profile", name="user_profile")
      */
-    public function getUserProfile(ReservationEventRepository $reservationevent,SeanceRepository $seanceRepository,ReservationFormationRepository $reservationFormationRepository): Response
+    public function getUserProfile(ReservationEventRepository $reservationevent,SeanceRepository $seanceRepository,ReservationFormationRepository $reservationFormationRepository, UserresultRepository $userresultRepository): Response
     {
         $user = $this->getUser();
         if (!$user) {
@@ -44,11 +45,13 @@ class UserController extends AbstractController
         if ($user->getRoles() == ["ROLE_ADMIN"]) {
             return $this->redirectToRoute('admin_profile');
         } else {
+
             return $this->render('user/userProfile.html.twig', [
                 'user' => $user,
                 'events' => $reservationevent->getbyuser($user->getId()),
                 'formations' => $reservationFormationRepository->findOneBySomeField($user->getId()),
                 'seances' => $seanceRepository->findAll(),
+                'userresults' => $userresultRepository->findBy(array('id_user'=>$this->getUser()->getId()))
             ]);
         }
     }

@@ -188,7 +188,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ahmed" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nassim" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
@@ -232,7 +232,7 @@
       <workItem from="1646599199446" duration="1311000" />
       <workItem from="1646600522751" duration="227000" />
       <workItem from="1646601073324" duration="1391000" />
-      <workItem from="1646609798015" duration="6942000" />
+      <workItem from="1646609798015" duration="13849000" />
     </task>
     <servers />
   </component>

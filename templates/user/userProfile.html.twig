@@ -38,7 +38,8 @@
                     <div class="col-sm-3 text-md-right">
                         <form method="post" action="{{ path('user_delete', {'id': user.id}) }}"
                               onsubmit="return confirm('All your data will be deleted... Are you sure you want to remove your account?');">
-                            <a onclick="deleteConfirmation()" class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-danger font-weight-normal">
+                            <a onclick="deleteConfirmation()"
+                               class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-danger font-weight-normal">
                                 <i class="mdi mdi-trash-can btn-icon-prepend"></i>Desactivate account
                             </a>
                         </form>
@@ -102,7 +103,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Vos Formations</h4>
                                 <div class="table-responsive">
-                                    <div  style="overflow-x:auto;">
+                                    <div style="overflow-x:auto;">
                                         <table class="table" id="myTable">
                                             <tbody>
                                             <tr>
@@ -113,11 +114,12 @@
                                                 <th>Places</th>
                                                 <th>Formateur</th>
                                                 <th>Lien</th>
+                                                <th>Passer quiz</th>
                                                 <th>Seances</th>
                                             </tr>
                                             <tr>
                                                 {% for for in formations %}
-                                                <td  style="display:none">{{ for.formation.Id }}</td>
+                                                <td style="display:none">{{ for.formation.Id }}</td>
                                                 <td>{{ for.formation.nomFormation }}</td>
                                                 <td>{{ for.formation.descriptionFormation }}</td>
                                                 <td>{{ for.formation.domaine.nomDomaine }}</td>
@@ -125,18 +127,42 @@
                                                 <td>{{ for.formation.nbPlaces }}</td>
                                                 <td>{{ for.formation.formateur.firstname }} {{ for.formation.formateur.lastname }}</td>
                                                 <td>{{ for.formation.lien }}</td>
+
+                                                <td>
+                                                    {% set a = 0 %}
+                                                    {% for test in user.userresults %}
+                                                        {% if for.formation.quiz == test.quiz %}
+                                                            {% set a = a + 1 %}
+                                                            {# <a class="btn btn-primary"
+                                                           href="{{ path('quizz_play',{'id':for.formation.quiz.id,'nbr':0}) }}">
+                                                            Passer</a> #}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if a == 0 and for.formation.quiz != null %}
+                                                        <a class="btn btn-primary"
+                                                           href="{{ path('quizz_play',{'id':for.formation.quiz.id,'nbr':0}) }}">
+                                                            Passer</a>
+                                                    {% endif %}
+                                                </td>
+
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <span class="flaticon-shower"></span>
                                                         {#
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ dom.id }}">Détails</button>
                                                         #}
-                                                        <button type="button" data-toggle="modal" data-target="#infos{{for.formation.id~for.formation.nomFormation }}"  class="btn btn-primary">seances</button>
-                                                        <div class="modal" id="infos{{for.formation.id~for.formation.nomFormation}}">
+                                                        <button type="button" data-toggle="modal"
+                                                                data-target="#infos{{ for.formation.id~for.formation.nomFormation }}"
+                                                                class="btn btn-primary">seances
+                                                        </button>
+                                                        <div class="modal"
+                                                             id="infos{{ for.formation.id~for.formation.nomFormation }}">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h4 class="modal-title">liste des seances de la formation :  <br>{{ for.formation.nomFormation }} </h4>
+                                                                        <h4 class="modal-title">liste des seances de la
+                                                                            formation :
+                                                                            <br>{{ for.formation.nomFormation }} </h4>
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <div class="row">
@@ -145,8 +171,8 @@
                                                                             <div class="col-lg-12 grid-margin stretch-card">
                                                                                 <div class="card">
                                                                                     <div class="card-body">
-                                                                                        <h4 class="card-title">  </h4><br>
-                                                                                        <div  style="overflow-x:auto;">
+                                                                                        <h4 class="card-title"></h4><br>
+                                                                                        <div style="overflow-x:auto;">
                                                                                             <table class="table">
                                                                                                 <tbody>
                                                                                                 <tr>
@@ -164,12 +190,15 @@
                                                                                                         <td>{{ sc.descriptionSeance }}</td>
                                                                                                         <td>{{ sc.dateSeance|date('d/m/Y') }}</td>
                                                                                                         <td>{{ sc.heureDeb|date('H:i') }}</td>
-                                                                                                        <td>{{ sc.heureFin |date('H:i')}}</td>
-                                                                                                    {% endif%}
+                                                                                                        <td>{{ sc.heureFin |date('H:i') }}</td>
+                                                                                                    {% endif %}
                                                                                                 </tr>
                                                                                                 {% else %}
                                                                                                     <tr>
-                                                                                                        <td colspan="3">pas de formations</td>
+                                                                                                        <td colspan="3">
+                                                                                                            pas de
+                                                                                                            formations
+                                                                                                        </td>
                                                                                                     </tr>
                                                                                                 {% endfor %}
                                                                                                 </tbody>
@@ -186,8 +215,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div></td>
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.Id) }}">
+                                                    </div>
+                                                </td>
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('delete' ~ for.Id) }}">
                                             </tr>
                                             {% else %}
                                                 <tr>
@@ -197,13 +228,20 @@
                                             </tbody>
                                             <tfoot>
                                             <tr>
-                                                <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="chercher" ></th>
-                                                <th><input style="width: 90%" type="text" id="myInput4" onkeyup="myFunction4()" placeholder="chercher" ></th>
-                                                <th><input style="width: 90%" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="chercher" ></th>
-                                                <th><input style="width: 90%" type="text" id="myInput6" onkeyup="myFunction6()" placeholder="chercher" ></th>
-                                                <th><input style="width: 90%" type="text" id="myInput7" onkeyup="myFunction7()" placeholder="chercher" ></th>
-                                                <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction8()" placeholder="chercher" ></th>
-                                                <th><input style="width: 90%" type="text" id="myInput9" onkeyup="myFunction9()" placeholder="chercher" ></th>
+                                                <th><input style="width: 90%" type="text" id="myInput2"
+                                                           onkeyup="myFunction2()" placeholder="chercher"></th>
+                                                <th><input style="width: 90%" type="text" id="myInput4"
+                                                           onkeyup="myFunction4()" placeholder="chercher"></th>
+                                                <th><input style="width: 90%" type="text" id="myInput5"
+                                                           onkeyup="myFunction5()" placeholder="chercher"></th>
+                                                <th><input style="width: 90%" type="text" id="myInput6"
+                                                           onkeyup="myFunction6()" placeholder="chercher"></th>
+                                                <th><input style="width: 90%" type="text" id="myInput7"
+                                                           onkeyup="myFunction7()" placeholder="chercher"></th>
+                                                <th><input style="width: 90%" type="text" id="myInput8"
+                                                           onkeyup="myFunction8()" placeholder="chercher"></th>
+                                                <th><input style="width: 90%" type="text" id="myInput9"
+                                                           onkeyup="myFunction9()" placeholder="chercher"></th>
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -216,51 +254,92 @@
             </div>
         </div>
     </div>
-<div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Vos évènements</h4>
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Vos évènements</h4>
 
-                <div id="accordion">
-                    {% for event in events %}
-                    <div class="card">
-                        <div class="card-header" id="headingOne{{ event.id }}">
-                            <h5 class="mb-0">
-                                <img src="{{ asset('uploads/Event/' ~ event.EventId.EPHOTO) | imagine_filter('squareshowprofile') }}" alt="{{ event.EventId.EName }}" >
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne{{ event.id }}" aria-expanded="true" aria-controls="collapseOne">
-                                    {{ event.EventId.EName }}
-                                </button>
-                            </h5>
-                        </div>
+                    <div id="accordion">
+                        {% for event in events %}
+                            <div class="card">
+                                <div class="card-header" id="headingOne{{ event.id }}">
+                                    <h5 class="mb-0">
+                                        <img src="{{ asset('uploads/Event/' ~ event.EventId.EPHOTO) | imagine_filter('squareshowprofile') }}"
+                                             alt="{{ event.EventId.EName }}">
+                                        <button class="btn btn-link" data-toggle="collapse"
+                                                data-target="#collapseOne{{ event.id }}" aria-expanded="true"
+                                                aria-controls="collapseOne">
+                                            {{ event.EventId.EName }}
+                                        </button>
+                                    </h5>
+                                </div>
 
-                        <div id="collapseOne{{ event.id }}" class="collapse" aria-labelledby="headingOne{{ event.id }}" data-parent="#accordion">
-                            <div class="card-body">
-                                <br>
-                                <p><b>Description :</b>{{ event.EventId.ENote }}</p>
-                                <p><b>Adresse : </b>{{ event.EventId.EPlace }}</p>
-                                <p><b>Date debut : </b>{{ event.EventId.EDateDebut |date('d-m-Y h:m') }}</p>
-                                <p><b>Date fin : </b>{{ event.EventId.EDateFin |date('d-m-Y h:m') }}</p>
-                                <p><b>Prix : </b>{{ event.PrixReservationEvent }} dt</p>
-                                <p><b>Contact :</b><p>
-                                <p><b>Email : </b>{{ event.EventId.EEmail }} </p>
-                                <p> <b>Numéro de téléphone : </b>{{ event.EventId.ETelNumber }}</p>
+                                <div id="collapseOne{{ event.id }}" class="collapse"
+                                     aria-labelledby="headingOne{{ event.id }}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <br>
+                                        <p><b>Description :</b>{{ event.EventId.ENote }}</p>
+                                        <p><b>Adresse : </b>{{ event.EventId.EPlace }}</p>
+                                        <p><b>Date debut : </b>{{ event.EventId.EDateDebut |date('d-m-Y h:m') }}</p>
+                                        <p><b>Date fin : </b>{{ event.EventId.EDateFin |date('d-m-Y h:m') }}</p>
+                                        <p><b>Prix : </b>{{ event.PrixReservationEvent }} dt</p>
+                                        <p><b>Contact :</b>
+                                        <p>
+                                        <p><b>Email : </b>{{ event.EventId.EEmail }} </p>
+                                        <p><b>Numéro de téléphone : </b>{{ event.EventId.ETelNumber }}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Vos quiz</h4>
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Vos quiz</h4>
+                    <div id="accordion">
+                        {% for res in userresults %}
+                            <div class="card">
+                                <div class="card-header" id="headingOne{{ res.id }}">
+                                    <h5 class="mb-0">
+                                        <img src="{{ asset('uploads/Formation/' ~ res.quiz.IdFormation.imageFormation) | imagine_filter('squareshowprofile') }}"
+                                             alt="{{ res.quiz.IdFormation.nomFormation }}">
+                                        <button class="btn btn-link" data-toggle="collapse"
+                                                data-target="#collapseOne{{ res.id }}" aria-expanded="true"
+                                                aria-controls="collapseOne">
+                                            {{ res.quiz.IdFormation.nomFormation }}
+                                        </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne{{ res.id }}" class="collapse"
+                                     aria-labelledby="headingOne{{ res.id }}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <br>
+                                        <p><b>Formateur : </b>{{ res.quiz.IdFormation.Formateur.firstname }}</p>
+                                        <p><b>Nom du quiz :</b>{{ res.quiz.name }}</p>
+                                        <p><b>Score : </b>{{ res.result }}</p>
+                                        {% if res.result >= 16 %}
+                                            <p><b>votre certification : </b><a
+                                                        class="btn btn-sm bg-white btn-icon-text border"
+                                                        href="{{ path('quiz_certif', {'id': res.quiz.id}) }}"><i
+                                                            class="mdi mdi-download btn-icon-prepend"></i>Certification</a>
+                                            </p>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <script type="text/javascript">
 
@@ -282,6 +361,7 @@
                 }
             }
         }
+
         function myFunction3() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput3");
@@ -300,6 +380,7 @@
                 }
             }
         }
+
         function myFunction4() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput4");
@@ -318,6 +399,7 @@
                 }
             }
         }
+
         function myFunction5() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput5");
@@ -336,6 +418,7 @@
                 }
             }
         }
+
         function myFunction6() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput6");
@@ -354,6 +437,7 @@
                 }
             }
         }
+
         function myFunction7() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput7");
@@ -372,6 +456,7 @@
                 }
             }
         }
+
         function myFunction8() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput8");
@@ -390,6 +475,7 @@
                 }
             }
         }
+
         function myFunction9() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput9");
@@ -408,6 +494,7 @@
                 }
             }
         }
+
         function myFunction10() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput10");
@@ -428,7 +515,7 @@
         }
 
 
-        function deleteConfirmation(){
+        function deleteConfirmation() {
             Swal.fire({
                 title: 'Vous êtes sûr ?',
                 text: "Vous ne pouvez plus utiliser ce compte!",
@@ -443,15 +530,14 @@
                     Swal.fire(
                         {
                             title: 'Fait!',
-                            text:'Votre compte est supprimé.',
-                            type:'success',
-                            timer:3000
+                            text: 'Votre compte est supprimé.',
+                            type: 'success',
+                            timer: 3000
                         }
-                    ).then(()=>{
-                        window.location.href= "{{ path('home') }}"
+                    ).then(() => {
+                        window.location.href = "{{ path('home') }}"
                     })
-                }
-                else{
+                } else {
                     Swal.fire({
                         title: 'Annulé!',
                         type: 'success',

@@ -91,12 +91,18 @@ class User implements UserInterface
     {
         $this->formations = new ArrayCollection();
         $this->reservationFormations = new ArrayCollection();
+        $this->userresults = new ArrayCollection();
     }
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $verification_file;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Userresult::class, mappedBy="id_user")
+     */
+    private $userresults;
 
     public function getId(): ?int
     {
@@ -322,6 +328,36 @@ class User implements UserInterface
                 $reservationFormation->setUser(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Userresult[]
+     */
+    public function getUserresults(): Collection
+    {
+        return $this->userresults;
+    }
+
+    public function addUserresult(Userresult $userresult): self
+    {
+        if (!$this->userresults->contains($userresult)) {
+            $this->userresults[] = $userresult;
+            $userresult->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserresult(Userresult $userresult): self
+    {
+        if ($this->userresults->removeElement($userresult)) {
+            // set the owning side to null (unless already changed)
+            if ($userresult->getIdUser() === $this) {
+                $userresult->setIdUser(null);
+            }
+        }
+
         return $this;
     }
 }

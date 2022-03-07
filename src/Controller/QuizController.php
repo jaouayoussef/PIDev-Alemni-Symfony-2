@@ -42,7 +42,17 @@ class QuizController extends AbstractController
     {
 
         return $this->render('quiz/index.html.twig', [
-            'quizzes' => $quizRepository->findAll(),
+            'quizzes' => $quizRepository->findBy(array('id_user'=>$this->getUser()->getId())),
+        ]);
+    }
+    /**
+     * @Route("/results/{id}", name="results", methods={"GET"})
+     */
+    public function results(Quiz $quiz,UserresultRepository $userresultRepository): Response
+    {
+
+        return $this->render('quiz/result.html.twig', [
+            'results' => $userresultRepository->findBy(array('quiz'=>$quiz)),
         ]);
     }
     /**
@@ -69,6 +79,7 @@ class QuizController extends AbstractController
         $userlastname = (string)$this->getUser()->getLastName();
         return $this->render('quiz/certification.html.twig', [
             'quiz' => $quiz,
+            'nomFormation' => $quiz->getIdFormation()->getNomFormation(),
             'username' => $username,
             'userlastname' => $userlastname,
 
@@ -201,10 +212,10 @@ $nbre=0;
                         $score++;
                     }
                 }
-//dd($score);
+//dd($quiz->getId());
                 $userresult = new Userresult();
-                $userresult->setIdUser(1);
-                $userresult->setIdQuizz($quiz->getId());
+                $userresult->setIdUser($this->getUser());
+                $userresult->setQuiz($quiz);
                 $userresult->setResult($score);
                 $em = $this->getDoctrine()->getManager();
 
