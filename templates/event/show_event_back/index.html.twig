@@ -1,0 +1,339 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %} Réservation événement {% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2/select2.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css')}}" />
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Réservation événement</h3>
+            <button type="button" class="btn btn-inverse-primary btn-rounded btn-icon" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-line-chart" aria-hidden="true"></i></button>
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Événements</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Réservation événement</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="chartModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Nombre de place disponible dans chaque événement</h4>
+                                        <canvas id="CodePromoOwnerChart1" style="height: 250px; width: 250px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">les revenus mensuels</h4>
+                                        <canvas id="CodePromoOwnerChart2" style="height: 250px; width: 250px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Réservation événements</h4><br>
+
+                        <div style="overflow-x:auto;">
+                            <table class="table table-bordered table-striped" id="myTable1">
+                                <thead>
+                                <tr>
+                                    <th>Nom client</th>
+                                    <th>Email Client</th>
+                                    <th>Prix reservation (dt)</th>
+                                    <th>Nom événement</th>
+                                    <th>Date reservation</th>
+                                    <th>actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for EventReservation in EventReservations %}
+                                    <tr>
+                                        <td>{{ EventReservation.UserId.firstname }} {{ EventReservation.UserId.lastname }}</td>
+                                        <td>{{ EventReservation.UserId.email }}</td>
+                                        <td>{{ EventReservation.PrixReservationEvent }}</td>
+                                        <td>{{ EventReservation.EventId.EName }}</td>
+                                        <td>{{ EventReservation.DateReservationEvent ? EventReservation.DateReservationEvent |date('Y-m-d h:i') : '' }}</td>
+                                        <td>
+                                            <form method="post" action="{{ path('eventreservation_delete', {'id': EventReservation.id}) }}" id="formdelete{{EventReservation.id}}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ EventReservation.id) }}">
+                                            </form>
+                                            <button class="btn btn-danger" onclick="deleteswal({{EventReservation.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="10">Aucun enregistrement trouvé</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction08()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput9" onkeyup="myFunction9()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput10" onkeyup="myFunction10()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput11" onkeyup="myFunction11()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput12" onkeyup="myFunction12()" placeholder="chercher" ></th>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    function deleteswal(a) {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimez-le !'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formdelete'+a).submit();
+            }
+        })
+    }
+    function myFunction08() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput8");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function myFunction12() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput12");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[4];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function myFunction9() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput9");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function myFunction10() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput10");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function myFunction11() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput11");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable1");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    let codePromoOwner1 = document.getElementById("CodePromoOwnerChart2");
+    let CodePromoOwnerChartGraph1 = new Chart(codePromoOwner1,{
+        type : "bar",
+        data:{
+            labels: {{ PromoDate|raw }},
+            datasets:[{
+                label: "dt",
+                data: {{ PromoCount|raw }},
+
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                scales: {
+
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                }
+            }],
+
+
+        }
+    })
+    let codePromoOwner = document.getElementById("CodePromoOwnerChart1");
+    let CodePromoOwnerChartGraph = new Chart(codePromoOwner,{
+        type : "bar",
+        data:{
+            labels: {{ nomevent|raw }},
+            datasets:[{
+                label: "place disponible",
+                data: {{ nbreplacedispo|raw }},
+
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                scales: {
+
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                }
+            }],
+
+
+        }
+    })
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

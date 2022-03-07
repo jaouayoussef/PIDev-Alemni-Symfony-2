@@ -1,0 +1,208 @@
+{% extends 'base-back.html.twig' %}
+
+{% block title %}Question index{% endblock %}
+
+
+{% block body %}
+    <div class="container-lg" style="max-width: 100%;"><br>
+        <span class="contact100-form-title">
+					quiz questions
+				</span>
+        <div class="table-responsive">
+            <div class="table-wrapper">
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th style="width: 25%;">Question</th>
+                        <th>Réponse 1</th>
+                        <th>Réponse 2</th>
+                        <th>Réponse 3</th>
+                        <th>Réponse 4</th>
+                        <th>N° correctRep</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th style="width: 25%;">    <div class="input-group">
+                                <input type="text" id="search1" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th>     <div class="input-group">
+                                <input type="text" id="search2" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th>   <div class="input-group">
+                                <input type="text" id="search3" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th><div class="input-group">
+                                <input type="text" id="search4" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th><div class="input-group">
+                                <input type="text" id="search5" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th><div class="input-group">
+                                <input type="text" id="search6" class="form-control" placeholder="Search by Name">
+                                <span class="input-group-addon"><i class="material-icons" style="margin-top: 40%;font-size: 19px;"></i></span>
+                            </div></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in questions %}
+                    <tr>
+                        <td>{{ loop.index}}</td>
+                        <td>{{ question.libelle }}</td>
+                        <td>{{ question.reponse1 }}</td>
+                        <td>{{ question.reponse2 }}</td>
+                        <td>{{ question.reponse3 }}</td>
+                        <td>{{ question.reponse4 }}</td>
+                        <td>{{ question.repcorrect }}</td>
+                        <td>
+                            <a href="{{ path('question_edit', {'id': question.id}) }}" class="edit" title="Edit" data-toggle="tooltip">edit</a>
+
+                        </td>
+                    </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7">no records found</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <a type="button" href="{{ path('formation_new') }}" value="Back to home" class="btn btn-primary">Back to <home>Back to home</home></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search1").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(2)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search2").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search3").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(4)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            // Activate tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Filter table rows based on searched term
+            $("#search").on("keyup", function() {
+                var term = $(this).val().toLowerCase();
+                $("table tbody tr").each(function(){
+                    $row = $(this);
+                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
+                    console.log(name);
+                    if(name.search(term) < 0){
+                        $row.hide();
+                    } else{
+                        $row.show();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
