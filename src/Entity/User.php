@@ -92,6 +92,7 @@ class User implements UserInterface
         $this->formations = new ArrayCollection();
         $this->reservationFormations = new ArrayCollection();
         $this->userresults = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
     }
 
     /**
@@ -103,6 +104,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Userresult::class, mappedBy="id_user")
      */
     private $userresults;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Reclamation::class, mappedBy="user")
+     */
+    private $reclamations;
 
     public function getId(): ?int
     {
@@ -355,6 +361,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($userresult->getIdUser() === $this) {
                 $userresult->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reclamation[]
+     */
+    public function getReclamations(): Collection
+    {
+        return $this->reclamations;
+    }
+
+    public function addReclamation(Reclamation $reclamation): self
+    {
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations[] = $reclamation;
+            $reclamation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReclamation(Reclamation $reclamation): self
+    {
+        if ($this->reclamations->removeElement($reclamation)) {
+            // set the owning side to null (unless already changed)
+            if ($reclamation->getUser() === $this) {
+                $reclamation->setUser(null);
             }
         }
 
