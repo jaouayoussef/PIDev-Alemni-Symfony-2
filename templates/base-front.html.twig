@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block css %}
         <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css') }}"/>
         <link rel="stylesheet" href="{{ asset('front/path/to/font-awesome/css/font-awesome.min.css') }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{{ asset('front/css/animate.css') }}">
@@ -37,6 +38,9 @@
                     <li class="nav-item"><a href="{{ path('show_event') }}" class="nav-link">Nos évènements</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Contactez Nous</a></li>
                     {% if app.user == null %}
+                        <li class="nav-item ">
+                            <a class="nav-link" href="{{ path('app_login') }}"><i class="mdi mdi-login"></i></a>
+                        </li>
                     {% else %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
@@ -78,37 +82,6 @@
     </div>
 {% endblock %}
 {% block login %}
-    {% if app.user == null %}
-        <section class="ftco-section ftco-no-pb ftco-no-pt">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-7"></div>
-                    <div class="col-md-5 order-md-last">
-                        <div class="login-wrap p-4 p-md-5">
-                            <h3 class="mb-4">Login</h3>
-                            <form action="#" class="signup-form">
-
-                                <div class="form-group">
-                                    <label class="label" for="email">Email Address</label>
-                                    <input type="text" id="email" name="email" class="form-control" placeholder="...">
-                                </div>
-                                <div class="form-group">
-                                    <label class="label" for="password-field">Password</label>
-                                    <input id="password-field" name="password-field" type="password" class="form-control" placeholder="...">
-                                </div>
-                                <div class="form-group d-flex justify-content-end mt-4">
-                                    <button type="submit" class="btn btn-primary submit"><span
-                                                class="fa fa-paper-plane"></span></button>
-                                </div>
-                            </form>
-                            <p class="text-center">Don't have an account? <a href="{{ path('user_register') }}">Sign
-                                    Up</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    {% endif %}
 {% endblock %}
 {% block body %}
 {% endblock %}
@@ -122,12 +95,13 @@
                         <p>Alemni est une plateforme des formations en ligne certifiée et des événements</p>
                         <ul class="ftco-footer-social list-unstyled float-md-left float-lft">
                             <li class="ftco-animate"><a href="#"><span class="fa fa-twitter"></span></a></li>
-                            <li class="ftco-animate"><a href="https://www.facebook.com/Alemni-102260802379484"><span class="fa fa-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="https://www.facebook.com/Alemni-102260802379484"><span
+                                            class="fa fa-facebook"></span></a></li>
                             <li class="ftco-animate"><a href="#"><span class="fa fa-instagram"></span></a></li>
                         </ul>
                     </div>
                 </div>
-               {# <div class="col-md pt-5">
+                {# <div class="col-md pt-5">
                     <div class="ftco-footer-widget pt-md-5 mb-4 ml-md-5">
                         <h2 class="ftco-heading-2">Help Desk</h2>
                         <ul class="list-unstyled">
@@ -139,7 +113,7 @@
                             <li><a href="#" class="py-2 d-block">Call Us</a></li>
                         </ul>
                     </div>
-                </div>#}
+                </div> #}
                 <div class="col-md pt-5">
                     <div class="ftco-footer-widget pt-md-5 mb-4">
                         <h2 class="ftco-heading-2">Recent Courses</h2>

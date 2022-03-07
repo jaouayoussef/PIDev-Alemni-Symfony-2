@@ -16,50 +16,60 @@ class AdminController extends AbstractController
      */
     public function index(UserRepository $userRepository, PaginatorInterface $paginator,Request $request): Response
     {
-        $users = $userRepository->findAll();
-        $nbAdmins = 0;
-        $nbTutors = 0;
-        $nbClients = 0;
-        $nbBanned = 0;
+        $user = $this->getUser();
+        if(!$user){
+            return $this->redirectToRoute('app_login');
+        }
+        else if($user->getRoles() == "ROLE_ADMIN"){
+            $users = $userRepository->findAll();
+            $nbAdmins = 0;
+            $nbTutors = 0;
+            $nbClients = 0;
+            $nbBanned = 0;
 
-        foreach ($users as $user)
-        {
-            if ($user->getRoles()[0]=="ROLE_ADMIN")
+            foreach ($users as $user)
             {
-                $nbAdmins++;
+                if ($user->getRoles()[0]=="ROLE_ADMIN")
+                {
+                    $nbAdmins++;
+                }
+                elseif ($user->getRoles()[0]=="ROLE_TUTOR")
+                {
+                    $nbTutors++;
+                }
+                elseif ($user->getRoles()[0]=="ROLE_CLIENT")
+                {
+                    $nbClients++;
+                }
+                if($user->getIsBanned() === true){
+                    $nbBanned++;
+                }
             }
-            elseif ($user->getRoles()[0]=="ROLE_TUTOR")
-            {
-                $nbTutors++;
-            }
-            elseif ($user->getRoles()[0]=="ROLE_CLIENT")
-            {
-                $nbClients++;
-            }
-            if($user->getIsBanned() === true){
-                $nbBanned++;
-            }
+
+            $userByDate = $userRepository->findByCreationDate();
+            $userByRoles = $userRepository->getUserByRole("ROLE_TUTOR");
+            $datePagination = $paginator->paginate(
+                $userByDate,
+                $request->query->getInt('page',1),
+                3
+            );
+            $rolePagination = $paginator->paginate(
+                $userByRoles,
+                $request->query->getInt('page',1),
+                3
+            );
+            return $this->render('admin/dashboard.html.twig',[
+                'datedUsers' => $datePagination,
+                'roledUsers' => $rolePagination,
+                "nbAdmins" => $nbAdmins,
+                "nbClients" => $nbClients,
+                "nbBanned" => $nbBanned,
+                "nbTutors" => $nbTutors,
+            ]);
+        }
+        else{
+            return $this->redirectToRoute('error');
         }
 
-        $userByDate = $userRepository->findByCreationDate();
-        $userByRoles = $userRepository->getUserByRole("ROLE_TUTOR");
-        $datePagination = $paginator->paginate(
-            $userByDate,
-            $request->query->getInt('page',1),
-            3
-        );
-        $rolePagination = $paginator->paginate(
-            $userByRoles,
-            $request->query->getInt('page',1),
-            3
-        );
-        return $this->render('admin/dashboard.html.twig',[
-            'datedUsers' => $datePagination,
-            'roledUsers' => $rolePagination,
-            "nbAdmins" => $nbAdmins,
-            "nbClients" => $nbClients,
-            "nbBanned" => $nbBanned,
-            "nbTutors" => $nbTutors,
-        ]);
     }
 }

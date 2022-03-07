@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ReponseType extends AbstractType
 {
@@ -15,10 +16,13 @@ class ReponseType extends AbstractType
     {
         $builder
             ->add('answer', TextareaType::class)
-            ->add('admin_file', FileType::class, array(
-                'data_class' => null,
-                'required'=>false,
-            ));
+            ->add('admin_file', FileType::class, [
+                'required' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new File()
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

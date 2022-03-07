@@ -19,13 +19,13 @@
                                         style="color: green;font-weight: bold">Client</u>!</p>
                         {% elseif user.roles|join(', ') == "ROLE_CLIENT" %}
                             <p class="text-muted">You're signed in as a <u
-                                        style="color: green;font-weight: bold">Client</u>!<a
-                                        class="text-muted font-weight-medium pl-2" href="{{ path('second_role') }}"><u>
+                                        style="color: green;font-weight: bold">Client</u>!<a onclick="verifyRole()"
+                                        class="text-muted font-weight-medium pl-2"><u>
                                         Become a tutor ?</u></a></p>
                         {% else %}
                             <p class="text-muted">You're signed in as a <u
-                                        style="color: green;font-weight: bold">Tutor</u>!<a
-                                        class="text-muted font-weight-medium pl-2" href="{{ path('second_role') }}"><u>
+                                        style="color: green;font-weight: bold">Tutor</u>!<a onclick="verifyRole()"
+                                        class="text-muted font-weight-medium pl-2"><u>
                                         Become a Client ?</u></a></p>
                         {% endif %}
 
@@ -536,6 +536,39 @@
                         }
                     ).then(() => {
                         window.location.href = "{{ path('home') }}"
+                    })
+                } else {
+                    Swal.fire({
+                        title: 'Annulé!',
+                        type: 'success',
+                        timer: 3000
+                    })
+                }
+
+            })
+        }
+
+        function verifyRole() {
+            Swal.fire({
+                title: 'Vous êtes sûr ?',
+                text: "Vous devez reconnecter pour confirmer",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelText: 'annuler',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        {
+                            title: 'Fait!',
+                            text: 'Votre role est changé.',
+                            type: 'success',
+                            timer: 3000
+                        }
+                    ).then(() => {
+                        window.location.href = "{{ path('second_role') }}"
                     })
                 } else {
                     Swal.fire({

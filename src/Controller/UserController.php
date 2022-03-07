@@ -307,7 +307,6 @@ class UserController extends AbstractController
     /**
      * @Route("/user/delete", name="user_delete")
      */
-    //TODO: verify before deleting account
     public function deleteUser(): Response
     {
         $user = $this->getUser();
@@ -328,7 +327,6 @@ class UserController extends AbstractController
     /**
      * @Route("user/addRole", name="second_role")
      */
-    //TODO: verify before changing user role
     public function addNewRole(): Response
     {
         $user = $this->getUser();
