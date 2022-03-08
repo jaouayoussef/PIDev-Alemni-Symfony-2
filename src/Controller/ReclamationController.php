@@ -76,7 +76,9 @@ class ReclamationController extends AbstractController
             $reclamation->setSendingDate(new \DateTime());
             if ($this->getUser()) {
                 $reclamation->setUser($this->getUser());
+                $reclamation->setEmail($this->getUser()->getEmail());
             }
+            $reclamation->setStatus(false);
             $entityManager->persist($reclamation);
             $entityManager->flush();
 
@@ -116,7 +118,7 @@ class ReclamationController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $data = $reclamationRepository->findAll();
             $res = $this->getStatDate($data);
             $repondu = 0;

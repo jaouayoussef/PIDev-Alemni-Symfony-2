@@ -37,7 +37,7 @@ class PromotionCodeController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $promotionCode = new PromotionCode();
             $promotion = new Promotion();
             $form = $this->createForm(PromotionCodeType::class, $promotionCode);
@@ -107,7 +107,7 @@ class PromotionCodeController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $form = $this->createForm(PromotionCodeType::class, $promotionCode);
             $form->handleRequest($request);
 
@@ -137,7 +137,7 @@ class PromotionCodeController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             if ($this->isCsrfTokenValid('delete' . $promotionCode->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($promotionCode);
                 $entityManager->flush();

@@ -40,7 +40,7 @@ class PromoCodeOwnerController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $promoCodeOwner = new PromoCodeOwner();
             $form = $this->createForm(PromoCodeOwnerType::class, $promoCodeOwner);
             $form->handleRequest($request);
@@ -103,7 +103,7 @@ class PromoCodeOwnerController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $form = $this->createForm(PromoCodeOwnerType::class, $promoCodeOwner);
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -129,7 +129,7 @@ class PromoCodeOwnerController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             if ($this->isCsrfTokenValid('delete' . $promoCodeOwner->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($promoCodeOwner);
                 $entityManager->flush();

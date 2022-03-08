@@ -83,11 +83,19 @@ class ReservationFormationController extends AbstractController
      */
     public function delete(Request $request, ReservationFormation $reservationFormation, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservationFormation->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($reservationFormation);
-            $entityManager->flush();
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
+            if ($this->isCsrfTokenValid('delete' . $reservationFormation->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($reservationFormation);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('formationBack_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->redirectToRoute('reservation_formation_index', [], Response::HTTP_SEE_OTHER);
     }
 }

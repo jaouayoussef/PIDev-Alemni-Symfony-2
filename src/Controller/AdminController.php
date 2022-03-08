@@ -20,7 +20,7 @@ class AdminController extends AbstractController
         if(!$user){
             return $this->redirectToRoute('app_login');
         }
-        else if($user->getRoles() == "ROLE_ADMIN"){
+        else if($user->getRoles() == ["ROLE_ADMIN"] ){
             $users = $userRepository->findAll();
             $nbAdmins = 0;
             $nbTutors = 0;

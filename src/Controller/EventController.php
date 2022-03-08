@@ -14,6 +14,7 @@ use App\Repository\PromoCodeOwnerRepository;
 use App\Repository\PromotionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -42,12 +43,23 @@ class EventController extends AbstractController
     /**
      * @Route("/show", name="show_event")
      */
-    public function index(EventRepository $eventRepository, PromotionRepository $promotionRepository, PromotionCodeRepository $promotionCodeRepository, ReservationEventRepository $reservationEvent): Response
+    public function index(EventRepository $eventRepository,PaginatorInterface $paginator,Request $req,PromotionRepository $promotionRepository, PromotionCodeRepository $promotionCodeRepository, ReservationEventRepository $reservationEvent): Response
     {
         $user = $this->getUser();
         if (!$user) {
-            return $this->redirectToRoute('app_login');
+            $test = $eventRepository->geteventbydatenowandreservationusernull();
+            $pagination = $paginator->paginate(
+                $test,
+                $req->query->getInt('page', 1),
+                4
+            );
+            return $this->render('event/show_event/index.html.twig', [
+                'Events' => $pagination,
+                'Promotions' => $promotionRepository->getPromotionEVENTbydatenow(),
+                'CodePromos' => $promotionCodeRepository->getPromotionCodebydatenow()
+            ]);
         } else {
+
             $eventreservers = $reservationEvent->findBy(array('UserId' => $this->getUser()->getId()));
             $listid = [];
             $i = 0;
@@ -56,15 +68,27 @@ class EventController extends AbstractController
                 $i++;
             }
             if (empty($listid)) {
+                $test = $eventRepository->geteventbydatenow();
+                $pagination = $paginator->paginate(
+                    $test,
+                    $req->query->getInt('page', 1),
+                    4
+                );
                 return $this->render('event/show_event/index.html.twig', [
-                    'Events' => $eventRepository->geteventbydatenow(),
+                    'Events' => $pagination,
                     'Promotions' => $promotionRepository->getPromotionEVENTbydatenow(),
                     'CodePromos' => $promotionCodeRepository->getPromotionCodebydatenow()
                 ]);
             }
+            $test = $eventRepository->geteventbydatenowandreservation($listid);
+            $pagination = $paginator->paginate(
+                $test,
+                $req->query->getInt('page', 1),
+                4
+            );
 
             return $this->render('event/show_event/index.html.twig', [
-                'Events' => $eventRepository->geteventbydatenowandreservation($listid),
+                'Events' => $pagination,
                 'Promotions' => $promotionRepository->getPromotionEVENTbydatenow(),
                 'CodePromos' => $promotionCodeRepository->getPromotionCodebydatenow()
             ]);
@@ -80,7 +104,7 @@ class EventController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $eventcharts = $event->findAll();
             $eventname = [];
             $placedispo = [];
@@ -147,94 +171,6 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/EventReservationAvecIncrement/{id}/{eventid}/{PrixReservaion}/{userid}", name="EventReservationAvecIncrement")
-     */
-    public function Increment_PCD_NbrePromo($id, $eventid, $userid, $PrixReservaion, PromoCodeOwnerRepository $PromotionCodeOwnerRepository, \Swift_Mailer $mailer, EntityManagerInterface $entityManager, UserRepository $userRepository, EventRepository $eventRepository): Response
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        } else {
-            $this->addFlash('message', 'teb3ath');
-            $reservationEvent = new ReservationEvent();
-            $event = $eventRepository->findOneBy(['id' => $eventid]);
-            $event->setEPlaceReserver($event->getEPlaceReserver() + 1);
-            $user = $userRepository->findOneBy(['id' => $userid]);
-            $reservationEvent->setUserId($user);
-            $reservationEvent->setEventId($event);
-            $reservationEvent->setPrixReservationEvent($PrixReservaion);
-            $reservationEvent->setDateReservationEvent(new \DateTime('now'));
-            $entityManager->persist($reservationEvent);
-            $promocodeOwner = $PromotionCodeOwnerRepository->findOneBy(['id' => $id]);
-            $promocodeOwner->setPCDNbrePromo($promocodeOwner->getPCDNbrePromo() + 1);
-
-            $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
-                ->setFrom('alemnicontact@gmail.com')
-                ->setTo($this->getUser()->getEmail())
-                ->setBody(
-                    $this->renderView(
-                    // templates/emails/registration.html.twig
-                        'event/show_event/mail.html.twig',
-                        ['nameevent' => $event->getEName(),
-                            'firstname' => $this->getUser()->getFirstName(),
-                            'lastname' => $this->getUser()->getLastName(),
-                            'montant' => $PrixReservaion,
-
-                        ]
-                    ),
-                    'text/html'
-                );
-
-            $mailer->send($message);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('show_event');
-        }
-    }
-
-    /**
-     * @Route("/EventReservationAvecIncrement/{eventid}/{PrixReservaion}/{userid}", name="aJouterReservation")
-     */
-    public function aJouterReservation($eventid, $userid, $PrixReservaion, EntityManagerInterface $entityManager, UserRepository $userRepository, \Swift_Mailer $mailer, EventRepository $eventRepository): Response
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        } else {
-            $reservationEvent = new ReservationEvent();
-            $event = $eventRepository->findOneBy(['id' => $eventid]);
-            $user = $userRepository->findOneBy(['id' => $userid]);
-            $event->setEPlaceReserver($event->getEPlaceReserver() + 1);
-            $reservationEvent->setUserId($user);
-            $reservationEvent->setEventId($event);
-            $reservationEvent->setPrixReservationEvent($PrixReservaion);
-            $reservationEvent->setDateReservationEvent(new \DateTime('now'));
-            $entityManager->persist($reservationEvent);
-
-            $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
-                ->setFrom('alemnicontact@gmail.com')
-                ->setTo($this->getUser()->getEmail())
-                ->setBody(
-                    $this->renderView(
-                    // templates/emails/registration.html.twig
-                        'event/show_event/mail.html.twig',
-                        ['nameevent' => $event->getEName(),
-                            'firstname' => $this->getUser()->getFirstName(),
-                            'lastname' => $this->getUser()->getLastName(),
-                            'montant' => $PrixReservaion,
-
-                        ]
-                    ),
-                    'text/html'
-                );
-
-            $mailer->send($message);
-            $entityManager->flush();
-            return $this->redirectToRoute('show_event');
-        }
-    }
-
-    /**
      * @Route("/", name="event_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager, EventRepository $eventRepository): Response
@@ -242,7 +178,7 @@ class EventController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $event = new Event();
 
             $form = $this->createForm(EventType::class, $event)->add('E_PHOTO', FileType::class, [
@@ -332,7 +268,7 @@ class EventController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $form = $this->createForm(EventType::class, $event)->add('E_PHOTO', FileType::class, [
                 'mapped' => false,
                 'required' => false,
@@ -393,7 +329,7 @@ class EventController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($event);
                 $entityManager->flush();

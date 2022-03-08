@@ -66,7 +66,7 @@
                             <label for="exampleInputName1">Nom de l'événement:</label>
                             {{ form_errors(form.E_Name, { 'attr': {'style': 'color:red'}}) }}
                             {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom','onchange':'verifNomEvent(this)'}}) }}
-
+                            {{ form_widget(form.E_PlaceReserver,{'attr':{'class':'form-control','style':'display: none;','type':'text','id':'Nom','placeholder':'Nom','onchange':'verifNomEvent(this)'}}) }}
                         </div><br>
                         <div class="form-group">
                             <label for="exampleTextarea1">description :</label>
@@ -197,8 +197,8 @@
 
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
-                                                <a type="button" class="btn btn-primary" href="{{ path('event_edit', {'id': event.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                                             {% if event.EPlaceReserver ==0  %}
+                                                <a type="button" class="btn btn-primary" href="{{ path('event_edit', {'id': event.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                                                 <form method="post" action="{{ path('event_delete', {'id': event.id}) }}" id="formdelete{{event.id}}">
                                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
                                                 </form>

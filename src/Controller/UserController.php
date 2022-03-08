@@ -2,11 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\ReservationEvent;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\EventRepository;
+use App\Repository\PromoCodeOwnerRepository;
 use App\Repository\ReservationEventRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserresultRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -209,19 +214,116 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/admin/allUsers/{page<\d+>}",name="all_users")
+     * @Route("/admin/testtttt",name="all_users")
      */
-    public function getAllUsers(UserRepository $repository, Request $req, int $page = 1): Response
+    public function test()
+    {}
+
+    /**
+     * @Route("user/EventReservationAvecIncrement/{id}/{eventid}/{PrixReservaion}/{userid}", name="EventReservationAvecIncrement", methods={"GET", "POST"})
+     */
+    public function Increment_PCD_NbrePromo($id, $eventid, $userid, $PrixReservaion, PromoCodeOwnerRepository $PromotionCodeOwnerRepository, \Swift_Mailer $mailer, EntityManagerInterface $entityManager, UserRepository $userRepository, EventRepository $eventRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $reservationEvent = new ReservationEvent();
+            $event = $eventRepository->findOneBy(['id' => $eventid]);
+            $event->setEPlaceReserver($event->getEPlaceReserver() + 1);
+            $user = $userRepository->findOneBy(['id' => $userid]);
+            $reservationEvent->setUserId($user);
+            $reservationEvent->setEventId($event);
+            $reservationEvent->setPrixReservationEvent($PrixReservaion);
+            $reservationEvent->setDateReservationEvent(new \DateTime('now'));
+            $entityManager->persist($reservationEvent);
+            $promocodeOwner = $PromotionCodeOwnerRepository->findOneBy(['id' => $id]);
+            $promocodeOwner->setPCDNbrePromo($promocodeOwner->getPCDNbrePromo() + 1);
+
+            $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
+                ->setFrom('alemnicontact@gmail.com')
+                ->setTo($this->getUser()->getEmail())
+                ->setBody(
+                    $this->renderView(
+                    // templates/emails/registration.html.twig
+                        'event/show_event/mail.html.twig',
+                        ['nameevent' => $event->getEName(),
+                            'firstname' => $this->getUser()->getFirstName(),
+                            'lastname' => $this->getUser()->getLastName(),
+                            'montant' => $PrixReservaion,
+
+                        ]
+                    ),
+                    'text/html'
+                );
+
+            $mailer->send($message);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('show_event');
+        }
+    }
+
+    /**
+     * @Route("user/EventReservation/{eventid}/{PrixReservaion}/{userid}", name="aJouterReservation", methods={"GET", "POST"})
+     */
+    public function aJouterReservation($eventid, $userid, $PrixReservaion, EntityManagerInterface $entityManager, UserRepository $userRepository, \Swift_Mailer $mailer, EventRepository $eventRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $reservationEvent = new ReservationEvent();
+            $event = $eventRepository->findOneBy(['id' => $eventid]);
+            $user = $userRepository->findOneBy(['id' => $userid]);
+            $event->setEPlaceReserver($event->getEPlaceReserver() + 1);
+            $reservationEvent->setUserId($user);
+            $reservationEvent->setEventId($event);
+            $reservationEvent->setPrixReservationEvent($PrixReservaion);
+            $reservationEvent->setDateReservationEvent(new \DateTime('now'));
+            $entityManager->persist($reservationEvent);
+
+            $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
+                ->setFrom('alemnicontact@gmail.com')
+                ->setTo($this->getUser()->getEmail())
+                ->setBody(
+                    $this->renderView(
+                    // templates/emails/registration.html.twig
+                        'event/show_event/mail.html.twig',
+                        ['nameevent' => $event->getEName(),
+                            'firstname' => $this->getUser()->getFirstName(),
+                            'lastname' => $this->getUser()->getLastName(),
+                            'montant' => $PrixReservaion,
+
+                        ]
+                    ),
+                    'text/html'
+                );
+
+            $mailer->send($message);
+            $entityManager->flush();
+            return $this->redirectToRoute('show_event');
+        }
+    }
+
+    /**
+     * @Route("/admin/allUsers",name="all_users")
+     */
+    //TODO: PAGINATOR
+    public function getAllUsers(UserRepository $repository, Request $req, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
         if ($user->getRoles() == ["ROLE_ADMIN"]) {
-            $test = $repository->createQueryBuilder('user')->select('user');
-            $pagerfanta = new Pagerfanta(new QueryAdapter($test));
-            $pagerfanta->setMaxPerPage(5);
-            $pagerfanta->setCurrentPage($page);
+            $test = $repository->findAll();
+            $pagination = $paginator->paginate(
+                $test,
+                $req->query->getInt('page', 1),
+                5
+            );
+
 
             $userRepo = $this->getDoctrine()->getRepository(User::class);
             $clients = $userRepo->getUserByRole("ROLE_CLIENT");
@@ -234,7 +336,7 @@ class UserController extends AbstractController
                 'tutors' => $tutors,
                 'admins' => $admins,
                 'both' => $both,
-                'data' => $pagerfanta,
+                'data' => $pagination,
             ]);
         } else {
             return $this->redirectToRoute('error');

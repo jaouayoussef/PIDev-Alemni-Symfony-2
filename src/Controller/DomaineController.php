@@ -40,7 +40,7 @@ class DomaineController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"] ) {
             $domaine = new Domaine();
             $form = $this->createForm(DomaineType::class, $domaine)
                 ->add('imageDomaine', FileType::class, [
@@ -110,7 +110,7 @@ class DomaineController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $form = $this->createForm(DomaineType::class, $domaine)
                 ->add('imageDomaine', FileType::class, [
                     'mapped' => false,
@@ -167,7 +167,7 @@ class DomaineController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             if ($this->isCsrfTokenValid('delete' . $domaine->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($domaine);
                 $entityManager->flush();

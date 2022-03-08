@@ -29,7 +29,7 @@ class QuestionController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             return $this->render('question/index.html.twig', [
                 'questions' => $questionRepository->findAll(),
             ]);
@@ -47,7 +47,7 @@ class QuestionController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             return $this->render('question/index.html.twig', [
                 'questions' => $this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getId()),
             ]);
@@ -96,7 +96,7 @@ class QuestionController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             $question = new Question();
 
             $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user' => $this->getUser()->getId())));
@@ -158,7 +158,7 @@ class QuestionController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             $form = $this->createForm(QuestionType::class, $question);
             $form->handleRequest($request);
 
@@ -186,7 +186,7 @@ class QuestionController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             if ($this->isCsrfTokenValid('delete' . $question->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($question);
                 $entityManager->flush();

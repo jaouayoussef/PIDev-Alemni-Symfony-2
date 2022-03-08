@@ -51,9 +51,14 @@
                             <label for="exampleInputEmail3">Lien</label>
                             {{ form_widget(form.lien,{'attr':{'class':'form-control','type':'text','id':'lien','placeholder':'Lien Formation'}}) }}
                         </div>
+                        {% if formation.seances|length>0 %}
                         {% if (formation.seances|first).dateSeance > date() %}
                             <button type="submit" class="btn btn-primary mr-2"> Modifier</button>
                             <button class="btn btn-light">Cancel</button>
+                        {% endif %}
+                         {% else %}
+                             <button type="submit" class="btn btn-primary mr-2"> Modifier</button>
+                             <button class="btn btn-light">Cancel</button>
                         {% endif %}
                         {{ form_end(form) }}
                     </div>

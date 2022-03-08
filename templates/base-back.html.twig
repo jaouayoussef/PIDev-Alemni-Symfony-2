@@ -37,7 +37,7 @@
             </div>
             <ul class="nav">
                 <li class="nav-item nav-profile">
-                    <a href="#" class="nav-link">
+                    <a class="nav-link">
                         {% if app.user %}
                             <div class="nav-profile-image">
                                 <img src="{{ asset('uploads/user_picture/' ~ app.user.picture) }}" alt="profile"/>
@@ -52,117 +52,127 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('home') }}">
+                    <a class="nav-link" href="{{ path('app_login') }}">
                         <i class="mdi mdi-home menu-icon"></i>
                         <span class="menu-title">Page d'accueil</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('user_stats') }}">
-                        <i class="mdi mdi-view-dashboard-outline menu-icon"></i>
-                        <span class="menu-title">Statistiques</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#user" aria-expanded="false"
-                       aria-controls="user">
-                        <i class="mdi mdi-nature-people menu-icon"></i>
-                        <span class="menu-title">Nos utilisateurs</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="user">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 1</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 2</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 3</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#formation" aria-expanded="false"
-                       aria-controls="formation">
-                        <i class="mdi mdi-book menu-icon"></i>
-                        <span class="menu-title">Nos Formations</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="formation">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 1</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 2</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 3</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#event" aria-expanded="false"
-                       aria-controls="event">
-                        <i class="mdi mdi-account-group menu-icon"></i>
-                        <span class="menu-title">Nos évènements</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="event">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('event_new')}}">Gestion événements</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('show_event_back')}}">Réservation événements</a>
-                            </li>
+                {% if app.user.roles|join(', ') == "ROLE_ADMIN" %}
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#user" aria-expanded="false"
+                           aria-controls="user">
+                            <i class="mdi mdi-nature-people menu-icon"></i>
+                            <span class="menu-title">utilisateurs</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="user">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('all_users') }}">Toutes les utilisateurs</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('user_stats') }}">Statistiques</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('domaine_new') }}">
+                            <i class="mdi mdi-view-dashboard-outline menu-icon"></i>
+                            <span class="menu-title">Domaines</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if app.user.roles|join(', ') == "ROLE_TUTOR" %}
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#formation" aria-expanded="false"
+                           aria-controls="formation">
+                            <i class="mdi mdi-book-minus menu-icon"></i>
+                            <span class="menu-title">Formations</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="formation">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('formation_new') }}">Formations</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('all') }}">Quiz</a>
+                                </li>
 
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                        <i class="mdi mdi-bullhorn menu-icon"></i>
-                        <span class="menu-title">Promotion</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="ui-basic">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('promo_code_owner_new')}}">Propriétaire du code</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('promotion_code_new')}}">Promotion</a>
-                            </li>
+                            </ul>
+                        </div>
+                    </li>
+                {% endif %}
+                {% if app.user.roles|join(', ') == "ROLE_ADMIN" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('event_new') }}">
+                            <i class="mdi mdi-account-group menu-icon"></i>
+                            <span class="menu-title">Evènements</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#event" aria-expanded="false"
+                           aria-controls="event">
+                            <i class="mdi mdi-calendar menu-icon"></i>
+                            <span class="menu-title">Réservations</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="event">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('formationBack_index') }}">Formations</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('show_event_back') }}">événements</a>
+                                </li>
 
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#report" aria-expanded="false"
-                       aria-controls="report">
-                        <i class="mdi mdi-check menu-icon"></i>
-                        <span class="menu-title">Nos réclamations</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="report">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 1</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 2</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">champs 3</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                           aria-controls="ui-basic">
+                            <i class="mdi mdi-bullhorn menu-icon"></i>
+                            <span class="menu-title">Promotions</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('promo_code_owner_new') }}">Propriétaire du
+                                        code</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('promotion_code_new') }}">Promotion</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#report" aria-expanded="false"
+                           aria-controls="report">
+                            <i class="mdi mdi-check menu-icon"></i>
+                            <span class="menu-title">Réclamations</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="report">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('all_reclamation') }}">Réclamations reçus</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('no_reply_reclamation') }}">Réclamations no
+                                        répondu</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('stat_reclamation') }}">Statistiques</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_logout') }}">
                         <i class="mdi mdi-file-document-box menu-icon"></i>
@@ -184,11 +194,6 @@
                     </button>
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
-                            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
-                               data-toggle="dropdown">
-                                <i class="mdi mdi-bell-outline"></i>
-                                <span class="count count-varient1">7</span>
-                            </a>
                             <div class="dropdown-menu navbar-dropdown navbar-dropdown-large preview-list"
                                  aria-labelledby="notificationDropdown">
                                 <h6 class="p-3 mb-0">Notifications</h6>
@@ -219,14 +224,14 @@
                                 </a>
                                 <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
                                     {% if app.user.roles|join(', ') == "ROLE_ADMIN" %}
-                                        <a class="dropdown-item" href="{{ path('user_profile') }}">
-                                            <i class="mdi mdi-cached mr-2 text-success"></i> My profile </a>
-                                    {% else %}
                                         <a class="dropdown-item" href="{{ path('admin_profile') }}">
-                                            <i class="mdi mdi-cached mr-2 text-success"></i> My profile </a>
+                                            <i class="mdi mdi-cached mr-2 text-success"></i>Mon profile</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{{ path('user_profile') }}">
+                                            <i class="mdi mdi-cached mr-2 text-success"></i>Mon profile</a>
                                     {% endif %}
                                     <a class="dropdown-item" href="{{ path('app_logout') }}">
-                                        <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </a>
+                                        <i class="mdi mdi-logout mr-2 text-primary"></i>Déconnecter</a>
                                 </div>
                             </li>
                         </ul>

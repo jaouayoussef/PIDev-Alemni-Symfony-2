@@ -38,7 +38,7 @@ class SeanceController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             $form = $this->createForm(SeanceType::class, $seance);
             $form->handleRequest($request);
 
@@ -67,7 +67,7 @@ class SeanceController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             $seance = new Seance();
             $form = $this->createForm(SeanceType::class, $seance);
             $form->handleRequest($request);
@@ -101,7 +101,7 @@ class SeanceController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             $form = $this->createForm(SeanceType::class, $seance);
             $form->handleRequest($request);
 
@@ -139,7 +139,7 @@ class SeanceController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_TUTOR") {
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
             if ($this->isCsrfTokenValid('delete' . $seance->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($seance);
                 $entityManager->flush();

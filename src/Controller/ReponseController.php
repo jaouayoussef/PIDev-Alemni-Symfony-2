@@ -29,7 +29,7 @@ class ReponseController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $reclamations = $reclamationRepository->findAll();
             $pagination = $paginator->paginate(
                 $reclamations,
@@ -54,7 +54,7 @@ class ReponseController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $data = $reclamationRepository->findBy(array("status" => "0"));
             $pagination = $paginator->paginate(
                 $data,
@@ -81,7 +81,7 @@ class ReponseController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $form = $this->createForm(ReponseType::class, $reponse);
             $formRec = $this->createForm(ReclamationType::class, $rec);
             $form->handleRequest($request);
@@ -111,7 +111,7 @@ class ReponseController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             $reponse = new Reponse();
             $formRec = $this->createForm(ReclamationType::class, $rec);
             $form = $this->createForm(ReponseType::class, $reponse);
@@ -119,7 +119,7 @@ class ReponseController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $file = $form->get('admin_file')->getData();
-                $email = $form->get('email')->getData();
+                $email = $formRec->get('email')->getData();
                 $name = $formRec->get('name')->getData();
                 $reply = $form->get('answer')->getData();
                 if ($file) {
@@ -179,7 +179,7 @@ class ReponseController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        } else if ($user->getRoles() == "ROLE_ADMIN") {
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
             if ($this->isCsrfTokenValid('delete' . $reponse->getId(), $request->request->get('_token'))) {
                 $entityManager->remove($reponse);
                 $entityManager->flush();
