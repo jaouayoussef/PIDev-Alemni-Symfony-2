@@ -41,6 +41,7 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('E_Nbre')
+            ->add('E_PlaceReserver')
         ;
     }
 

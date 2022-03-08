@@ -8,7 +8,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Formation</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"> Formation  </li>
+                    <li class="breadcrumb-item active" aria-current="page"> Formation</li>
                 </ol>
             </nav>
         </div>
@@ -34,11 +34,11 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">Prix</label>
-                            {{ form_widget(form.prixFormation,{'attr':{'class':'form-control','type':'number','onchange':'verifPrix(this)','id':'formateur','placeholder':'Prix Formation'}}) }}
+                            {{ form_widget(form.prixFormation,{'attr':{'class':'form-control','type':'number', 'oninput':'this.value = Math.round(this.value);','onchange':'verifPrix(this)','id':'formateur','placeholder':'Prix Formation'}}) }}
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">Nombre de places</label>
-                            {{ form_widget(form.nbPlaces,{'attr':{'class':'form-control','type':'number','onchange':'verifPlaces(this)','id':'formateur','placeholder':'Nombres de places disponible '}}) }}
+                            {{ form_widget(form.nbPlaces,{'attr':{'class':'form-control','type':'number','min':'1', 'step':'1','onchange':'verifPlaces(this)','id':'formateur','placeholder':'Nombres de places disponible '}}) }}
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail3">Image </label>
@@ -51,7 +51,7 @@
                             {{ form_widget(form.lien,{'attr':{'class':'form-control','type':'text','id':'lien','placeholder':'Lien Formation'}}) }}
                         </div>
 
-                        <button type="submit" class="btn btn-primary mr-2" > Ajouter </button>
+                        <button type="submit" class="btn btn-primary mr-2"> Ajouter</button>
                         <button class="btn btn-light">Cancel</button>
                         {{ form_end(form) }}
                     </div>
@@ -66,55 +66,93 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Liste des formations </h4><br>
-
-                        <table class="table">
-                            <tbody>
-                            <tr>
-                                <th>Id</th>
-                                <th>Nom</th>
-                                <th>Description</th>
-                                <th>Domaine</th>
-                                <th>Prix</th>
-                                <th>Places</th>
-                                <th>Formateur</th>
-                                <th>Lien</th>
-                                <th>Action</th>
-                            </tr>
-                            <tr>
-                                {% for for in formations %}
-
-                                <td>{{ for.Id }}</td>
-                                <td>{{ for.nomFormation }}</td>
-                                <td>{{ for.descriptionFormation }}</td>
-                                <td>{{ for.domaine.nomDomaine }}</td>
-                                <td>{{ for.prixFormation }}</td>
-                                <td>{{ for.nbPlaces }}</td>
-                                <td>{{ for.formateur.firstname }}</td>
-                                <td>{{ for.lien }}</td>
-
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a class="btn btn-secondary" href="{{ path('seance_new', {'id': for.Id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i></a> <a class="btn btn-primary" href="{{ path('formation_edit', {'id': for.Id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> <form method="post" action="{{ path('formation_delete', {'id': for.Id}) }}" onsubmit="return confirm('etes vous sur de supprimer cette formation?');">
-                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.Id) }}">
-                                            <button class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                        </form> </div></td>
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.Id) }}">
-                            </tr>
-
-
-
-
-
-
-                            {% else %}
+                        <div style="overflow-x:auto;">
+                            <table class="table" id="myTable">
+                                <tbody>
                                 <tr>
-                                    <td colspan="3">pas de formations</td>
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Domaine</th>
+                                    <th>Prix</th>
+                                    <th>Places</th>
+                                    <th>Formateur</th>
+                                    <th>Lien</th>
+                                    <th>Seances</th>
+                                    <th>Quiz</th>
+                                    <th>Action</th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                                <tr>
+                                    {% for for in formations %}
 
+                                    <td style="display:none">{{ for.Id }}</td>
+                                    <td>{{ for.nomFormation }}</td>
+                                    <td>{{ for.descriptionFormation }}</td>
+                                    <td>{{ for.domaine.nomDomaine }}</td>
+                                    <td>{{ for.prixFormation }}</td>
+                                    <td>{{ for.nbPlaces }}</td>
+                                    <td>{{ for.formateur.firstname }}</td>
+                                    <td>{{ for.lien }}</td>
+                                    <td>{{ for.seances|length }}</td>
+                                    <td>
+                                        {% if for.quiz == null and  for.seances|length > 0 %}
+                                            <a class="btn btn-primary"
+                                               href="{{ path('quiz_new', {'id': for.Id}) }}">+</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+
+                                            <a class="btn btn-secondary"
+                                               href="{{ path('seance_new', {'id': for.Id}) }}"><i
+                                                        class="fa fa-clipboard" aria-hidden="true"></i></a>
+                                            <a class="btn btn-primary"
+                                               href="{{ path('formation_edit', {'id': for.Id}) }}"><i
+                                                        class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                            {% if for.placesReserve == 0 %}
+                                            <form method="post" action="{{ path('formation_delete', {'id': for.id}) }}"
+                                                  id="formdelete{{ for.id }}">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('delete' ~ for.id) }}">
+                                            </form>
+                                            <button class="btn btn-danger" onclick="deleteswal({{ for.id }});"
+                                                    id="btn-submit"><i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.Id) }}">
+                                </tr>
+
+
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">pas de formations</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput4" onkeyup="myFunction4()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput5" onkeyup="myFunction5()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput6" onkeyup="myFunction6()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput7" onkeyup="myFunction7()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction8()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput9" onkeyup="myFunction9()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput10" onkeyup="myFunction10()"
+                                               placeholder="chercher"></th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -122,38 +160,234 @@
     </div>
 
 
-<script>
-    $( document ).ready(function() {
-        document.getElementById("formation_imageFormation").required = true;
-    });
-    function verifPrix(_this){
+    <link rel="stylesheet" href="{{ asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css') }}"/>
 
-        if ( parseInt(_this.value)< 0 ){
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"
+            integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Extra large modal -->
+    <script>
+
+        function deleteswal(a) {
             Swal.fire({
-                icon: 'error',
-                title: 'Le prix de la formation doit etre superieur a zero !',
-                timer: 3000,
-                timerProgressBar: true,
+                title: 'Êtes-vous sûr ?',
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimez-le !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formdelete' + a).submit();
+                }
             })
-            _this.value = null;
         }
-    }
 
-    function verifPlaces(_this){
+        $(document).ready(function () {
+            document.getElementById("formation_imageFormation").required = true;
+        });
 
-        if ( parseInt(_this.value)< 1 ){
-            Swal.fire({
-                icon: 'error',
-                title: 'Le nombre de places doit etre superieur a zero !',
-                timer: 3000,
-                timerProgressBar: true,
-            })
-            _this.value = null;
+        function verifPrix(_this) {
+
+            if (parseInt(_this.value) < 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Le prix de la formation doit etre superieur a zero !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                _this.value = null;
+            }
         }
-    }
-</script>
 
-    {# <a href="{{ path('domaine_index') }}">back to list</a>#}
+        function verifPlaces(_this) {
+
+            if (parseInt(_this.value) < 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Le nombre de places doit etre superieur a zero !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                _this.value = null;
+            }
+        }
+
+        function myFunction2() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput2");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction3() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput3");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction4() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput4");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction5() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput5");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction6() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput6");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction7() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput7");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[5];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction8() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput8");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[6];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction9() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput9");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[7];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction10() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput10");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[8];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+    {# <a href="{{ path('domaine_index') }}">back to list</a> #}
 {% endblock %}
 
 

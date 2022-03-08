@@ -78,7 +78,7 @@
         var myPieChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ["Non Répondu", "Répondu"],
+                labels: ["Répondu", "Non Répondu"],
                 datasets: [{
                     data: [ {{ etat[0] }} , {{ etat[1] }} ],
                     backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],

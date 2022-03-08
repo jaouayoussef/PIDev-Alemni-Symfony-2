@@ -4,11 +4,11 @@
 {% block body %}
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Form elements</h3>
+            <h3 class="page-title">Gestion Seances</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"> Form elements </li>
+                    <li class="breadcrumb-item"><a href="#">Formation</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Seance</li>
                 </ol>
             </nav>
         </div>
@@ -61,11 +61,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Listes des seances </h4><br>
-
-                        <table class="table">
+                        <div  style="overflow-x:auto;">
+                            <table class="table" id="myTable">
                             <tbody>
                             <tr>
-                                <th>Id</th>
+
                                 <th>Nom</th>
                                 <th>Description</th>
                                 <th>Date</th>
@@ -77,23 +77,27 @@
                             <tr>
                                 {% for for in seances %}
 
-                                <td>{{ for.id }}</td>
+                                <td style="display:none">{{ for.id }}</td>
                                 <td>{{ for.nomSeance }}</td>
                                 <td>{{ for.descriptionSeance }}</td>
-                                <td>{{ for.dateSeance|date('d/m/Y') }}</td>
+                                <td>{{ for.dateSeance|date('Y-m-d') }}</td>
                                 <td>{{ for.heureDeb|date('H:i') }}</td>
                                 <td>{{ for.heureFin |date('H:i')}}</td>
                                 <td>{{ for.formation.nomFormation }}</td>
 
                                 <td>
+                                    {% if for.dateSeance > date() %}
                                     <div class="btn-group" role="group" aria-label="Basic example">
 
                                         <a class="btn btn-primary" href="{{ path('seance1_edit', {'id': for.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 
                                         </a>
-                                        {{ include('seance/_delete_form.html.twig') }}
+                                        <form method="post" action="{{ path('seance_delete', {'id': for.id}) }}" id="formdelete{{for.id}}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ for.id) }}">
+                                        </form>
+                                        <button class="btn btn-danger" onclick="deleteswal({{for.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
                                     </div>
-
+                                    {% endif %}
                                 </td>
                             </tr>
 
@@ -108,7 +112,20 @@
                                 </tr>
                             {% endfor %}
                             </tbody>
+                            <tfoot>
+                            <tr>
+                                <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput4" onkeyup="myFunction4()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput6" onkeyup="myFunction6()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput7" onkeyup="myFunction7()" placeholder="chercher" ></th>
+                                <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction8()" placeholder="chercher" ></th>
+
+
+                            </tr>
+                            </tfoot>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,7 +139,193 @@
 
     {#   {{ include('seance/_form.html.twig') }}#}
 
-<script>
+
+
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Extra large modal -->
+    <script>
+
+        function deleteswal(a) {
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimez-le !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formdelete'+a).submit();
+                }
+            })
+        }
+        function myFunction2() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput2");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction3() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput3");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction4() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput4");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction5() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput5");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction6() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput6");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction7() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput7");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[5];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction8() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput8");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[6];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction9() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput9");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[7];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        function myFunction10() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput10");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[8];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
     function verifDatedebut() {
         let dateDebutString = document.getElementById("seance_dateSeance").value.split("-");
 
@@ -141,6 +344,21 @@
             document.getElementById("seance_dateSeance").value = 0;
 
         }
+        var table = document.getElementById('myTable');
+        for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+
+            if (table.rows[r].cells[3].innerHTML == document.getElementById("seance_dateSeance").value){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cette date existe !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+
+                document.getElementById("seance_dateSeance").value = null ;
+            }
+
+        }
     }
     function verifHeureFin() {
         let HeureDebutString = document.getElementById("seance_heureDeb").value.split(":");
@@ -149,7 +367,7 @@
         let heureFin = new Date (1776, 6, 4, HeureFinString[0], HeureFinString[1]-1, 0, 0);
         let date = new Date();
 
-        if (heureDebut > heureFin ){
+        if (heureDebut >= heureFin ){
             Swal.fire({
                 icon: 'error',
                 title: "l'heure de debut doit etre inferieur a l'heure de fin !",

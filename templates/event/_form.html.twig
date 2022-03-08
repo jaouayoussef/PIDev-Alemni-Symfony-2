@@ -2,8 +2,7 @@
 
 <div class="form-group">
     <label for="exampleInputName1">Nom de l'événement:</label>
-    {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
-
+    {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom','onchange':'verifNomEvent(this)'}}) }}
 </div><br>
 <div class="form-group">
     <label for="exampleTextarea1">description :</label>
@@ -18,6 +17,7 @@
 <div class="form-group">
     <label for="exampleInputName1">Nombre de place :</label>
     {{ form_widget(form.E_Nbre,{'attr':{'class':'form-control','type':'number','id':'Sexe','onchange':'verifNbr(this)'}}) }}
+    {{ form_widget(form.E_PlaceReserver,{'attr':{'class':'form-control','type':'number','style':'display:none'}}) }}
 </div><br>
 <div class="form-group">
     <label for="exampleInputEmail3">Date debut :</label>
@@ -29,6 +29,7 @@
     {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()'}}) }}
 </div><br>
 
+{% if event.EPlaceReserver ==0  %}
 
 <div class="form-group">
     <label for="exampleSelectGender">Prix :</label>
@@ -37,13 +38,18 @@
             <div class="input-group-prepend">
                 <span class="input-group-text bg-primary text-white">Dt</span>
             </div>
-            {{ form_widget(form.E_Price,{'attr':{'class':'form-control','id':'Sexe'}}) }}
+            {{ form_widget(form.E_Price,{'attr':{'class':'form-control','id':'Sexe',}}) }}
             <div class="input-group-append">
                 <span class="input-group-text">.00</span>
             </div>
         </div>
     </div>
 </div><br>
+    {% else %}
+
+                    {{ form_widget(form.E_Price,{'attr':{'class':'form-control','id':'Sexe','style':'display:none'}}) }}
+
+{% endif %}
 
 
 

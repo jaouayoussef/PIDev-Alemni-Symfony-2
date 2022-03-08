@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuizRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +25,7 @@ class Quiz
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="quiz", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="quiz", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $questions;
 
@@ -33,9 +35,19 @@ class Quiz
     private $id_user;
 
     /**
-     * @ORM\OneToOne(targetEntity=Formation::class, inversedBy="quiz", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Formation::class, inversedBy="quiz")
      */
     private $id_formation;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Userresult::class, mappedBy="quiz")
+     */
+    private $userresults;
+
+    public function __construct()
+    {
+        $this->userresults = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -90,6 +102,36 @@ class Quiz
     public function setIdFormation(?Formation $id_formation): self
     {
         $this->id_formation = $id_formation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Userresult[]
+     */
+    public function getUserresults(): Collection
+    {
+        return $this->userresults;
+    }
+
+    public function addUserresult(Userresult $userresult): self
+    {
+        if (!$this->userresults->contains($userresult)) {
+            $this->userresults[] = $userresult;
+            $userresult->setQuiz($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserresult(Userresult $userresult): self
+    {
+        if ($this->userresults->removeElement($userresult)) {
+            // set the owning side to null (unless already changed)
+            if ($userresult->getQuiz() === $this) {
+                $userresult->setQuiz(null);
+            }
+        }
 
         return $this;
     }

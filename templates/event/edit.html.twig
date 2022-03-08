@@ -1,6 +1,6 @@
 {% extends 'base-back.html.twig' %}
 
-{% block title %} test add {% endblock %}
+{% block title %} Modifier Événements {% endblock %}
 
 {% block body %}
 
@@ -30,10 +30,82 @@
 
     </div>
 </div>
+    <table class="table table-bordered table-striped" id="myTable" style="display: none;">
+        <thead>
+        <tr>
+            <th>Nom </th>
+            <th>description </th>
+            <th>Adresse </th>
+            <th>Date debut</th>
+            <th>Date fin </th>
+            <th>Prix </th>
+            <th>Adresse email</th>
+            <th>Numéro de téléphone</th>
+            <th>Nombre de place</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td style="display:none">{{ event.id }}</td>
+                <td>{{ event.EName }}</td>
+                <td>{{ event.ENOTE }}</td>
+                <td>{{ event.EPlace }}</td>
+                <td>{{ event.EDateDebut |date('d-m-Y h:m')}}</td>
+                <td>{{ event.EDateFin |date('d-m-Y h:m') }}</td>
+                <td>{{ event.EPrice }}</td>
+                <td>{{ event.EEmail }}</td>
+                <td>{{ event.ETelNumber }}</td>
+                <td>{{ event.ENbre }}</td>
 
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a type="button" class="btn btn-primary" href="{{ path('event_edit', {'id': event.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        {% if event.EPlaceReserver ==0  %}
+                            <form method="post" action="{{ path('event_delete', {'id': event.id}) }}" id="formdelete{{event.id}}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                            </form>
+                            <button class="btn btn-danger" onclick="deleteswal({{event.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">Aucun enregistrement trouvé</td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+        <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction08()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput9" onkeyup="myFunction9()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput10" onkeyup="myFunction10()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput11" onkeyup="myFunction11()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput12" onkeyup="myFunction12()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput130" onkeyup="myFunction13()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput14" onkeyup="myFunction14()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput15" onkeyup="myFunction15()" placeholder="chercher" ></th>
+        <th><input style="width: 90%" type="text" id="myInput16" onkeyup="myFunction16()" placeholder="chercher" ></th>
+    </table>
     <link rel="stylesheet" href="{{asset('Back-Office/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
 <script>
+    function verifNomEvent(_this){
+        var table = document.getElementById('myTable');
+        for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+            if (table.rows[r].cells[1].innerHTML == _this.value){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Nom Promotion existe !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                document.getElementById("event_E_Name").value = null;
 
+            }
+
+        }
+    }
     $( document ).ready(function() {
         document.getElementById("event_E_PHOTO").required = false;
     });
@@ -43,23 +115,29 @@
         let datedebuttimea = datedebuttimeandjour[1].split(":");
         let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
 
+        let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
+        let datefintimeandjour = dateFinString[2].split("T");
+        let datefintimea = datefintimeandjour[1].split(":");
+        let dateFin = new Date (dateFinString[0],dateFinString[1]-1,datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
 
         let date = new Date();
 
-        if (dateDebut <= date  ){
+        if (dateDebut <= date && dateDebut >= dateFin ){
             Swal.fire({
                 icon: 'error',
                 title: 'Date Invalide !',
                 timer: 3000,
                 timerProgressBar: true,
             })
-            document.getElementById("event_E_DateFin").disabled = true;
             document.getElementById("event_E_DateDebut").value = 0;
             document.getElementById("event_E_DateFin").value = 0;
-
-
         }else {
-            document.getElementById("event_E_DateFin").disabled = false;
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Fin Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
             document.getElementById("event_E_DateFin").value = 0;
         }
     }
@@ -119,6 +197,14 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Le nombre de place ne doit pas etre égal à 0 !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
+            _this.value = null;
+        }else if (document.getElementById('event_E_PlaceReserver').value > _this.value){
+            Swal.fire({
+                icon: 'error',
+                title: 'Le nombre de place est inferieur au nombre de place réservée !',
                 timer: 3000,
                 timerProgressBar: true,
             })

@@ -1,6 +1,6 @@
 {% extends 'base-back.html.twig' %}
 
-
+{% block title %} Promotion {% endblock %}
 {% block body %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -150,8 +150,10 @@
 
 
                                                                         <a type="button" class="btn btn-primary" href="{{ path('promotion_code_edit', {'id': promotion_code.id}) }}">  <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                                                        {{ include('promotion_code/_delete_form.html.twig') }}
-                                                                    </div>
+                                                                        <form method="post" action="{{ path('promotion_code_delete', {'id': promotion_code.id}) }}" id="formdelete{{promotion_code.id}}">
+                                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion_code.id) }}">
+                                                                        </form>
+                                                                        <button class="btn btn-danger" onclick="deleteswal({{promotion_code.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         {% else %}
@@ -191,7 +193,7 @@
                                                 <br>
 
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail3">Valeur du code promo en pourcentage :</label>
+                                                    <label for="exampleInputEmail3">Valeur du promotion en pourcentage :</label>
                                                     <div class="form-group">
                                                         {{ form_errors(form1.P_Value) }}
 
@@ -255,7 +257,7 @@
                                                     <label for="exampleInputEmail3">Date fin :</label>
                                                     {{ form_errors(form1.P_DateF) }}
 
-                                                    {{ form_widget(form1.P_DateF,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()','disabled':'disabled'}}) }}
+                                                    {{ form_widget(form1.P_DateF,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()'}}) }}
                                                 </div><br>
 
 
@@ -283,7 +285,7 @@
                                                             <th>Nom Promotion</th>
                                                             <th>Valeur du code promo
                                                             </th>
-                                                            <th>Domaine</th>
+                                                            <th>Domaine/Événements</th>
                                                             <th>Date debut</th>
                                                             <th>Date fin</th>
                                                             <th>Description</th>
@@ -304,7 +306,10 @@
                                                                     <div class="btn-group" role="group" aria-label="Basic example">
 
                                                                         <a type="button" class="btn btn-primary" href="{{ path('promotion_edit', {'id': promotion.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                                                        {{ include('promotion/_delete_form.html.twig') }}
+                                                                        <form method="post" action="{{ path('promotion_delete', {'id': promotion.id}) }}" id="formdelete{{promotion.id}}">
+                                                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ promotion.id) }}">
+                                                                        </form>
+                                                                        <button class="btn btn-danger" onclick="deleteswal({{promotion.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -342,6 +347,21 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
         <script>
+            function deleteswal(a) {
+                Swal.fire({
+                    title: 'Êtes-vous sûr ?',
+                    text: "Vous ne pourrez pas revenir en arrière !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, supprimez-le !'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('formdelete'+a).submit();
+                    }
+                })
+            }
             let codePromoOwner = document.getElementById("CodePromoOwnerChart");
             let CodePromoOwnerChartGraph = new Chart(codePromoOwner,{
                 type : "bar",
@@ -368,6 +388,8 @@
                             'rgba(255, 159, 64, 1)'
                         ],
                         scales: {
+
+
                             yAxes: [{
                                 ticks: {
                                     beginAtZero: true
@@ -700,22 +722,33 @@
             function verifDatedebut() {
                 let dateDebutString = document.getElementById("promotion_P_DateB").value.split("-");
                 let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+
+
+                let dateFinString = document.getElementById("promotion_P_DateF").value.split("-");
+                let dateFin = new Date(dateFinString[0],dateFinString[1]-1,dateFinString[2]);
+
                 let date = new Date();
-                if (dateDebut < date ){
+                if (dateDebut <= date ){
                     Swal.fire({
                         icon: 'error',
                         title: 'Date Invalide !',
                         timer: 3000,
                         timerProgressBar: true,
                     })
-                    document.getElementById("promotion_P_DateF").disabled = true;
                     document.getElementById("promotion_P_DateB").value = 0;
                     document.getElementById("promotion_P_DateF").value = 0;
-                }else {
-                    document.getElementById("promotion_P_DateF").disabled = false;
+                }
+                if (dateDebut >= dateFin){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Date Fin Invalide !',
+                        timer: 3000,
+                        timerProgressBar: true,
+                    })
                     document.getElementById("promotion_P_DateF").value = 0;
                 }
             }
+
             function verifDatePromo() {
                 let dateDebutString = document.getElementById("promotion_code_PC_ExpirationCode").value.split("-");
                 let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);

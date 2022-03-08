@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="page-header flex-wrap">
-        <h3 class="mb-0">Welcome to your profile, {{ user.firstname }}!</h3>
+        <h3 class="mb-0">Bienvenue à votre profile, {{ user.firstname }}!</h3>
     </div>
 
     <div class="col-xl-12 stretch-card grid-margin">
@@ -14,20 +14,20 @@
                 <div class="row">
                     <div class="col-sm-6">
                         {% if user.roles|join(', ') == "ROLE_ADMIN" %}
-                            <p class="text-muted">You're signed in as an <u
+                            <p class="text-muted">Vous êtes connecté en tant quen <u
                                         style="color: red; font-weight: bold">Admin</u>!</p>
                         {% endif %}
                     </div>
                     <div class="col-sm-3 text-md-right">
                         <a href="{{ path('edit_admin') }}" type="button"
                            class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-warning font-weight-normal">
-                            <i class="mdi mdi-pen btn-icon-prepend"></i>Edit profile</a>
+                            <i class="mdi mdi-pen btn-icon-prepend"></i>Modifier profile</a>
                     </div>
                     <div class="col-sm-3 text-md-right">
                         <form method="post" action="{{ path('user_delete', {'id': user.id}) }}"
                               onsubmit="return confirm('All your data will be deleted... Are you sure you want to remove your account?');">
                             <button class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-danger font-weight-normal">
-                                <i class="mdi mdi-trash-can btn-icon-prepend"></i>Desactivate account
+                                <i class="mdi mdi-trash-can btn-icon-prepend"></i>désactiver compte
                             </button>
                         </form>
                     </div>
@@ -36,7 +36,7 @@
                     <div class="col-lg-6">
                         <div class="card mb-3 mb-sm-0">
                             <div class="card-body py-3 px-4">
-                                <p class="m-0 survey-head">Profile Picture</p>
+                                <p class="m-0 survey-head">Photo de profil</p>
 
                                 <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
                                     <img src="{{ asset('uploads/user_picture/' ~ user.picture) }}"
@@ -48,28 +48,28 @@
                     <div class="col-lg-6 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Profile details</h4>
+                                <h4 class="card-title">Détails</h4>
                                 </p>
                                 <div class="table-responsive">
                                     <table class="table table-hover">
                                         <tr>
-                                            <th class="text-center">First name</th>
+                                            <th class="text-center">Prénom</th>
                                             <td class="text-center">{{ user.firstName }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Last name</th>
+                                            <th class="text-center">Nom</th>
                                             <td class="text-center">{{ user.lastName }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Email</th>
+                                            <th class="text-center">Addresse mail</th>
                                             <td class="text-center">{{ user.email }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Gender</th>
+                                            <th class="text-center">Genre</th>
                                             <td class="text-center">{{ user.gender }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-center">Creation Date</th>
+                                            <th class="text-center">Date de création</th>
                                             <td class="text-center">{{ user.createdAt|date("d/m/y") }}</td>
                                         </tr>
                                     </table>
