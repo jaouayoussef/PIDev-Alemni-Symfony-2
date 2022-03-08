@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}Reponse{% endblock %}
+<title>Reponse</title>
 
 {% block body %}
     <h1>Reponse</h1>
@@ -16,11 +16,11 @@
                 <td>{{ reponse.answer }}</td>
             </tr>
             <tr>
-                <th>Admin_file</th>
-                <td>{{ reponse.adminFile }}</td>
+                <th>File</th>
+                <td>{{ reponse.file }}</td>
             </tr>
             <tr>
-                <th>Reply_date</th>
+                <th>ReplyDate</th>
                 <td>{{ reponse.replyDate ? reponse.replyDate|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>

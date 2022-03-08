@@ -4,8 +4,13 @@ namespace App\Form;
 
 use App\Entity\Reclamation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ReclamationType extends AbstractType
 {
@@ -13,14 +18,18 @@ class ReclamationType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('message')
-            ->add('type')
             ->add('name')
-            ->add('email')
-            ->add('status')
-            ->add('user_file')
-            ->add('sending_date')
-            ->add('reponse')
+            ->add('email', EmailType::class)
+            ->add('type',ChoiceType::class,[
+                'choices'  => [
+                    'Account' => 'Account',
+                    'Course' => 'Course',
+                    'Event' => 'Event',
+                    'Others' => 'Others',
+                ],
+            ])
+            ->add('message',TextareaType::class)
+            
         ;
     }
 

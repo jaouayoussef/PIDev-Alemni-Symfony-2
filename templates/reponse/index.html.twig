@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}Reponse index{% endblock %}
+<title>Reponse index</title>
 
 {% block body %}
     <h1>Reponse index</h1>
@@ -10,8 +10,8 @@
             <tr>
                 <th>Id</th>
                 <th>Answer</th>
-                <th>Admin_file</th>
-                <th>Reply_date</th>
+                <th>File</th>
+                <th>ReplyDate</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ reponse.id }}</td>
                 <td>{{ reponse.answer }}</td>
-                <td>{{ reponse.adminFile }}</td>
+                <td>{{ reponse.file }}</td>
                 <td>{{ reponse.replyDate ? reponse.replyDate|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('reponse_show', {'id': reponse.id}) }}">show</a>
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('reponse_new') }}">Create new</a>
+    {# <a href="{{ path('add_reponse') }}">Create new</a> #}
 {% endblock %}

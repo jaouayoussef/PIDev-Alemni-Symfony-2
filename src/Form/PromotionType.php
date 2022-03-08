@@ -42,14 +42,14 @@ class PromotionType extends AbstractType
                 'required' => false,
                 'empty_data' => null,
                 'attr' => [
-                'id' => 'DateD']
+                    'id' => 'DateD']
             ])
             ->add('P_DateF', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
                 'empty_data' => null,
                 'attr' => [
-                                'id' => 'DateF']
+                    'id' => 'DateF']
 
             ])
             ->add('P_Note',TextareaType::class, [

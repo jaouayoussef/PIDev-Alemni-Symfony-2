@@ -25,13 +25,44 @@ class Quiz
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="quiz", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="quiz", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $questions;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $id_user;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Formation::class, inversedBy="quiz")
+     */
+    private $id_formation;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Userresult::class, mappedBy="quiz")
+     */
+    private $userresults;
+
     public function __construct()
     {
-        $this->questions = new ArrayCollection();
+        $this->userresults = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    /**
+     * @param mixed $questions
+     */
+    public function setQuestions($questions): void
+    {
+        $this->questions = $questions;
     }
 
     public function getId(): ?int
@@ -51,30 +82,54 @@ class Quiz
         return $this;
     }
 
-    /**
-     * @return Collection|Question[]
-     */
-    public function getQuestions(): Collection
+    public function getIdUser(): ?int
     {
-        return $this->questions;
+        return $this->id_user;
     }
 
-    public function addQuestion(Question $question): self
+    public function setIdUser(int $id_user): self
     {
-        if (!$this->questions->contains($question)) {
-            $this->questions[] = $question;
-            $question->setQuiz($this);
+        $this->id_user = $id_user;
+
+        return $this;
+    }
+
+    public function getIdFormation(): ?Formation
+    {
+        return $this->id_formation;
+    }
+
+    public function setIdFormation(?Formation $id_formation): self
+    {
+        $this->id_formation = $id_formation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Userresult[]
+     */
+    public function getUserresults(): Collection
+    {
+        return $this->userresults;
+    }
+
+    public function addUserresult(Userresult $userresult): self
+    {
+        if (!$this->userresults->contains($userresult)) {
+            $this->userresults[] = $userresult;
+            $userresult->setQuiz($this);
         }
 
         return $this;
     }
 
-    public function removeQuestion(Question $question): self
+    public function removeUserresult(Userresult $userresult): self
     {
-        if ($this->questions->removeElement($question)) {
+        if ($this->userresults->removeElement($userresult)) {
             // set the owning side to null (unless already changed)
-            if ($question->getQuiz() === $this) {
-                $question->setQuiz(null);
+            if ($userresult->getQuiz() === $this) {
+                $userresult->setQuiz(null);
             }
         }
 

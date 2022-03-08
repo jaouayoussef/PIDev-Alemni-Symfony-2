@@ -1,6 +1,6 @@
 {% extends 'base-back.html.twig' %}
 
-{% block title %} test add {% endblock %}
+{% block title %} Gestion événements {% endblock %}
 
 {% block body %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -10,6 +10,8 @@
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">Événements</h3>
+            <button type="button" class="btn btn-inverse-primary btn-rounded btn-icon" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-line-chart" aria-hidden="true"></i></button>
+
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#">Événements</a></li>
@@ -17,6 +19,40 @@
                 </ol>
             </nav>
         </div>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="chartModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">nombre dévénement par date debut</h4>
+                                        <canvas id="CodePromoOwnerChart" style="height: 250px; width: 250px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">nombre dévénement par date fin</h4>
+                                        <canvas id="CodePromoOwnerChart2" style="height: 250px; width: 250px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
             </div>
@@ -29,8 +65,8 @@
                         <div class="form-group">
                             <label for="exampleInputName1">Nom de l'événement:</label>
                             {{ form_errors(form.E_Name, { 'attr': {'style': 'color:red'}}) }}
-                            {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom'}}) }}
-
+                            {{ form_widget(form.E_Name,{'attr':{'class':'form-control','type':'text','id':'Nom','placeholder':'Nom','onchange':'verifNomEvent(this)'}}) }}
+                            {{ form_widget(form.E_PlaceReserver,{'attr':{'class':'form-control','style':'display: none;','type':'text','id':'Nom','placeholder':'Nom','onchange':'verifNomEvent(this)'}}) }}
                         </div><br>
                         <div class="form-group">
                             <label for="exampleTextarea1">description :</label>
@@ -62,7 +98,7 @@
                             <label> Date fin :</label>
                             {{ form_errors(form.E_DateFin) }}
 
-                            {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage','disabled':'disable' ,'onchange':'verifDate()'}}) }}
+                            {{ form_widget(form.E_DateFin,{'attr':{'class':'form-control','id':'DateF','placeholder':'Valeur du code promo en pourcentage' ,'onchange':'verifDate()'}}) }}
                         </div><br>
 
 
@@ -162,7 +198,12 @@
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 <a type="button" class="btn btn-primary" href="{{ path('event_edit', {'id': event.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                                {{ include('event/_delete_form.html.twig') }}
+                                            {% if event.EPlaceReserver ==0  %}
+                                                <form method="post" action="{{ path('event_delete', {'id': event.id}) }}" id="formdelete{{event.id}}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+                                                </form>
+                                                <button class="btn btn-danger" onclick="deleteswal({{event.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
+                                            {% endif %}
                                             </div>
                                         </td>
                                     </tr>
@@ -191,9 +232,130 @@
     </div>
     <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+    function verifNomEvent(_this){
+        var table = document.getElementById('myTable');
+        for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+            if (table.rows[r].cells[1].innerHTML == _this.value){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Nom Promotion existe !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+                document.getElementById("event_E_Name").value = null;
 
+            }
+
+        }
+    }
+    function deleteswal(a) {
+        Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimez-le !'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formdelete'+a).submit();
+            }
+        })
+    }
+    let codePromoOwner = document.getElementById("CodePromoOwnerChart");
+    let CodePromoOwnerChartGraph = new Chart(codePromoOwner,{
+        type : "bar",
+        data:{
+            labels: {{ EventDateDebut|raw }},
+            datasets:[{
+                label: "nbre d'événements",
+                data: {{ EventCountDebut|raw }},
+
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                }
+            }],
+
+
+        }
+    })
+    let codePromoOwner1 = document.getElementById("CodePromoOwnerChart2");
+    let CodePromoOwnerChartGraph1 = new Chart(codePromoOwner1,{
+        type : "bar",
+        data:{
+            labels: {{ EventDateFin|raw }},
+            datasets:[{
+                label: "nbre d'événements",
+                data: {{ EventCountFin|raw }},
+
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                },
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                }
+            }],
+
+
+        }
+    })
     function myFunction08() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput8");
@@ -364,23 +526,29 @@
         let datedebuttimea = datedebuttimeandjour[1].split(":");
         let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
 
+        let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
+        let datefintimeandjour = dateFinString[2].split("T");
+        let datefintimea = datefintimeandjour[1].split(":");
+        let dateFin = new Date (dateFinString[0],dateFinString[1]-1,datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
 
         let date = new Date();
 
-        if (dateDebut <= date  ){
+        if (dateDebut <= date && dateDebut >= dateFin ){
             Swal.fire({
                 icon: 'error',
                 title: 'Date Invalide !',
                 timer: 3000,
                 timerProgressBar: true,
             })
-            document.getElementById("event_E_DateFin").disabled = true;
             document.getElementById("event_E_DateDebut").value = 0;
             document.getElementById("event_E_DateFin").value = 0;
-
-
 }else {
-            document.getElementById("event_E_DateFin").disabled = false;
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Fin Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
             document.getElementById("event_E_DateFin").value = 0;
         }
     }
@@ -388,10 +556,11 @@
         let dateDebutString = document.getElementById("event_E_DateDebut").value.split("-");
         let datedebuttimeandjour = dateDebutString[2].split("T");
         let datedebuttimea = datedebuttimeandjour[1].split(":");
+        let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
+
         let dateFinString = document.getElementById("event_E_DateFin").value.split("-");
         let datefintimeandjour = dateFinString[2].split("T");
         let datefintimea = datefintimeandjour[1].split(":");
-        let dateDebut = new Date (dateDebutString[0],dateDebutString[1]-1,datedebuttimeandjour[0],datedebuttimea[0],datedebuttimea[1],0);
         let dateFin = new Date (dateFinString[0],dateFinString[1]-1,datefintimeandjour[0],datefintimea[0],datefintimea[1],0);
 
         let date = new Date();

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\QuestionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Integer;
 
 /**
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
@@ -21,6 +22,12 @@ class Question
      * @ORM\Column(type="string", length=255)
      */
     private $libelle;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Quiz::class, inversedBy="questions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $quiz;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -48,10 +55,85 @@ class Question
     private $repcorrect;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Quiz::class, inversedBy="questions")
-     * @ORM\JoinColumn(nullable=false)
+     * @return mixed
      */
-    private $quiz;
+    public function getRepcorrect()
+    {
+        return $this->repcorrect;
+    }
+
+    /**
+     * @param mixed $repcorrect
+     */
+    public function setRepcorrect($repcorrect): void
+    {
+        $this->repcorrect = $repcorrect;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReponse2()
+    {
+        return $this->reponse2;
+    }
+
+    /**
+     * @param mixed $reponse2
+     */
+    public function setReponse2($reponse2): void
+    {
+        $this->reponse2 = $reponse2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReponse3()
+    {
+        return $this->reponse3;
+    }
+
+    /**
+     * @param mixed $reponse3
+     */
+    public function setReponse3($reponse3): void
+    {
+        $this->reponse3 = $reponse3;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReponse4()
+    {
+        return $this->reponse4;
+    }
+
+    /**
+     * @param mixed $reponse4
+     */
+    public function setReponse4($reponse4): void
+    {
+        $this->reponse4 = $reponse4;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReponse1()
+    {
+        return $this->reponse1;
+    }
+
+    /**
+     * @param mixed $reponse1
+     */
+    public function setReponse1($reponse1): void
+    {
+        $this->reponse1 = $reponse1;
+    }
+
 
     public function getId(): ?int
     {
@@ -69,75 +151,14 @@ class Question
 
         return $this;
     }
-
-    public function getReponse1(): ?string
-    {
-        return $this->reponse1;
-    }
-
-    public function setReponse1(string $reponse1): self
-    {
-        $this->reponse1 = $reponse1;
-
-        return $this;
-    }
-
-    public function getReponse2(): ?string
-    {
-        return $this->reponse2;
-    }
-
-    public function setReponse2(string $reponse2): self
-    {
-        $this->reponse2 = $reponse2;
-
-        return $this;
-    }
-
-    public function getReponse3(): ?string
-    {
-        return $this->reponse3;
-    }
-
-    public function setReponse3(string $reponse3): self
-    {
-        $this->reponse3 = $reponse3;
-
-        return $this;
-    }
-
-    public function getReponse4(): ?string
-    {
-        return $this->reponse4;
-    }
-
-    public function setReponse4(string $reponse4): self
-    {
-        $this->reponse4 = $reponse4;
-
-        return $this;
-    }
-
-    public function getRepcorrect(): ?int
-    {
-        return $this->repcorrect;
-    }
-
-    public function setRepcorrect(int $repcorrect): self
-    {
-        $this->repcorrect = $repcorrect;
-
-        return $this;
-    }
-
     public function getQuiz(): ?Quiz
     {
         return $this->quiz;
     }
 
-    public function setQuiz(?Quiz $quiz): self
+    public function setQuiz(Quiz $id): self
     {
-        $this->quiz = $quiz;
+        $this->quiz = $id;
 
         return $this;
     }

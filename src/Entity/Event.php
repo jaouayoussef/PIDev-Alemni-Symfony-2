@@ -23,10 +23,10 @@ class Event
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
      *     message = "Cette valeur ne doit pas être vide"
      * )
-     * @ORM\Column(type="string", length=255)
      */
     private $E_Name;
 
@@ -49,7 +49,10 @@ class Event
     private $E_Place;
 
     /**
-     * @ORM\Column(type="integer", length=255)
+     * @ORM\Column(type="float", length=255)
+     *  @Assert\NotBlank(
+     *     message = "Cette valeur ne doit pas être vide"
+     * )
      */
     private $E_Price=0;
 
@@ -134,6 +137,11 @@ class Event
      * @ORM\OneToMany(targetEntity=ReservationEvent::class, mappedBy="EventId", orphanRemoval=true)
      */
     private $reservationEvents;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $E_PlaceReserver=0;
 
     public function __construct()
     {
@@ -286,7 +294,16 @@ class Event
         return $this;
     }
 
+    public function getEPlaceReserver(): ?int
+    {
+        return $this->E_PlaceReserver;
+    }
 
+    public function setEPlaceReserver(?int $E_PlaceReserver): self
+    {
+        $this->E_PlaceReserver = $E_PlaceReserver;
 
+        return $this;
+    }
 
 }

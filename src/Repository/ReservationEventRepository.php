@@ -18,7 +18,22 @@ class ReservationEventRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ReservationEvent::class);
     }
-
+    /**
+     * @return void
+     */
+    public function AvgBydate(){
+        $query = $this->createQueryBuilder('a')
+            ->select('SUBSTRING(a.DateReservationEvent,6,2) as dateMonth, SUM(a.PrixReservationEvent) as SUM')
+            ->where('SUBSTRING(a.DateReservationEvent,1,4) = 2022 ')
+            -> groupBy('dateMonth');
+        return $query->getQuery()->getResult();
+    }
+    public function getbyuser($userId){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.UserId = :identifier')
+            ->setParameter('identifier', $userId);
+        return $qb->getQuery()->getResult();
+    }
     // /**
     //  * @return ReservationEvent[] Returns an array of ReservationEvent objects
     //  */

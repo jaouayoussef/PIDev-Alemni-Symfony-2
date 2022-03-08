@@ -53,19 +53,29 @@
     function verifDatedebut() {
         let dateDebutString = document.getElementById("promotion_P_DateB").value.split("-");
         let dateDebut = new Date(dateDebutString[0],dateDebutString[1]-1,dateDebutString[2]);
+
+
+        let dateFinString = document.getElementById("promotion_P_DateF").value.split("-");
+        let dateFin = new Date(dateFinString[0],dateFinString[1]-1,dateFinString[2]);
+
         let date = new Date();
-        if (dateDebut < date ){
+        if (dateDebut <= date ){
             Swal.fire({
                 icon: 'error',
                 title: 'Date Invalide !',
                 timer: 3000,
                 timerProgressBar: true,
             })
-            document.getElementById("promotion_P_DateF").disabled = true;
             document.getElementById("promotion_P_DateB").value = 0;
             document.getElementById("promotion_P_DateF").value = 0;
-        }else {
-            document.getElementById("promotion_P_DateF").disabled = false;
+        }
+        if (dateDebut >= dateFin){
+            Swal.fire({
+                icon: 'error',
+                title: 'Date Fin Invalide !',
+                timer: 3000,
+                timerProgressBar: true,
+            })
             document.getElementById("promotion_P_DateF").value = 0;
         }
     }

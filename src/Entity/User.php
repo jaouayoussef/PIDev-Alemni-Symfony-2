@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -24,6 +25,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
@@ -45,16 +48,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $gender;
 
@@ -64,17 +70,45 @@ class User implements UserInterface
     private $picture;
 
     /**
-     * @ORM\OneToMany(targetEntity=ReservationEvent::class, mappedBy="UserId", orphanRemoval=true)
+     * @ORM\Column(type="boolean")
      */
-    private $reservationEvents;
+    private $isBanned = false;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="formateur", orphanRemoval=true)
+     */
+    private $formations;
+    /**
+     * @ORM\OneToMany(targetEntity=ReservationFormation::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $reservationFormations;
     public function __construct()
     {
-        $this->reservationEvents = new ArrayCollection();
+        $this->formations = new ArrayCollection();
+        $this->reservationFormations = new ArrayCollection();
+        $this->userresults = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
     }
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $verification_file;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Userresult::class, mappedBy="id_user")
+     */
+    private $userresults;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reclamation::class, mappedBy="user")
+     */
+    private $reclamations;
 
     public function getId(): ?int
     {
@@ -100,7 +134,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -109,8 +143,6 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = json_encode($this->roles);
 
         return array_unique($roles);
     }
@@ -217,36 +249,151 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|ReservationEvent[]
-     */
-    public function getReservationEvents(): Collection
+    public function getIsBanned(): ?bool
     {
-        return $this->reservationEvents;
+        return $this->isBanned;
     }
 
-    public function addReservationEvent(ReservationEvent $reservationEvent): self
+    public function setIsBanned(bool $isBanned): self
     {
-        if (!$this->reservationEvents->contains($reservationEvent)) {
-            $this->reservationEvents[] = $reservationEvent;
-            $reservationEvent->setUserId($this);
+        $this->isBanned = $isBanned;
+
+        return $this;
+    }
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getVerificationFile(): ?string
+    {
+        return $this->verification_file;
+    }
+
+    public function setVerificationFile(?string $verification_file): self
+    {
+        $this->verification_file = $verification_file;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Formation[]
+     */
+    public function getFormations(): Collection
+    {
+        return $this->formations;
+    }
+    public function addFormation(Formation $formation): self
+    {
+        if (!$this->formations->contains($formation)) {
+            $this->formations[] = $formation;
+            $formation->setFormateur($this);
+        }
+        return $this;
+    }
+    public function removeFormation(Formation $formation): self
+    {
+        if ($this->formations->removeElement($formation)) {
+            // set the owning side to null (unless already changed)
+            if ($formation->getFormateur() === $this) {
+                $formation->setFormateur(null);
+            }
+        }
+        return $this;
+    }
+    /**
+     * @return Collection|ReservationFormation[]
+     */
+    public function getReservationFormations(): Collection
+    {
+        return $this->reservationFormations;
+    }
+    public function addReservationFormation(ReservationFormation $reservationFormation): self
+    {
+        if (!$this->reservationFormations->contains($reservationFormation)) {
+            $this->reservationFormations[] = $reservationFormation;
+            $reservationFormation->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeReservationFormation(ReservationFormation $reservationFormation): self
+    {
+        if ($this->reservationFormations->removeElement($reservationFormation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationFormation->getUser() === $this) {
+                $reservationFormation->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Userresult[]
+     */
+    public function getUserresults(): Collection
+    {
+        return $this->userresults;
+    }
+
+    public function addUserresult(Userresult $userresult): self
+    {
+        if (!$this->userresults->contains($userresult)) {
+            $this->userresults[] = $userresult;
+            $userresult->setIdUser($this);
         }
 
         return $this;
     }
 
-    public function removeReservationEvent(ReservationEvent $reservationEvent): self
+    public function removeUserresult(Userresult $userresult): self
     {
-        if ($this->reservationEvents->removeElement($reservationEvent)) {
+        if ($this->userresults->removeElement($userresult)) {
             // set the owning side to null (unless already changed)
-            if ($reservationEvent->getUserId() === $this) {
-                $reservationEvent->setUserId(null);
+            if ($userresult->getIdUser() === $this) {
+                $userresult->setIdUser(null);
             }
         }
 
         return $this;
     }
 
+    /**
+     * @return Collection|Reclamation[]
+     */
+    public function getReclamations(): Collection
+    {
+        return $this->reclamations;
+    }
 
+    public function addReclamation(Reclamation $reclamation): self
+    {
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations[] = $reclamation;
+            $reclamation->setUser($this);
+        }
 
+        return $this;
+    }
+
+    public function removeReclamation(Reclamation $reclamation): self
+    {
+        if ($this->reclamations->removeElement($reclamation)) {
+            // set the owning side to null (unless already changed)
+            if ($reclamation->getUser() === $this) {
+                $reclamation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }

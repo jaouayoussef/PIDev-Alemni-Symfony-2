@@ -42,6 +42,11 @@ class ReservationEvent
      */
     private $PrixReservationEvent;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $DateReservationEvent;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -80,6 +85,18 @@ class ReservationEvent
     public function setEventId(?Event $EventId): self
     {
         $this->EventId = $EventId;
+
+        return $this;
+    }
+
+    public function getDateReservationEvent(): ?\DateTimeInterface
+    {
+        return $this->DateReservationEvent;
+    }
+
+    public function setDateReservationEvent(\DateTimeInterface $DateReservationEvent): self
+    {
+        $this->DateReservationEvent = $DateReservationEvent;
 
         return $this;
     }

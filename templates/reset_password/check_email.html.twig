@@ -1,0 +1,22 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Password Reset Email Sent{% endblock %}
+
+{% block login %}
+    <section class="ftco-section ftco-no-pb ftco-no-pt">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7"></div>
+                <div class="col-md-5 order-md-last">
+                    <div class="login-wrap p-4 p-md-5">
+                        <p>
+                            Si vote email est valide, vous allez recevoir un mail qui contient un lien que vous pouvez utiliser pour récupérer votre mot de passe.
+                            Ce lien va être expirer dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                        </p>
+                        <p>Si vous n'avez rien reçu, Merci de vérifier votre dossier SPAM ou <a href="{{ path('app_forgot_password_request') }}">Réessayez</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
