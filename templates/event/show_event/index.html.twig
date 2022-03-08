@@ -144,7 +144,15 @@
                                     <ul class="d-flex justify-content-between">
                                         <li>
                                             {% if app.user != null %}
-
+                                                <script>
+                                                    function reserverEvent(b, a, c) {
+                                                        if (b == "") {
+                                                            location.href = "/user/EventReservation/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                        } else {
+                                                            location.href = "/user/EventReservationAvecIncrement/" + b + "/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                        }
+                                                    }
+                                                </script>
                                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                                         data-target="#exampleModalCenter{{ event.id }}Promo">
                                                     Réserver
@@ -187,6 +195,15 @@
                                         <ul class="d-flex justify-content-between">
                                             <li>
                                                 {% if app.user != null %}
+                                                    <script>
+                                                        function reserverEvent(b, a, c) {
+                                                            if (b == "") {
+                                                                location.href = "/user/EventReservation/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                            } else {
+                                                                location.href = "/user/EventReservationAvecIncrement/" + b + "/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                            }
+                                                        }
+                                                    </script>
                                                     <button type="button" class="btn btn-primary"
                                                             data-toggle="modal" {% if event.EPrice ==0 %} data-target="#exampleModalCenter{{ event.id }}Promo" {% else %}data-target="#exampleModalCenter{{ event.id }}"{% endif %} >
                                                         Réserver
@@ -242,7 +259,7 @@
                                                             }
                                                         </script>
                                                         <button type="button" class="btn btn-primary"
-                                                                data-toggle="modal" {% if event.EPrice ==0 %} data-target="#exampleModalCenter{{ event.id }}Promo" {% else %}data-target="#exampleModalCenter{{ event.id }}"{% endif %} >
+                                                                data-toggle="modal" {% if event.EPrice ==0 %} data-target="#f{{ event.id }}Promo" {% else %}data-target="#exampleModalCenter{{ event.id }}"{% endif %} >
                                                             Réserver
                                                         </button>
                                                     {% endif %}

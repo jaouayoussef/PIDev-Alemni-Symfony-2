@@ -356,7 +356,7 @@ class EventController extends AbstractController
                 $entityManager->remove($eventReservation);
                 $message = (new \Swift_Message('ALEMNI, Paiement Annulé!'))
                     ->setFrom('alemnicontact@gmail.com')
-                    ->setTo($this->getUser()->getEmail())
+                    ->setTo($eventReservation->getUserId()->getUsername())
                     ->setBody(
                         $this->renderView(
                         // templates/emails/registration.html.twig
