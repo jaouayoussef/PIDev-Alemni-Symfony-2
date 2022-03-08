@@ -46,7 +46,7 @@ class Domaine
     private $formations;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Promotion::class, mappedBy="P_Domaine")
+     * @ORM\OneToMany(targetEntity=Promotion::class, mappedBy="P_Domaine")
      * @Groups("domaine")
      */
     private $promotions;

@@ -26,94 +26,118 @@ class QuestionController extends AbstractController
 
     public function index(QuestionRepository $questionRepository): Response
     {
-        return $this->render('question/index.html.twig', [
-            'questions' => $questionRepository->findAll(),
-        ]);
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            return $this->render('question/index.html.twig', [
+                'questions' => $questionRepository->findAll(),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
+        }
+
     }
+
     /**
      * @Route("/myquestion/{id}", name="myquestion", methods={"GET"})
      */
     public function myquestion(Quiz $question): Response
     {
-        return $this->render('question/index.html.twig', [
-            'questions' => $this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getId()),
-        ]);
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            return $this->render('question/index.html.twig', [
+                'questions' => $this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getId()),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
+        }
+
     }
 
     /**
      * @Route("/new", name="question_new", methods={"GET", "POST"})
      */
-  /*  public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $array = array();
-        $question = new Question();
-        $indice =count($array);
-        $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()))) ;
-        $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()));
-        $quiz=$quizs[$nbr -1];
-        $form = $this->createForm(QuestionType::class, $question);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+    /*  public function new(Request $request, EntityManagerInterface $entityManager): Response
+      {
+          $array = array();
+          $question = new Question();
+          $indice =count($array);
+          $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()))) ;
+          $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()));
+          $quiz=$quizs[$nbr -1];
+          $form = $this->createForm(QuestionType::class, $question);
+          $form->handleRequest($request);
+          if ($form->isSubmitted() && $form->isValid()) {
 
 
-            if ( $indice < 4){
-                $array[$indice++] = $question;
-                return $this->redirectToRoute('question_new', [
-                    'quiz' =>  $quiz,
-                    'question' => $question,
-                    'form' => $form->createView(),
-                    'nbre'=> $indice,
-                ],Response::HTTP_SEE_OTHER);
-            } else{ dd($array);return $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$quiz]);}
-        }
-        return $this->render('question/new.html.twig', [
-            'quiz' =>  $quiz,
-            'question' => $question,
-            'form' => $form->createView(),
-            'nbre'=>$indice ,
-        ]);
+              if ( $indice < 4){
+                  $array[$indice++] = $question;
+                  return $this->redirectToRoute('question_new', [
+                      'quiz' =>  $quiz,
+                      'question' => $question,
+                      'form' => $form->createView(),
+                      'nbre'=> $indice,
+                  ],Response::HTTP_SEE_OTHER);
+              } else{ dd($array);return $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$quiz]);}
+          }
+          return $this->render('question/new.html.twig', [
+              'quiz' =>  $quiz,
+              'question' => $question,
+              'form' => $form->createView(),
+              'nbre'=>$indice ,
+          ]);
 
-    }*/
+      }*/
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            $question = new Question();
 
-        $question = new Question();
+            $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user' => $this->getUser()->getId())));
+            $quizs = $this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user' => $this->getUser()->getId()));
+            $quiz = $quizs[$nbr - 1];
+            //$quiz =$this->getDoctrine()->getRepository(Quiz::class)->find(50);
+            $form = $this->createForm(QuestionType::class, $question);
+            $form->handleRequest($request);
 
-        $nbr = count($this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()))) ;
-        $quizs =$this->getDoctrine()->getRepository(Quiz::class)->findBy(array('id_user'=>$this->getUser()->getId()));
-        $quiz=$quizs[$nbr -1];
-        //$quiz =$this->getDoctrine()->getRepository(Quiz::class)->find(50);
-        $form = $this->createForm(QuestionType::class, $question);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $question->setQuiz($quiz);
-
-
-            $entityManager->persist($question);
-            $entityManager->flush();
-
+            if ($form->isSubmitted() && $form->isValid()) {
+                $question->setQuiz($quiz);
 
 
-         $nbre = count($this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getQuiz()->getId()));
-          if ( $nbre < 20){
+                $entityManager->persist($question);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('question_new', [
-                'quiz' =>  $quiz,
+
+                $nbre = count($this->getDoctrine()->getRepository(Question::class)->findByExampleField($question->getQuiz()->getId()));
+                if ($nbre < 20) {
+
+                    return $this->redirectToRoute('question_new', [
+                        'quiz' => $quiz,
+                        'question' => $question,
+                        'form' => $form->createView(),
+                        'nbre' => $nbre,
+                    ], Response::HTTP_SEE_OTHER);
+                } else {
+                    return $this->forward('App\Controller\QuestionController::myquestion', ['question' => $quiz]);
+                }
+            }
+            $nbre = count($this->getDoctrine()->getRepository(Question::class)->findByExampleField($quiz->getId()));
+
+            return $this->render('question/new.html.twig', [
+                'quiz' => $quiz,
                 'question' => $question,
                 'form' => $form->createView(),
-                'nbre'=> $nbre,
-            ],Response::HTTP_SEE_OTHER);
-        } else{ return $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$quiz]);}
-    }
-        $nbre = count($this->getDoctrine()->getRepository(Question::class)->findByExampleField($quiz->getId()));
-
-        return $this->render('question/new.html.twig', [
-            'quiz' =>  $quiz,
-            'question' => $question,
-            'form' => $form->createView(),
-            'nbre'=>$nbre,
-        ]);
+                'nbre' => $nbre,
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
+        }
     }
 
     /**
@@ -131,19 +155,27 @@ class QuestionController extends AbstractController
      */
     public function edit(Request $request, Question $question, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(QuestionType::class, $question);
-        $form->handleRequest($request);
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            $form = $this->createForm(QuestionType::class, $question);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
 
-            return  $this->forward('App\Controller\QuestionController::myquestion', ['question'=>$question->getQuiz()]);;
+                return $this->forward('App\Controller\QuestionController::myquestion', ['question' => $question->getQuiz()]);;
+            }
+
+            return $this->render('question/edit.html.twig', [
+                'question' => $question,
+                'form' => $form->createView(),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->render('question/edit.html.twig', [
-            'question' => $question,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**
@@ -151,11 +183,19 @@ class QuestionController extends AbstractController
      */
     public function delete(Request $request, Question $question, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$question->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($question);
-            $entityManager->flush();
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            if ($this->isCsrfTokenValid('delete' . $question->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($question);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('question_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->redirectToRoute('question_index', [], Response::HTTP_SEE_OTHER);
     }
 }

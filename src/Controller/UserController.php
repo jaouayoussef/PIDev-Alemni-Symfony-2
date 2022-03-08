@@ -2,17 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\ReservationEvent;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\EventRepository;
+use App\Repository\PromoCodeOwnerRepository;
 use App\Repository\ReservationEventRepository;
-use App\Repository\ReservationFormationRepository;
-use App\Repository\SeanceRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserresultRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use App\Repository\ReservationFormationRepository;
+use App\Repository\SeanceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -36,7 +41,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/profile", name="user_profile")
      */
-    public function getUserProfile( ReservationEventRepository $reservationevent,SeanceRepository $seanceRepository,ReservationFormationRepository $reservationFormationRepository): Response
+    public function getUserProfile(ReservationEventRepository $reservationevent,SeanceRepository $seanceRepository,ReservationFormationRepository $reservationFormationRepository, UserresultRepository $userresultRepository): Response
     {
         $user = $this->getUser();
         if (!$user) {
@@ -45,11 +50,13 @@ class UserController extends AbstractController
         if ($user->getRoles() == ["ROLE_ADMIN"]) {
             return $this->redirectToRoute('admin_profile');
         } else {
+
             return $this->render('user/userProfile.html.twig', [
                 'user' => $user,
                 'events' => $reservationevent->getbyuser($user->getId()),
                 'formations' => $reservationFormationRepository->findOneBySomeField($user->getId()),
                 'seances' => $seanceRepository->findAll(),
+                'userresults' => $userresultRepository->findBy(array('id_user'=>$this->getUser()->getId()))
             ]);
         }
     }
@@ -207,19 +214,116 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/admin/allUsers/{page<\d+>}",name="all_users")
+     * @Route("/admin/testtttt",name="all_users")
      */
-    public function getAllUsers(UserRepository $repository, Request $req, int $page = 1): Response
+    public function test()
+    {}
+
+    /**
+     * @Route("user/EventReservationAvecIncrement/{id}/{eventid}/{PrixReservaion}/{userid}", name="EventReservationAvecIncrement", methods={"GET", "POST"})
+     */
+    public function Increment_PCD_NbrePromo($id, $eventid, $userid, $PrixReservaion, PromoCodeOwnerRepository $PromotionCodeOwnerRepository, \Swift_Mailer $mailer, EntityManagerInterface $entityManager, UserRepository $userRepository, EventRepository $eventRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $reservationEvent = new ReservationEvent();
+            $event = $eventRepository->findOneBy(['id' => $eventid]);
+            $event->setEPlaceReserver($event->getEPlaceReserver() + 1);
+            $user = $userRepository->findOneBy(['id' => $userid]);
+            $reservationEvent->setUserId($user);
+            $reservationEvent->setEventId($event);
+            $reservationEvent->setPrixReservationEvent($PrixReservaion);
+            $reservationEvent->setDateReservationEvent(new \DateTime('now'));
+            $entityManager->persist($reservationEvent);
+            $promocodeOwner = $PromotionCodeOwnerRepository->findOneBy(['id' => $id]);
+            $promocodeOwner->setPCDNbrePromo($promocodeOwner->getPCDNbrePromo() + 1);
+
+            $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
+                ->setFrom('alemnicontact@gmail.com')
+                ->setTo($this->getUser()->getEmail())
+                ->setBody(
+                    $this->renderView(
+                    // templates/emails/registration.html.twig
+                        'event/show_event/mail.html.twig',
+                        ['nameevent' => $event->getEName(),
+                            'firstname' => $this->getUser()->getFirstName(),
+                            'lastname' => $this->getUser()->getLastName(),
+                            'montant' => $PrixReservaion,
+
+                        ]
+                    ),
+                    'text/html'
+                );
+
+            $mailer->send($message);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('show_event');
+        }
+    }
+
+    /**
+     * @Route("user/EventReservation/{eventid}/{PrixReservaion}/{userid}", name="aJouterReservation", methods={"GET", "POST"})
+     */
+    public function aJouterReservation($eventid, $userid, $PrixReservaion, EntityManagerInterface $entityManager, UserRepository $userRepository, \Swift_Mailer $mailer, EventRepository $eventRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $reservationEvent = new ReservationEvent();
+            $event = $eventRepository->findOneBy(['id' => $eventid]);
+            $user = $userRepository->findOneBy(['id' => $userid]);
+            $event->setEPlaceReserver($event->getEPlaceReserver() + 1);
+            $reservationEvent->setUserId($user);
+            $reservationEvent->setEventId($event);
+            $reservationEvent->setPrixReservationEvent($PrixReservaion);
+            $reservationEvent->setDateReservationEvent(new \DateTime('now'));
+            $entityManager->persist($reservationEvent);
+
+            $message = (new \Swift_Message('ALEMNI, Paiement effectué!'))
+                ->setFrom('alemnicontact@gmail.com')
+                ->setTo($this->getUser()->getEmail())
+                ->setBody(
+                    $this->renderView(
+                    // templates/emails/registration.html.twig
+                        'event/show_event/mail.html.twig',
+                        ['nameevent' => $event->getEName(),
+                            'firstname' => $this->getUser()->getFirstName(),
+                            'lastname' => $this->getUser()->getLastName(),
+                            'montant' => $PrixReservaion,
+
+                        ]
+                    ),
+                    'text/html'
+                );
+
+            $mailer->send($message);
+            $entityManager->flush();
+            return $this->redirectToRoute('show_event');
+        }
+    }
+
+    /**
+     * @Route("/admin/allUsers",name="all_users")
+     */
+    //TODO: PAGINATOR
+    public function getAllUsers(UserRepository $repository, Request $req, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
         if ($user->getRoles() == ["ROLE_ADMIN"]) {
-            $test = $repository->createQueryBuilder('user')->select('user');
-            $pagerfanta = new Pagerfanta(new QueryAdapter($test));
-            $pagerfanta->setMaxPerPage(5);
-            $pagerfanta->setCurrentPage($page);
+            $test = $repository->findAll();
+            $pagination = $paginator->paginate(
+                $test,
+                $req->query->getInt('page', 1),
+                5
+            );
+
 
             $userRepo = $this->getDoctrine()->getRepository(User::class);
             $clients = $userRepo->getUserByRole("ROLE_CLIENT");
@@ -232,7 +336,7 @@ class UserController extends AbstractController
                 'tutors' => $tutors,
                 'admins' => $admins,
                 'both' => $both,
-                'data' => $pagerfanta,
+                'data' => $pagination,
             ]);
         } else {
             return $this->redirectToRoute('error');
@@ -244,11 +348,11 @@ class UserController extends AbstractController
      */
     public function banUser($id): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
+        $currentUser = $this->getUser();
+        if (!$currentUser) {
             return $this->redirectToRoute('app_login');
         }
-        if ($user->getRoles() == ["ROLE_ADMIN"]) {
+        if ($currentUser->getRoles() == ["ROLE_ADMIN"]) {
             $em = $this->getDoctrine()->getManager();
             $user = $this->getDoctrine()->getRepository(User::class)->find($id);
             $user->setIsBanned(true);
@@ -305,7 +409,6 @@ class UserController extends AbstractController
     /**
      * @Route("/user/delete", name="user_delete")
      */
-    //TODO: verify before deleting account
     public function deleteUser(): Response
     {
         $user = $this->getUser();
@@ -326,7 +429,6 @@ class UserController extends AbstractController
     /**
      * @Route("user/addRole", name="second_role")
      */
-    //TODO: verify before changing user role
     public function addNewRole(): Response
     {
         $user = $this->getUser();
@@ -339,19 +441,6 @@ class UserController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('user_profile');
-        }
-    }
-
-    /**
-     * @Route("/admin/dashboard", name="admin_dashboard")
-     */
-    public function adminDashboard(): Response
-    {
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        } else {
-            return $this->render('admin/dashboard.html.twig');
         }
     }
 }

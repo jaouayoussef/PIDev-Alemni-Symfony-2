@@ -22,82 +22,79 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class DomaineController extends AbstractController
 {
-   # /**
+    # /**
     # * @Route("/", name="domaine_index", methods={"GET"})
     # */
-   # public function index(DomaineRepository $domaineRepository): Response
-   # {
+    # public function index(DomaineRepository $domaineRepository): Response
+    # {
     #    return $this->render('domaine/index.html.twig', [
-     #       'domaines' => $domaineRepository->findAll(),
-     #   ]);
-   # }
+    #       'domaines' => $domaineRepository->findAll(),
+    #   ]);
+    # }
 
     /**
      * @Route("/new", name="domaine_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,DomaineRepository $domaineRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, DomaineRepository $domaineRepository): Response
     {
-        $domaine = new Domaine();
-        $form = $this->createForm(DomaineType::class, $domaine)    ->add('imageDomaine', FileType::class, [
-
-
-            // unmapped means that this field is not associated to any entity property
-            'mapped' => false,
-
-            // make it optional so you don't have to re-upload the PDF file
-            // every time you edit the Product details
-            'required' => true,
-
-            // unmapped fields can't define their validation using annotations
-            // in the associated entity, so you can use the PHP constraint classes
-            'constraints' => [
-                new NotBlank(),
-                new File([
-
-                    'mimeTypes' => [
-                        'image/*',
-
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_ADMIN"] ) {
+            $domaine = new Domaine();
+            $form = $this->createForm(DomaineType::class, $domaine)
+                ->add('imageDomaine', FileType::class, [
+                    'mapped' => false,
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank(),
+                        new File([
+                            'mimeTypes' => [
+                                'image/*',
+                            ],
+                            'mimeTypesMessage' => 'merci d"ajouter une image',
+                        ])
                     ],
-                    'mimeTypesMessage' => 'merci d"ajouter une image',
-                ])
-            ],
-        ]);
-        $form->handleRequest($request);
+                ]);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $brochureFile */
-            $image = $form->get('imageDomaine')->getData();
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var UploadedFile $brochureFile */
+                $image = $form->get('imageDomaine')->getData();
 
-            if ($image) {
-                $newFilename = uniqid().'.'.$image->guessExtension();
+                if ($image) {
+                    $newFilename = uniqid() . '.' . $image->guessExtension();
 
-                try {
-                    $image->move(
-                        $this->getParameter('image_domaine'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
+                    try {
+                        $image->move(
+                            $this->getParameter('image_domaine'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                    }
+
+                    $domaine->setImageDomaine($newFilename);
                 }
+                $entityManager->persist($domaine);
+                $entityManager->flush();
 
-                $domaine->setImageDomaine($newFilename);
+                return $this->redirectToRoute('domaine_new', [], Response::HTTP_SEE_OTHER);
             }
-            $entityManager->persist($domaine);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('domaine_new', [], Response::HTTP_SEE_OTHER);
+            return $this->render('domaine/new.html.twig', [
+                'domaine' => $domaine,
+                'form' => $form->createView(),
+                'domaines' => $domaineRepository->findAll(),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->render('domaine/new.html.twig', [
-            'domaine' => $domaine,
-            'form' => $form->createView(),
-            'domaines' => $domaineRepository->findAll(),
-        ]);
     }
 
     /**
      * @Route("/show", name="domaine_show", )
      */
-    //TODO: SHOW DATA IN FRONT (Not displaying : base-front problem)
     public function show(DomaineRepository $domaineRepository): Response
     {
         return $this->render('domaine/show.html.twig', [
@@ -108,99 +105,103 @@ class DomaineController extends AbstractController
     /**
      * @Route("/{id}/edit", name="domaine_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, $id,Domaine $domaine, EntityManagerInterface $entityManager,DomaineRepository $domaineRepository): Response
+    public function edit(Request $request, $id, Domaine $domaine, EntityManagerInterface $entityManager, DomaineRepository $domaineRepository): Response
     {
-        $form = $this->createForm(DomaineType::class, $domaine)    ->add('imageDomaine', FileType::class, [
-
-
-            // unmapped means that this field is not associated to any entity property
-            'mapped' => false,
-
-            // make it optional so you don't have to re-upload the PDF file
-            // every time you edit the Product details
-            'required' => false,
-
-            // unmapped fields can't define their validation using annotations
-            // in the associated entity, so you can use the PHP constraint classes
-            'constraints' => [
-
-                new File([
-
-                    'mimeTypes' => [
-                        'image/*',
-
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
+            $form = $this->createForm(DomaineType::class, $domaine)
+                ->add('imageDomaine', FileType::class, [
+                    'mapped' => false,
+                    'required' => false,
+                    'constraints' => [
+                        new File([
+                            'mimeTypes' => [
+                                'image/*',
+                            ],
+                            'mimeTypesMessage' => 'merci d"ajouter une image',
+                        ])
                     ],
-                    'mimeTypesMessage' => 'merci d"ajouter une image',
-                ])
-            ],
-        ]);
-        $form->handleRequest($request);
+                ]);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $brochureFile */
-            $image = $form->get('imageDomaine')->getData();
+            if ($form->isSubmitted() && $form->isValid()) {
+                /** @var UploadedFile $brochureFile */
+                $image = $form->get('imageDomaine')->getData();
 
-            if ($image) {
-                $newFilename = uniqid().'.'.$image->guessExtension();
+                if ($image) {
+                    $newFilename = uniqid() . '.' . $image->guessExtension();
 
-                try {
-                    $image->move(
-                        $this->getParameter('image_domaine'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
+                    try {
+                        $image->move(
+                            $this->getParameter('image_domaine'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                    }
+
+                    $domaine->setImageDomaine($newFilename);
                 }
+                $entityManager->flush();
 
-                $domaine->setImageDomaine($newFilename);
+                return $this->redirectToRoute('domaine_new', [], Response::HTTP_SEE_OTHER);
             }
-            $entityManager->flush();
 
-            return $this->redirectToRoute('domaine_new', [], Response::HTTP_SEE_OTHER);
+            return $this->render('domaine/edit.html.twig', [
+                'domaine' => $domaine,
+                'form' => $form->createView(),
+                'domaines' => $domaineRepository->getWhatYouWant($id),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->render('domaine/edit.html.twig', [
-            'domaine' => $domaine,
-            'form' => $form->createView(),
-            'domaines' => $domaineRepository->getWhatYouWant($id),
-        ]);
     }
 
     /**
      * @Route("/{id}", name="domaine_delete", methods={"POST"})
      */
-    //TODO: ERROR ON DELETE
     public function delete(Request $request, Domaine $domaine, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$domaine->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($domaine);
-            $entityManager->flush();
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
+            if ($this->isCsrfTokenValid('delete' . $domaine->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($domaine);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('domaine_new', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->redirectToRoute('domaine_new', [], Response::HTTP_SEE_OTHER);
     }
 
-    //TODO: NOT INCLUDED
-    /**
+    /*/**
      * @Route("/liste",name="liste")
      */
-    public function getDomaines(DomaineRepository $domaineRepository,SerializerInterface $serializerInterface, EntityManagerInterface $entityManager){
-        $domaines=$domaineRepository->findAll();
+    /*public function getDomaines(DomaineRepository $domaineRepository, SerializerInterface $serializerInterface, EntityManagerInterface $entityManager)
+    {
+        $domaines = $domaineRepository->findAll();
 
-        $json=$serializerInterface->serialize($domaines,'json',['groups'=>'domaine']);
+        $json = $serializerInterface->serialize($domaines, 'json', ['groups' => 'domaine']);
         return new response ($json);
 
-    }
+    }*/
 
-    //TODO: NOT INCLUDED
-    /**
+    /*/**
      * @Route("/add",name="add")
      */
-    public function addDomaine(Request $request,SerializerInterface $serializerInterface, EntityManagerInterface $entityManager){
-        $content=$request->getContent();
-        $data=$serializerInterface->deserialize($content,Domaine::class,'json');
+    /*public function addDomaine(Request $request, SerializerInterface $serializerInterface, EntityManagerInterface $entityManager)
+    {
+        $content = $request->getContent();
+        $data = $serializerInterface->deserialize($content, Domaine::class, 'json');
         $entityManager->persist($data);
         $entityManager->flush();
         return new Response('domaine ajouté avec succés');
 
-    }
+    }*/
 }

@@ -18,6 +18,20 @@ class FormationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Formation::class);
     }
+
+    public function geteventbydatenowandreservation($listid){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where(' u.id NOT IN (:listid) AND u.placesReserve < u.nbPlaces')
+            ->setParameter('listid', $listid);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function dated(){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where(' u.placesReserve < u.nbPlaces');
+        return $qb->getQuery()->getResult();
+    }
+
     public function getFormation(){
 
        return $this->getEntityManager()

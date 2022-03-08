@@ -50,60 +50,84 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Domaines</h4><br>
-                        <div  style="overflow-x:auto;">
+                        <div style="overflow-x:auto;">
                             <table class="table" id="myTable">
-                            <tbody>
-                            <tr>
-
-                                <th>Nom</th>
-                                <th>Description</th>
-                                <th>Action</th>
-                            </tr>
-                            <tr>
-                                {% for dm in domaines %}
-                                <td style="display:none">{{ dm.id }}</td>
-                                <td>{{ dm.nomDomaine }}</td>
-                                <td>{{ dm.descriptionDomaine }}</td>
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        <a class="btn btn-primary" href="{{ path('domaine_edit', {'id': dm.id}) }}"><i
-                                                    class="fa fa-pencil-square-o"
-                                                    aria-hidden="true"></i></a>
-                                        <form method="post" action="{{ path('domaine_delete', {'id': dm.id}) }}"
-                                              onsubmit="return confirm('etes vous sur de supprimer ce domaine?');">
-                                            <input type="hidden" name="_token"
-                                                   value="{{ csrf_token('delete' ~ dm.id) }}">
-                                            <button class="btn btn-danger"><i class="fa fa-trash"
-                                                                              aria-hidden="true"></i></button>
-                                        </form>
-
-                                    </div>
-                                </td>
-                            </tr>
-                            {% else %}
+                                <tbody>
                                 <tr>
-                                    <td colspan="3">tableau domaine vide</td>
+
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
                                 </tr>
-                            {% endfor %}
-                            </tbody>
                                 <tr>
-                                    <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="chercher" ></th>
-                                    <th><input style="width: 90%" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="chercher" ></th>
+                                    {% for dm in domaines %}
+                                    <td style="display:none">{{ dm.id }}</td>
+                                    <td>{{ dm.nomDomaine }}</td>
+                                    <td>{{ dm.descriptionDomaine }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a class="btn btn-primary" href="{{ path('domaine_edit', {'id': dm.id}) }}"><i
+                                                        class="fa fa-pencil-square-o"
+                                                        aria-hidden="true"></i></a>
+                                            {% if dm.formations|length == 0 %}
+                                            <form method="post" action="{{ path('domaine_delete', {'id': dm.id}) }}"
+                                                  id="formDelete{{ dm.id }}">
+                                                <input type="hidden" name="_token"
+                                                       value="{{ csrf_token('delete' ~ dm.id) }}">
+                                            </form>
+                                            <button class="btn btn-danger" onclick="deleteswal({{ dm.id }});"
+                                                    id="btn-submit"><i class="fa fa-trash" aria-hidden="true"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3">tableau domaine vide</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tr>
+                                    <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()"
+                                               placeholder="chercher"></th>
+                                    <th><input style="width: 90%" type="text" id="myInput3" onkeyup="myFunction3()"
+                                               placeholder="chercher"></th>
 
 
                                 </tr>
-                        </table>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+    <link rel="stylesheet" href="{{ asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css') }}"/>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"
+            integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
+
+        function deleteswal(a) {
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimez-le !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formDelete' + a).submit();
+                }
+            })
+        }
+
+
         function myFunction2() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput2");
@@ -122,6 +146,7 @@
                 }
             }
         }
+
         function myFunction3() {
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("myInput3");
@@ -140,6 +165,7 @@
                 }
             }
         }
+
         $(document).ready(function () {
             document.getElementById("domaine_imageDomaine").required = true;
         });

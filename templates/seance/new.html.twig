@@ -4,11 +4,11 @@
 {% block body %}
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Form elements</h3>
+            <h3 class="page-title">Gestion Seances</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                    <li class="breadcrumb-item active" aria-current="page"> Form elements </li>
+                    <li class="breadcrumb-item"><a href="#">Formation</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Seance</li>
                 </ol>
             </nav>
         </div>
@@ -80,12 +80,13 @@
                                 <td style="display:none">{{ for.id }}</td>
                                 <td>{{ for.nomSeance }}</td>
                                 <td>{{ for.descriptionSeance }}</td>
-                                <td>{{ for.dateSeance|date('d/m/Y') }}</td>
+                                <td>{{ for.dateSeance|date('Y-m-d') }}</td>
                                 <td>{{ for.heureDeb|date('H:i') }}</td>
                                 <td>{{ for.heureFin |date('H:i')}}</td>
                                 <td>{{ for.formation.nomFormation }}</td>
 
                                 <td>
+                                    {% if for.dateSeance > date() %}
                                     <div class="btn-group" role="group" aria-label="Basic example">
 
                                         <a class="btn btn-primary" href="{{ path('seance1_edit', {'id': for.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
@@ -96,7 +97,7 @@
                                         </form>
                                         <button class="btn btn-danger" onclick="deleteswal({{for.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
                                     </div>
-
+                                    {% endif %}
                                 </td>
                             </tr>
 
@@ -341,6 +342,21 @@
             })
 
             document.getElementById("seance_dateSeance").value = 0;
+
+        }
+        var table = document.getElementById('myTable');
+        for (var r = 1, n = table.rows.length - 1; r < n; r++) {
+
+            if (table.rows[r].cells[3].innerHTML == document.getElementById("seance_dateSeance").value){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cette date existe !',
+                    timer: 3000,
+                    timerProgressBar: true,
+                })
+
+                document.getElementById("seance_dateSeance").value = null ;
+            }
 
         }
     }

@@ -20,45 +20,22 @@ class Userresult
     /**
      * @ORM\Column(type="integer")
      */
-    private $id_quizz;
+    private $result;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity=Quiz::class, inversedBy="userresults")
+     */
+    private $quiz;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="userresults")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $id_user;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $result;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getId_quizz(): ?int
-    {
-        return $this->id_quizz;
-    }
-
-    public function setIdQuizz(int $id_quizz): self
-    {
-        $this->id_quizz = $id_quizz;
-
-        return $this;
-    }
-
-    public function getIdUser(): ?int
-    {
-        return $this->id_user;
-    }
-
-    public function setIdUser(int $id_user): self
-    {
-        $this->id_user = $id_user;
-
-        return $this;
     }
 
     public function getResult(): ?int
@@ -69,6 +46,30 @@ class Userresult
     public function setResult(int $result): self
     {
         $this->result = $result;
+
+        return $this;
+    }
+
+    public function getQuiz(): ?Quiz
+    {
+        return $this->quiz;
+    }
+
+    public function setQuiz(?Quiz $quiz): self
+    {
+        $this->quiz = $quiz;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?User
+    {
+        return $this->id_user;
+    }
+
+    public function setIdUser(?User $id_user): self
+    {
+        $this->id_user = $id_user;
 
         return $this;
     }

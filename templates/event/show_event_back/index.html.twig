@@ -81,10 +81,12 @@
                                         <td>{{ EventReservation.EventId.EName }}</td>
                                         <td>{{ EventReservation.DateReservationEvent ? EventReservation.DateReservationEvent |date('Y-m-d h:i') : '' }}</td>
                                         <td>
+                                            {% if (date(EventReservation.DateReservationEvent)|date('Y-m-d') == date()|date('Y-m-d')) %}
                                             <form method="post" action="{{ path('eventreservation_delete', {'id': EventReservation.id}) }}" id="formdelete{{EventReservation.id}}">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ EventReservation.id) }}">
                                             </form>
                                             <button class="btn btn-danger" onclick="deleteswal({{EventReservation.id}});" id="btn-submit" ><i class="fa fa-trash" aria-hidden="true" ></i></button>
+                                        {% endif %}
                                         </td>
                                     </tr>
                                 {% else %}

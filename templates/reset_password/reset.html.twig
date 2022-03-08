@@ -1,0 +1,31 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+{% block login %}
+    <section class="ftco-section ftco-no-pb ftco-no-pt">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7"></div>
+                <div class="col-md-5 order-md-last">
+                    <div class="login-wrap p-4 p-md-5">
+                        <h3 class="mb-4">Récupérer votre mot de passe</h3>
+                        {{ form_start(resetForm) }}
+                        <div class="form-group">
+                            <label class="label" for="email">Nouveau mot de passe</label>
+                            {{ form_row(resetForm.plainPassword.first, {'attr': {'class' : 'form-control'}}) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="label" for="email">Confirmer mot de passe</label>
+                            {{ form_row(resetForm.plainPassword.second, {'attr': {'class' : 'form-control'}}) }}
+                        </div>
+                        <div class="form-group d-flex justify-content-end mt-4">
+                            <button class="btn btn-primary submit"><span
+                                        class="fa fa-lock"></span></button>
+                        </div>
+                        {{ form_end(resetForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

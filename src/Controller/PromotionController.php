@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 /**
  * @Route("/promotion")
  */
@@ -62,20 +63,28 @@ class PromotionController extends AbstractController
      */
     public function edit(Request $request, Promotion $promotion, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(PromotionType::class, $promotion);
-        $form->handleRequest($request);
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_ADMIN"]) {
+            $form = $this->createForm(PromotionType::class, $promotion);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
 
-            return $this->redirectToRoute('promotion_code_new', [], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('promotion_code_new', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('promotion/edit.html.twig', [
+                'promotion' => $promotion,
+                'form' => $form->createView(),
+
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
         }
 
-        return $this->render('promotion/edit.html.twig', [
-            'promotion' => $promotion,
-            'form' => $form->createView(),
-
-        ]);
     }
 
     /**
@@ -83,7 +92,7 @@ class PromotionController extends AbstractController
      */
     public function delete(Request $request, Promotion $promotion, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$promotion->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $promotion->getId(), $request->request->get('_token'))) {
             $entityManager->remove($promotion);
             $entityManager->flush();
         }

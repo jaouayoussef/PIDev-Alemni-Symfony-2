@@ -48,9 +48,9 @@ class Reclamation
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean", length=255)
      */
-    private $status = 'not answered';
+    private $status = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -66,6 +66,11 @@ class Reclamation
      * @ORM\OneToOne(targetEntity=Reponse::class, mappedBy="reclamation", cascade={"persist", "remove"})
      */
     private $reponse;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reclamations")
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -181,6 +186,18 @@ class Reclamation
         }
 
         $this->reponse = $reponse;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

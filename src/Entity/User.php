@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Bafford\PasswordStrengthBundle\Validator\Constraints as BAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -78,7 +77,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified;
+    private $isVerified = false;
 
     /**
      * @ORM\OneToMany(targetEntity=Formation::class, mappedBy="formateur", orphanRemoval=true)
@@ -92,12 +91,24 @@ class User implements UserInterface
     {
         $this->formations = new ArrayCollection();
         $this->reservationFormations = new ArrayCollection();
+        $this->userresults = new ArrayCollection();
+        $this->reclamations = new ArrayCollection();
     }
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $verification_file;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Userresult::class, mappedBy="id_user")
+     */
+    private $userresults;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Reclamation::class, mappedBy="user")
+     */
+    private $reclamations;
 
     public function getId(): ?int
     {
@@ -314,6 +325,7 @@ class User implements UserInterface
         }
         return $this;
     }
+
     public function removeReservationFormation(ReservationFormation $reservationFormation): self
     {
         if ($this->reservationFormations->removeElement($reservationFormation)) {
@@ -322,6 +334,66 @@ class User implements UserInterface
                 $reservationFormation->setUser(null);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Userresult[]
+     */
+    public function getUserresults(): Collection
+    {
+        return $this->userresults;
+    }
+
+    public function addUserresult(Userresult $userresult): self
+    {
+        if (!$this->userresults->contains($userresult)) {
+            $this->userresults[] = $userresult;
+            $userresult->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserresult(Userresult $userresult): self
+    {
+        if ($this->userresults->removeElement($userresult)) {
+            // set the owning side to null (unless already changed)
+            if ($userresult->getIdUser() === $this) {
+                $userresult->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reclamation[]
+     */
+    public function getReclamations(): Collection
+    {
+        return $this->reclamations;
+    }
+
+    public function addReclamation(Reclamation $reclamation): self
+    {
+        if (!$this->reclamations->contains($reclamation)) {
+            $this->reclamations[] = $reclamation;
+            $reclamation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReclamation(Reclamation $reclamation): self
+    {
+        if ($this->reclamations->removeElement($reclamation)) {
+            // set the owning side to null (unless already changed)
+            if ($reclamation->getUser() === $this) {
+                $reclamation->setUser(null);
+            }
+        }
+
         return $this;
     }
 }

@@ -37,12 +37,12 @@
                                 <td>{{ dom.descriptionDomaine }}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <li><span class="flaticon-shower"></span>
+                                        <span class="flaticon-shower"></span>
                                             {#
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ dom.id }}">Détails</button>
                                             #}
-                                            <button type="button" data-toggle="modal" data-target="#infos{{dom.id~dom.nomDomaine}}"  class="btn btn-primary">formations</button>
-                                            <div class="modal" id="infos{{dom.id~dom.nomDomaine}}">
+                                            <button type="button" data-toggle="modal" data-target="#infos{{dom.id}}"  class="btn btn-primary">formations</button>
+                                            <div class="modal" id="infos{{dom.id}}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -117,7 +117,7 @@
 
 
 
-                                        </li>
+
                                 </div>
 
                                     </td>
@@ -158,12 +158,12 @@
                                     <td>{{ for.email }}</td>
                                     <td>
                                         <div class="btn-group" role="group" aria-label="Basic example">
-                                            <li><span class="flaticon-shower"></span>
+                                           <span class="flaticon-shower"></span>
                                                 {#
                                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lga{{ dom.id }}">Détails</button>
                                                 #}
-                                                <button type="button" data-toggle="modal" data-target="#infos{{for.id~for.firstname~for.lastname }}"  class="btn btn-primary">formations</button>
-                                                <div class="modal" id="infos{{for.id~for.firstname~for.lastname}}">
+                                                <button type="button" data-toggle="modal" data-target="#infos{{for.id }}"  class="btn btn-primary">formations</button>
+                                                <div class="modal" id="infos{{for.id}}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -238,7 +238,7 @@
 
 
 
-                                            </li>
+
                                         </div>
 
                                     </td>

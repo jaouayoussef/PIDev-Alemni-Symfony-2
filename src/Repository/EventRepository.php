@@ -26,6 +26,12 @@ class EventRepository extends ServiceEntityRepository
             ->setParameter('listid', $listid);
         return $qb->getQuery()->getResult();
     }
+    public function geteventbydatenowandreservationusernull(){
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.E_DateDebut >= :identifier')
+            ->setParameter('identifier', new \DateTime('now'));
+        return $qb->getQuery()->getResult();
+    }
     public function geteventbydatenow(){
         $qb = $this->createQueryBuilder('u');
         $qb->where('u.E_DateDebut >= :identifier AND u.E_PlaceReserver < u.E_Nbre')
@@ -47,6 +53,15 @@ class EventRepository extends ServiceEntityRepository
             ->setParameter('identifier', new \DateTime('now'))
             -> groupBy('datefin');
         return $query->getQuery()->getResult();
+    }
+    public function getWhatYouWant($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.id != :identifier')
+            ->setParameter('identifier', $id);
+
+        return $qb->getQuery()
+            ->getResult();
     }
 
     // /**
