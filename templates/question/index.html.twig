@@ -1,9 +1,9 @@
 {% extends 'base-back.html.twig' %}
 
-{% block title %}Question index{% endblock %}
-
+{% block title %} Mes quizzes {% endblock %}
 
 {% block body %}
+<<<<<<< Updated upstream
     <div class="container-lg" style="max-width: 100%;"><br>
         <span class="contact100-form-title">
 					quiz questions
@@ -76,133 +76,304 @@
                     </tbody>
                 </table>
                 <input type="submit" value="Back to home" class="btn btn-primary">
+=======
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2/select2.min.css')}}" />
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css')}}" />
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Mes questions</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page"><a>Formation</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('all') }}">Mes quizzes</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Mes questions</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Mes quizzes</h4><br>
+
+                        <div style="overflow-x:auto;">
+                            <table class="table table-bordered table-striped" id="myTable">
+                                <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th style="width: 25%;">Question</th>
+                                    <th>Réponse 1</th>
+                                    <th>Réponse 2</th>
+                                    <th>Réponse 3</th>
+                                    <th>Réponse 4</th>
+                                    <th>N° correctRep</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for question in questions %}
+                                    <tr>
+                                        <td>{{ loop.index}}</td>
+                                        <td>{{ question.libelle }}</td>
+                                        <td>{{ question.reponse1 }}</td>
+                                        <td>{{ question.reponse2 }}</td>
+                                        <td>{{ question.reponse3 }}</td>
+                                        <td>{{ question.reponse4 }}</td>
+                                        <td>{{ question.repcorrect }}</td>
+                                        <td>
+                                            <a href="{{ path('question_edit', {'id': question.id}) }}" class="edit" title="Edit" data-toggle="tooltip"><i class="fa fa-edit" aria-hidden="true" ></i></a>
+
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7">no records found</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <th><input style="width: 90%" type="text" id="myInput2" onkeyup="myFunction2()"
+                                           placeholder="chercher"></th>
+                                <th><input style="width: 90%" type="text" id="myInput3" onkeyup="myFunction3()"
+                                           placeholder="chercher"></th>
+                                <th><input style="width: 90%" type="text" id="myInput4" onkeyup="myFunction4()"
+                                           placeholder="chercher"></th>
+                                <th><input style="width: 90%" type="text" id="myInput5" onkeyup="myFunction5()"
+                                           placeholder="chercher"></th>
+                                <th><input style="width: 90%" type="text" id="myInput6" onkeyup="myFunction6()"
+                                           placeholder="chercher"></th>
+                                <th><input style="width: 90%" type="text" id="myInput7" onkeyup="myFunction7()"
+                                           placeholder="chercher"></th>
+                                <th><input style="width: 90%" type="text" id="myInput8" onkeyup="myFunction8()"
+                                           placeholder="chercher"></th>
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+>>>>>>> Stashed changes
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function(){
-            // Activate tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+    <link rel="stylesheet" href="{{asset('Back/assets/vendors/mdi/css/materialdesignicons.min.css')}}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-            // Filter table rows based on searched term
-            $("#search1").on("keyup", function() {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function(){
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(2)").text().toLowerCase();
-                    console.log(name);
-                    if(name.search(term) < 0){
-                        $row.hide();
-                    } else{
-                        $row.show();
-                    }
-                });
-            });
-        });
-    </script>
     <script>
-        $(document).ready(function(){
-            // Activate tooltips
-            $('[data-toggle="tooltip"]').tooltip();
-
-            // Filter table rows based on searched term
-            $("#search2").on("keyup", function() {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function(){
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
-                    console.log(name);
-                    if(name.search(term) < 0){
-                        $row.hide();
-                    } else{
-                        $row.show();
+        function deleteswal(a) {
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimez-le !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('formdelete'+a).submit();
+                }
+            })
+        }
+        function myFunction2() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput2");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-            // Activate tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+                }
+            }
+        }
 
-            // Filter table rows based on searched term
-            $("#search3").on("keyup", function() {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function(){
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(4)").text().toLowerCase();
-                    console.log(name);
-                    if(name.search(term) < 0){
-                        $row.hide();
-                    } else{
-                        $row.show();
+        function myFunction3() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput3");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-            // Activate tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+                }
+            }
+        }
 
-            // Filter table rows based on searched term
-            $("#search").on("keyup", function() {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function(){
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
-                    console.log(name);
-                    if(name.search(term) < 0){
-                        $row.hide();
-                    } else{
-                        $row.show();
+        function myFunction4() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput4");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-            // Activate tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+                }
+            }
+        }
 
-            // Filter table rows based on searched term
-            $("#search").on("keyup", function() {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function(){
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
-                    console.log(name);
-                    if(name.search(term) < 0){
-                        $row.hide();
-                    } else{
-                        $row.show();
+        function myFunction5() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput5");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
-                });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function(){
-            // Activate tooltips
-            $('[data-toggle="tooltip"]').tooltip();
+                }
+            }
+        }
 
-            // Filter table rows based on searched term
-            $("#search").on("keyup", function() {
-                var term = $(this).val().toLowerCase();
-                $("table tbody tr").each(function(){
-                    $row = $(this);
-                    var name = $row.find("td:nth-child(3)").text().toLowerCase();
-                    console.log(name);
-                    if(name.search(term) < 0){
-                        $row.hide();
-                    } else{
-                        $row.show();
+        function myFunction6() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput6");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
-                });
-            });
-        });
+                }
+            }
+        }
+
+        function myFunction7() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput7");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[5];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction8() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput8");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[6];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction9() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput9");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[7];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function myFunction10() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput10");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[8];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
     </script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

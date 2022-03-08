@@ -1,0 +1,56 @@
+{% extends 'base-front.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block login %}
+    {% if app.user == null %}
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+    <section class="ftco-section ftco-no-pb ftco-no-pt">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7"></div>
+                <div class="col-md-5 order-md-last">
+                    <div class="login-wrap p-4 p-md-5">
+                        <h3> S'authentifier </h3>
+                        <form method="post" class="signup-form" id="loginForm">
+                            <div class="form-group">
+                                <label class="label" for="inputEmail">Addresse mail</label>
+                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+                                       class="form-control" autocomplete="email" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label class="label" for="inputPassword">Mot de passe</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control"
+                                       autocomplete="current-password" required>
+                                <input type="hidden" name="_csrf_token"
+                                       value="{{ csrf_token('authenticate') }}"
+                                >
+                            </div>
+                            <div class="form-group d-flex justify-content-end mt-4">
+                                <div class="checkbox mb-3">
+                                    <label>
+                                        <input type="checkbox" name="_remember_me">   se souvenir
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary submit"><span
+                                            class="fa fa-paper-plane"></span></button>
+                            </div>
+                        </form>
+                        <p class="text-center">Cliquez içi pour <a href="{{ path('app_forgot_password_request') }}">Récupérer mot de passe</a></p>
+                        <p class="text-center">Pas de compte ? <a href="{{ path('user_register') }}">Créez-le</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}

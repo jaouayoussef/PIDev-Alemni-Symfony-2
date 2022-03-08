@@ -30,15 +30,43 @@ class QuizController extends AbstractController
      */
     public function index(QuizRepository $quizRepository): Response
     {
+<<<<<<< Updated upstream
         return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizRepository->findBy(array('id_user'=>1)),
         ]);
+=======
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() != ["ROLE_CLIENT"]) {
+            return $this->render('quiz/index.html.twig', [
+                'quizzes' => $quizRepository->findBy(array('id_user' => 1)),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
+        }
+
+>>>>>>> Stashed changes
     }
     /**
      * @Route("/all", name="all", methods={"GET"})
      */
     public function all(QuizRepository $quizRepository): Response
     {
+<<<<<<< Updated upstream
+=======
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            return $this->render('quiz/index.html.twig', [
+                'quizzes' => $quizRepository->findBy(array('id_user' => $this->getUser()->getId())),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
+        }
+    }
+>>>>>>> Stashed changes
 
         return $this->render('quiz/index.html.twig', [
             'quizzes' => $quizRepository->findAll(),
@@ -74,6 +102,7 @@ class QuizController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+<<<<<<< Updated upstream
         $quiz = new Quiz();
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
@@ -85,6 +114,31 @@ class QuizController extends AbstractController
             $entityManager->flush();
 $nbre=0;
             return $this->redirectToRoute('question_new', ['quiz' => $quiz, 'nbre'=>$nbre], Response::HTTP_SEE_OTHER);
+=======
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            $quiz = new Quiz();
+            $form = $this->createForm(QuizType::class, $quiz);
+            $form->handleRequest($request);
+            $user = $this->getUser()->getId();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $quiz->setIdUser($user);
+                $quiz->setIdFormation($formation);
+                $entityManager->persist($quiz);
+                $entityManager->flush();
+                $nbre = 0;
+                return $this->redirectToRoute('question_new', ['quiz' => $quiz, 'nbre' => $nbre], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('quiz/new.html.twig', [
+                'quiz' => $quiz,
+                'form' => $form->createView(),
+            ]);
+        } else {
+            return $this->redirectToRoute('error');
+>>>>>>> Stashed changes
         }
 
         return $this->render('quiz/new.html.twig', [
@@ -108,8 +162,20 @@ $nbre=0;
      */
     public function edit(Request $request, Quiz $quiz, EntityManagerInterface $entityManager): Response
     {
+<<<<<<< Updated upstream
         $form = $this->createForm(QuizType::class, $quiz);
         $form->handleRequest($request);
+=======
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            $form = $this->createForm(QuizType::class, $quiz);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->flush();
+>>>>>>> Stashed changes
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
@@ -128,9 +194,24 @@ $nbre=0;
      */
     public function delete(Request $request, Quiz $quiz, EntityManagerInterface $entityManager): Response
     {
+<<<<<<< Updated upstream
         if ($this->isCsrfTokenValid('delete'.$quiz->getId(), $request->request->get('_token'))) {
             $entityManager->remove($quiz);
             $entityManager->flush();
+=======
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        } else if ($user->getRoles() == ["ROLE_TUTOR"]) {
+            if ($this->isCsrfTokenValid('delete' . $quiz->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($quiz);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('error');
+>>>>>>> Stashed changes
         }
 
         return $this->redirectToRoute('quiz_index', [], Response::HTTP_SEE_OTHER);

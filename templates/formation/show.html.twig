@@ -1,0 +1,467 @@
+{% extends 'base-front.html.twig' %}
+
+
+{% block header %}
+    <style>
+        .hide {
+            display: none;
+        }
+
+        ::placeholder {
+            font-size: 0.6em;
+        }
+    </style>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><span>Ale</span>mni</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                    aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="course.html" class="nav-link">Our courses</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">All Tutors</a></li>
+                    <li class="nav-item"><a href="instructor.html" class="nav-link">Our events</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact us</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                             aria-labelledby="navbarDropdownMenuLink-333">
+                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="#">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('front/images/bg_2.jpg') }}');">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end justify-content-center">
+                <div class="col-md-9 ftco-animate pb-5 text-center">
+                    <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
+                                        class="fa fa-chevron-right"></i></a></span> <span>Listes des formations <i
+                                    class="fa fa-chevron-right"></i></span></p>
+                    <h1 class="mb-0 bread">Listes des formations</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% block body %}
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 sidebar">
+                    <div class="sidebar-box bg-white ftco-animate">
+                        <form class="search-form">
+                            <div class="form-group">
+                                <input type="search"
+                                       id="search-input"
+                                       placeholder="Recherchez le nom de l'événement ici..">
+                                <span class="icon fa fa-search" type="button" id="search"></span>
+
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="sidebar-box bg-white p-4 ftco-animate">
+                        <h3 class="heading-sidebar">Catégorie </h3>
+                        <label for="option-category-3"><input type="radio" onclick="filterProduct('all')"
+                                                              id="option-category-3" name="vehicle" value="" checked>
+                            tout</label><br>
+                        <label for="option-category-4"><input type="radio" onclick="filterProduct('Nothing')"
+                                                              id="option-category-4" name="vehicle" value=""> Ordinaire</label><br>
+                        <label for="option-category-5"><input type="radio" onclick="filterProduct('Promo')"
+                                                              id="option-category-5" name="vehicle" value=""> Promotion</label><br>
+                        <label for="option-category-5"><input type="radio" onclick="filterProduct('Free')"
+                                                              id="option-category-5" name="vehicle" value="">
+                            Gratuit</label><br>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        {% for formation in formations %}
+
+                        <div class="col-md-6 d-flex align-items-stretch ftco-animate">
+                            {% for pro in Promotions %}
+                            {% if pro.PDomaine.id == formation.domaine.id and formation.prixFormation>0 %}
+                            <div class="project-wrap Promo">
+
+                                <a class="img"
+                                   style="background-image: url({{ asset('uploads/formation/' ~ formation.imageFormation) | imagine_filter('square') }}"
+                                   alt="{{ formation.nomFormation }});">
+                                    <span class="price">Promotion -{{ pro.PValue }}% </span>
+                                </a>
+
+                                {# <img src="{{ asset('uploads/formation/' ~ formation.imageFormation) | imagine_filter('square') }}" alt="{{ formation.nomFormation }}" > #}
+
+                                <div class="text p-4">
+                                    <h3><a class="event-name">{{ formation.nomFormation }}</a></h3>
+                                    <p class="advisor"> {{ formation.domaine.nomDomaine }}</span></p>
+                                    <p class="advisor"> {{ formation.descriptionFormation }}</span></p>
+                                    <ul class="d-flex justify-content-between">
+                                        <li><span class="flaticon-shower"></span>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    data-target=".bd-example-modal-lga{{ formation.id }}">Détails
+                                            </button>
+                                        </li>
+                                        <li>
+                                            {% if app.user != null %}
+                                                <script>
+                                                    function reserverEvent(b, a, c) {
+                                                        if (b == "") {
+                                                            location.href = "/formation/FormationReservationAvecIncrement/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                        } else {
+                                                            location.href = "/formation/FormationReservationAvecIncrement/" + b + "/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                        }
+                                                    }
+                                                </script>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target="#exampleModalCenter{{ formation.id }}Promo">
+                                                    Réserver
+                                                </button>
+                                            {% endif %}
+                                        </li>
+                                        <li class="price"><strike style="color: red">{{ formation.prixFormation }}
+                                                dt</strike>/{{ formation.prixFormation - (formation.prixFormation * pro.PValue /100) }}
+                                            dt
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {% else %}
+                            {% if formation.prixFormation ==0 %}
+                            <div class="project-wrap Free"> {% else %}
+                                <div class="project-wrap Nothing"> {% endif %}
+                                    <img src="{{ asset('uploads/formation/' ~ formation.imageFormation) | imagine_filter('square') }}"
+                                         alt="{{ formation.nomFormation }}">
+                                    <div class="text p-4">
+                                        <h3><a class="event-name">{{ formation.nomFormation }}</a></h3>
+                                        <p class="advisor"> {{ formation.domaine.nomDomaine }}</span></p>
+                                        <p class="advisor"> {{ formation.descriptionFormation }}</span></p>
+                                        <ul class="d-flex justify-content-between">
+                                            <li><span class="flaticon-shower"></span>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target=".bd-example-modal-lga{{ formation.id }}">Détails
+                                                </button>
+                                            </li>
+                                            <li>
+                                                {% if app.user != null %}
+                                                    <script>
+                                                        function reserverEvent(b, a, c) {
+                                                            if (b == "") {
+                                                                location.href = "/formation/FormationReservationAvecIncrement/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                            } else {
+                                                                location.href = "/formation/FormationReservationAvecIncrement/" + b + "/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                            }
+                                                        }
+                                                    </script>
+                                                    <button type="button" class="btn btn-primary"
+                                                            data-toggle="modal" {% if formation.prixFormation ==0 %} data-target="#exampleModalCenter{{ formation.id }}Promo" {% else %}data-target="#exampleModalCenter{{ formation.id }}"{% endif %} >
+                                                        Réserver
+                                                    </button>
+                                                {% endif %}
+                                            </li>
+                                            <li class="price">{% if formation.prixFormation ==0 %} Gratuit {% else %}{{ formation.prixFormation }}dt {% endif %} </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% endfor %}
+                                {% if  Promotions|length == 0 %}
+                                {% if formation.prixFormation ==0 %}
+                                <div class="project-wrap Free"> {% else %}
+                                    <div class="project-wrap Nothing"> {% endif %}
+                                        <img src="{{ asset('uploads/formation/' ~ formation.imageFormation) | imagine_filter('square') }}"
+                                             alt="{{ formation.nomFormation }}">
+                                        <div class="text p-4">
+                                            <h3><a class="event-name">{{ formation.nomFormation }}</a></h3>
+                                            <p class="advisor"> {{ formation.domaine.nomDomaine }}</span></p>
+                                            <p class="advisor"> {{ formation.descriptionFormation }}</span></p>
+                                            <ul class="d-flex justify-content-between">
+                                                <li><span class="flaticon-shower"></span>
+                                                    {% if app.user != null %}
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal"
+                                                                data-target=".bd-example-modal-lga{{ formation.id }}">
+                                                            Détails
+                                                        </button>
+                                                    {% endif %}
+                                                </li>
+                                                <li>
+                                                    {% if app.user != null %}
+                                                        <script>
+                                                            function reserverEvent(b, a, c) {
+                                                                if (b == "") {
+                                                                    location.href = "/formation/FormationReservationAvecIncrement/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                                } else {
+                                                                    location.href = "/formation/FormationReservationAvecIncrement/" + b + "/" + a + "/" + c + "/" +{{ app.user.id }};
+                                                                }
+                                                            }
+                                                        </script>
+                                                        <button type="button" class="btn btn-primary"
+                                                                data-toggle="modal" {% if formation.prixFormation ==0 %} data-target="#exampleModalCenter{{ formation.id }}Promo" {% else %}data-target="#exampleModalCenter{{ formation.id }}"{% endif %} >
+                                                            Réserver
+                                                        </button>
+                                                    {% endif %}
+                                                </li>
+                                                <li class="price">{% if formation.prixFormation ==0 %} Gratuit {% else %}{{ formation.prixFormation }}dt {% endif %} </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal fade bd-example-modal-lga{{ formation.id }}" tabindex="-1"
+                                     role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    id="exampleModalLabel">{{ formation.nomFormation }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="col-md-8 d-flex align-items-center">
+                                                    <div class="staff-detail w-100 pl-md-5">
+                                                        <h3>Description :</h3>
+                                                        <p>{{ formation.descriptionFormation }}</p>
+                                                        <h3>Formateur :</h3>
+                                                        <p>{{ formation.formateur.firstname }}</p>
+                                                        <h3>Nombres places :</h3>
+                                                        <p>{{ formation.nbPlaces }}</p>
+                                                        <h3>Prix :</h3>
+                                                        <p>{{ formation.prixFormation }} dt</p>
+                                                        <table class="table">
+                                                            <tbody>
+                                                            <tr>
+
+                                                                <th>Nom</th>
+                                                                <th>Description</th>
+                                                                <th>Date</th>
+                                                                <th>Heure debut</th>
+                                                                <th>Heure Fin</th>
+
+                                                            </tr>
+                                                            <tr>
+                                                                {% for for in seances %}
+                                                                {% if for.formation.id == formation.id %}
+
+                                                                <td>{{ for.nomSeance }}</td>
+                                                                <td>{{ for.descriptionSeance }}</td>
+                                                                <td>{{ for.dateSeance|date('d/m/Y') }}</td>
+                                                                <td>{{ for.heureDeb|date('H:i') }}</td>
+                                                                <td>{{ for.heureFin |date('H:i') }}</td>
+
+
+                                                            </tr>
+                                                            {% endif %}
+                                                            {% endfor %}
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter{{ formation.id }}" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Réservation
+                                                    pour {{ formation.nomFormation }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <h5>Le Prix Total du reservation est :<span
+                                                            id="prixinput1{{ formation.id }}"> {{ formation.prixFormation }}</span>
+                                                    dt</h5>
+
+                                                <p></p>
+                                                <hr>
+                                                <h5>Promotion code</h5>
+                                                <p><span id="codepromoId{{ formation.id }}"
+                                                         style="display: none"></span> <span
+                                                            id="promocodeOwner{{ formation.id }}"><input type="text"
+                                                                                                         id="codepromoinput{{ formation.id }}"> <a
+                                                                onclick="codepromoverif(document.getElementById('codepromoinput{{ formation.id }}').value,document.getElementById('prixinput1{{ formation.id }}'),document.getElementById('promocodeOwner{{ formation.id }}'),{{ formation.id }},document.getElementById('codepromoId{{ formation.id }}'),document.getElementById('codeInvalid{{ formation.id }}'))"
+                                                                role="button" class="btn btn-secondary popover-test"
+                                                                title="Popover title"
+                                                                data-content="Popover body content is set in this attribute.">Valider</a></span><br>
+                                                    <span id="codeInvalid{{ formation.id }}"></span></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Annuler
+                                                </button>
+                                                <a role="button"
+                                                   onclick="reserverEvent(document.getElementById('codepromoId{{ formation.id }}').innerText,{{ formation.id }},document.getElementById('prixinput1{{ formation.id }}').innerText)"
+                                                   class="btn btn-primary" title="Popover title"
+                                                   data-content="Popover body content is set in this attribute.">Réserver</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter{{ formation.id }}Promo" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Réservation
+                                                    pour {{ formation.nomFormation }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {% for pro in Promotions %}
+                                                    <h5>Le Prix Total du reservation est :<span
+                                                                id="prixinput{{ formation.id }}"> {{ formation.prixFormation - (formation.prixFormation * pro.PValue /100) }}</span>
+                                                        dt</h5>
+
+                                                {% endfor %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Annuler
+                                                </button>
+                                                <a type="button" class="btn btn-primary"
+                                                   onclick="reserverEvent(document.getElementById('codepromoId{{ formation.id }}').innerText,{{ formation.id }},document.getElementById('prixinput{{ formation.id }}').innerText)"
+                                                   id="buttonReserverPromo">Réserver</a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+
+        function codepromoverif(a, b, c, d, e, f) {
+
+            {% for CodePromo in CodePromos %}
+            var x = "{{ CodePromo.PCCode }}";
+            var prix = {{ CodePromo.PCValue }};
+            var eventid = d;
+            if (a == x) {
+                b.innerHTML = parseFloat(b.innerHTML) - (((parseFloat(b.innerHTML)) * parseFloat(prix)) / 100);
+                c.innerHTML = "<p>{{ CodePromo.CPPCD.PCDName }} {{ CodePromo.CPPCD.PCDFirstName }} : - {{ CodePromo.PCValue }}%</p>";
+                e.innerHTML = "<p>{{ CodePromo.CPPCD.id }}</p>";
+                f.innerHTML = null;
+
+            } else {
+                f.innerHTML = "<p> Code promotion Invalide !! </p>";
+            }
+            {% endfor %}
+
+        }
+
+        /*function reserverEvent(b, a, c) {
+            if (b == "") {
+                location.href = "/formation/FormationReservationAvecIncrement/" + a + "/" + c + "/" ;
+            } else {
+                location.href = "/formation/FormationReservationAvecIncrement/" + b + "/" + a + "/" + c + "/" +;
+            }
+        }*/
+
+        function getPromocodeOwnerId() {
+            return localStorage.getItem("IdPromoCodeOwner");
+        }
+
+        function filterProduct(value) {
+            //Button class code
+            let buttons = document.querySelectorAll(".button-value");
+            buttons.forEach((button) => {
+                //check if value equals innerText
+                if (value.toUpperCase() == button.innerText.toUpperCase()) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            });
+
+            //select all cards
+            let elements = document.querySelectorAll(".project-wrap");
+            //loop through all cards
+            elements.forEach((element) => {
+                //display all cards on 'all' button click
+                if (value == "all") {
+                    element.classList.remove("hide");
+                } else {
+                    //Check if element contains category class
+                    if (element.classList.contains(value)) {
+                        //display element based on category
+                        element.classList.remove("hide");
+                    } else {
+                        //hide other elements
+                        element.classList.add("hide");
+                    }
+                }
+            });
+        }
+
+        //Search button click
+        document.getElementById("search").addEventListener("click", () => {
+
+            //initializations
+            let searchInput = document.getElementById("search-input").value;
+
+            let elements = document.querySelectorAll(".event-name");
+            //console.log(elements);
+            let cards = document.querySelectorAll(".project-wrap");
+            // console.log(cards);
+            //loop through all elements
+            elements.forEach((element, index) => {
+                //check if text includes the search value
+                if (element.innerText.toUpperCase().includes(searchInput.toUpperCase())) {
+                    //display matching card
+                    cards[index].classList.remove("hide");
+                } else {
+                    //hide others
+                    cards[index].classList.add("hide");
+                }
+            });
+        });
+
+        //Initially display all products
+        window.onload = () => {
+            filterProduct("all");
+        };
+    </script>
+{% endblock %}
